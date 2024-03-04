@@ -1,11 +1,16 @@
 buildscript {
 	repositories {
 		jcenter()
-		maven { url = "http://files.minecraftforge.net/maven" }
 		maven { url "https://plugins.gradle.org/m2/" }
+		maven {
+			name = 'forge'
+			url = 'https://maven.minecraftforge.net/'
+		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+		classpath('com.anatawa12.forge:ForgeGradle:2.3-1.0.+') {
+			changing = true
+		}
 		classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.1.0'
 		classpath 'com.wynprice.cursemaven:CurseMaven:1.2.+'
 	}
@@ -47,20 +52,7 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "com.feed_the_beast.mods:FTBLib:${ftblib_version}"
-	deobfCompile "com.latmod.mods:ItemFilters:${itemfilters_version}"
-	provided "dev.latvian.kubejs:KubeJS:forge-1.12.2-${kubejs_version}"
-	provided "com.feed_the_beast.mods:FTBUtilities:${ftbutilities_version}"
-	deobfProvided curse.resolve('jei', project.jei_file)
-	deobfProvided curse.resolve('industrial-craft', project.industrialcraft_file)
-	deobfProvided curse.resolve('packmode', project.packmode_file)
-	deobfProvided curse.resolve('botania', project.botania_file)
-	deobfProvided curse.resolve('baubles', project.baubles_file)
-	deobfProvided curse.resolve('buildcraft-core', project.buildcraftcore_file)
-	deobfProvided curse.resolve('projecte', project.projecte_file)
-	deobfProvided curse.resolve('game-stages', project.gamestages_file)
-	deobfProvided curse.resolve('custom-npcs', project.customnpcs_file)
-	deobfProvided curse.resolve('reskillable', project.reskillable_file)
+	implementation fileTree(dir: project.lib, include: ['*.jar'], exclude: [])
 }
 
 processResources {
