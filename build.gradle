@@ -34,7 +34,7 @@ compileJava {
 }
 
 minecraft {
-	version = "${mc_version}-${forge_version}"
+	version = '1.12.2-14.23.5.2838'
 	runDir = "run"
 	mappings = project.mappings_version
 
@@ -48,11 +48,10 @@ configurations.all {
 
 repositories {
 	mavenLocal()
-	maven { url "https://maven.latmod.com/" } //FTB Library, KubeJS, Item Filters, FTB Utilities
 }
 
 dependencies {
-	implementation fileTree(dir: project.lib, include: ['*.jar'], exclude: [])
+	implementation fileTree(dir: project.lib, include: ['*-deobf.jar'], exclude: [])
 }
 
 processResources {
