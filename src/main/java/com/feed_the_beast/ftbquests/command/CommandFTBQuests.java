@@ -16,6 +16,7 @@ public class CommandFTBQuests extends CommandTreeBase
 		addSubcommand(new CommandImportRewardsFromChest());
 		addSubcommand(new CommandExportRewardsToChest());
 		addSubcommand(new CommandGenerateItemChapter());
+		addSubcommand(new CommandOpenQuestBookGUI());
 	}
 
 	@Override
