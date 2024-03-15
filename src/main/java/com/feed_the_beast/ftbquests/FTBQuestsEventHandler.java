@@ -129,17 +129,17 @@ public class FTBQuestsEventHandler
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
 	{
 		event.getRegistry().registerAll(
-				withName(new BlockTaskScreen(), "screen"),
-				withName(new BlockTaskScreenPart(), "screen_part"),
-				withName(new BlockProgressDetector(), "progress_detector"),
-				withName(new BlockDetector(), "detector"),
-				withName(new BlockProgressScreen(), "progress_screen"),
-				withName(new BlockProgressScreenPart(), "progress_screen_part"),
-				withName(new BlockQuestChest(), "chest"),
-				withName(new BlockLootCrateStorage(), "loot_crate_storage"),
-				withName(new BlockLootCrateOpener(), "loot_crate_opener"),
-				withName(new BlockQuestBarrier(), "barrier"),
-				withName(new BlockRewardCollector(), "reward_collector")
+			withName(new BlockTaskScreen(), "screen"),
+			withName(new BlockTaskScreenPart(), "screen_part"),
+			withName(new BlockProgressDetector(), "progress_detector"),
+			withName(new BlockDetector(), "detector"),
+			withName(new BlockProgressScreen(), "progress_screen"),
+			withName(new BlockProgressScreenPart(), "progress_screen_part"),
+			withName(new BlockQuestChest(), "chest"),
+			withName(new BlockLootCrateStorage(), "loot_crate_storage"),
+			withName(new BlockLootCrateOpener(), "loot_crate_opener"),
+			withName(new BlockQuestBarrier(), "barrier"),
+			withName(new BlockRewardCollector(), "reward_collector")
 		);
 
 		GameRegistry.registerTileEntity(TileTaskScreenCore.class, new ResourceLocation(FTBQuests.MOD_ID, "screen_core"));
@@ -163,19 +163,19 @@ public class FTBQuestsEventHandler
 	public static void registerItems(RegistryEvent.Register<Item> event)
 	{
 		event.getRegistry().registerAll(
-				new ItemBlockTaskScreen(FTBQuestsBlocks.SCREEN).setRegistryName("screen"),
-				new ItemBlock(FTBQuestsBlocks.PROGRESS_DETECTOR).setRegistryName("progress_detector"),
-				new ItemBlockDetector(FTBQuestsBlocks.DETECTOR).setRegistryName("detector"),
-				new ItemBlockProgressScreen(FTBQuestsBlocks.PROGRESS_SCREEN).setRegistryName("progress_screen"),
-				new ItemBlock(FTBQuestsBlocks.CHEST).setRegistryName("chest"),
-				new ItemBlock(FTBQuestsBlocks.LOOT_CRATE_STORAGE).setRegistryName("loot_crate_storage"),
-				new ItemBlock(FTBQuestsBlocks.LOOT_CRATE_OPENER).setRegistryName("loot_crate_opener"),
-				new ItemBlockBarrier(FTBQuestsBlocks.BARRIER).setRegistryName("barrier"),
-				new ItemBlock(FTBQuestsBlocks.REWARD_COLLECTOR).setRegistryName("reward_collector"),
+			new ItemBlockTaskScreen(FTBQuestsBlocks.SCREEN).setRegistryName("screen"),
+			new ItemBlock(FTBQuestsBlocks.PROGRESS_DETECTOR).setRegistryName("progress_detector"),
+			new ItemBlockDetector(FTBQuestsBlocks.DETECTOR).setRegistryName("detector"),
+			new ItemBlockProgressScreen(FTBQuestsBlocks.PROGRESS_SCREEN).setRegistryName("progress_screen"),
+			new ItemBlock(FTBQuestsBlocks.CHEST).setRegistryName("chest"),
+			new ItemBlock(FTBQuestsBlocks.LOOT_CRATE_STORAGE).setRegistryName("loot_crate_storage"),
+			new ItemBlock(FTBQuestsBlocks.LOOT_CRATE_OPENER).setRegistryName("loot_crate_opener"),
+			new ItemBlockBarrier(FTBQuestsBlocks.BARRIER).setRegistryName("barrier"),
+			new ItemBlock(FTBQuestsBlocks.REWARD_COLLECTOR).setRegistryName("reward_collector"),
 
-				withName(new ItemQuestBook(), "book"),
-				withName(new ItemLootCrate(), "lootcrate"),
-				withName(new ItemCustomIcon(), "custom_icon")
+			withName(new ItemQuestBook(), "book"),
+			withName(new ItemLootCrate(), "lootcrate"),
+			withName(new ItemCustomIcon(), "custom_icon")
 		);
 	}
 
@@ -183,20 +183,20 @@ public class FTBQuestsEventHandler
 	public static void registerTasks(RegistryEvent.Register<TaskType> event)
 	{
 		event.getRegistry().registerAll(
-				FTBQuestsTasks.ITEM = new TaskType(ItemTask::new).setRegistryName("item").setIcon(Icon.getIcon("minecraft:items/diamond")),
-				FTBQuestsTasks.FLUID = new TaskType(FluidTask::new).setRegistryName("fluid").setIcon(Icon.getIcon(FluidRegistry.WATER.getStill(new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME)).toString()).combineWith(Icon.getIcon(FluidTask.TANK_TEXTURE.toString()))),
-				FTBQuestsTasks.FORGE_ENERGY = new TaskType(ForgeEnergyTask::new).setRegistryName("forge_energy").setIcon(Icon.getIcon(ForgeEnergyTask.EMPTY_TEXTURE.toString()).combineWith(Icon.getIcon(ForgeEnergyTask.FULL_TEXTURE.toString()))),
-				FTBQuestsTasks.CUSTOM = new TaskType(CustomTask::new).setRegistryName("custom").setIcon(GuiIcons.COLOR_HSB),
-				FTBQuestsTasks.XP = new TaskType(XPTask::new).setRegistryName("xp").setIcon(Icon.getIcon("minecraft:items/experience_bottle")),
-				FTBQuestsTasks.DIMENSION = new TaskType(DimensionTask::new).setRegistryName("dimension").setIcon(Icon.getIcon("minecraft:blocks/portal")),
-				FTBQuestsTasks.STAT = new TaskType(StatTask::new).setRegistryName("stat").setIcon(Icon.getIcon("minecraft:items/iron_sword")),
-				FTBQuestsTasks.KILL = new TaskType(KillTask::new).setRegistryName("kill").setIcon(Icon.getIcon("minecraft:items/diamond_sword")),
-				FTBQuestsTasks.LOCATION = new TaskType(LocationTask::new).setRegistryName("location").setIcon(Icon.getIcon("minecraft:items/compass_00")),
-				FTBQuestsTasks.CHECKMARK = new TaskType(CheckmarkTask::new).setRegistryName("checkmark").setIcon(GuiIcons.ACCEPT_GRAY),
-				FTBQuestsTasks.ADVANCEMENT = new TaskType(AdvancementTask::new).setRegistryName("advancement").setIcon(Icon.getIcon("minecraft:items/wheat")),
-				FTBQuestsTasks.OBSERVATION = new TaskType(ObservationTask::new).setRegistryName("observation").setIcon(GuiIcons.ART),
-				FTBQuestsTasks.INTERACTION = new TaskType(InteractionTask::new).setRegistryName("interaction").setIcon(GuiIcons.BELL),
-				FTBQuestsTasks.BIOME = new TaskType(BiomeTask::new).setRegistryName("biome").setIcon(Icon.getIcon("minecraft:blocks/sapling_oak"))
+			FTBQuestsTasks.ITEM = new TaskType(ItemTask::new).setRegistryName("item").setIcon(Icon.getIcon("minecraft:items/diamond")),
+			FTBQuestsTasks.FLUID = new TaskType(FluidTask::new).setRegistryName("fluid").setIcon(Icon.getIcon(FluidRegistry.WATER.getStill(new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME)).toString()).combineWith(Icon.getIcon(FluidTask.TANK_TEXTURE.toString()))),
+			FTBQuestsTasks.FORGE_ENERGY = new TaskType(ForgeEnergyTask::new).setRegistryName("forge_energy").setIcon(Icon.getIcon(ForgeEnergyTask.EMPTY_TEXTURE.toString()).combineWith(Icon.getIcon(ForgeEnergyTask.FULL_TEXTURE.toString()))),
+			FTBQuestsTasks.CUSTOM = new TaskType(CustomTask::new).setRegistryName("custom").setIcon(GuiIcons.COLOR_HSB),
+			FTBQuestsTasks.XP = new TaskType(XPTask::new).setRegistryName("xp").setIcon(Icon.getIcon("minecraft:items/experience_bottle")),
+			FTBQuestsTasks.DIMENSION = new TaskType(DimensionTask::new).setRegistryName("dimension").setIcon(Icon.getIcon("minecraft:blocks/portal")),
+			FTBQuestsTasks.STAT = new TaskType(StatTask::new).setRegistryName("stat").setIcon(Icon.getIcon("minecraft:items/iron_sword")),
+			FTBQuestsTasks.KILL = new TaskType(KillTask::new).setRegistryName("kill").setIcon(Icon.getIcon("minecraft:items/diamond_sword")),
+			FTBQuestsTasks.LOCATION = new TaskType(LocationTask::new).setRegistryName("location").setIcon(Icon.getIcon("minecraft:items/compass_00")),
+			FTBQuestsTasks.CHECKMARK = new TaskType(CheckmarkTask::new).setRegistryName("checkmark").setIcon(GuiIcons.ACCEPT_GRAY),
+			FTBQuestsTasks.ADVANCEMENT = new TaskType(AdvancementTask::new).setRegistryName("advancement").setIcon(Icon.getIcon("minecraft:items/wheat")),
+			FTBQuestsTasks.OBSERVATION = new TaskType(ObservationTask::new).setRegistryName("observation").setIcon(GuiIcons.ART),
+			FTBQuestsTasks.INTERACTION = new TaskType(InteractionTask::new).setRegistryName("interaction").setIcon(GuiIcons.BELL),
+			FTBQuestsTasks.BIOME = new TaskType(BiomeTask::new).setRegistryName("biome").setIcon(Icon.getIcon("minecraft:blocks/sapling_oak"))
 		);
 
 		FTBQuests.PROXY.setTaskGuiProviders();
@@ -206,16 +206,16 @@ public class FTBQuestsEventHandler
 	public static void registerRewards(RegistryEvent.Register<RewardType> event)
 	{
 		event.getRegistry().registerAll(
-				FTBQuestsRewards.ITEM = new RewardType(ItemReward::new).setRegistryName("item").setIcon(Icon.getIcon("minecraft:items/diamond")),
-				FTBQuestsRewards.CHOICE = new RewardType(ChoiceReward::new).setRegistryName("choice").setIcon(GuiIcons.COLOR_RGB).setExcludeFromListRewards(true),
-				FTBQuestsRewards.RANDOM = new RewardType(RandomReward::new).setRegistryName("random").setIcon(GuiIcons.DICE).setExcludeFromListRewards(true),
-				FTBQuestsRewards.LOOT = new RewardType(LootReward::new).setRegistryName("loot").setIcon(GuiIcons.MONEY_BAG).setExcludeFromListRewards(true),
-				FTBQuestsRewards.COMMAND = new RewardType(CommandReward::new).setRegistryName("command").setIcon(Icon.getIcon("minecraft:blocks/command_block_back")),
-				FTBQuestsRewards.CUSTOM = new RewardType(CustomReward::new).setRegistryName("custom").setIcon(GuiIcons.COLOR_HSB),
-				FTBQuestsRewards.XP = new RewardType(XPReward::new).setRegistryName("xp").setIcon(Icon.getIcon("minecraft:items/experience_bottle")),
-				FTBQuestsRewards.XP_LEVELS = new RewardType(XPLevelsReward::new).setRegistryName("xp_levels").setIcon(Icon.getIcon("minecraft:items/experience_bottle")),
-				FTBQuestsRewards.ADVANCEMENT = new RewardType(AdvancementReward::new).setRegistryName("advancement").setIcon(Icon.getIcon("minecraft:items/wheat")),
-				FTBQuestsRewards.TOAST = new RewardType(ToastReward::new).setRegistryName("toast").setIcon(Icon.getIcon("minecraft:items/sign"))
+			FTBQuestsRewards.ITEM = new RewardType(ItemReward::new).setRegistryName("item").setIcon(Icon.getIcon("minecraft:items/diamond")),
+			FTBQuestsRewards.CHOICE = new RewardType(ChoiceReward::new).setRegistryName("choice").setIcon(GuiIcons.COLOR_RGB).setExcludeFromListRewards(true),
+			FTBQuestsRewards.RANDOM = new RewardType(RandomReward::new).setRegistryName("random").setIcon(GuiIcons.DICE).setExcludeFromListRewards(true),
+			FTBQuestsRewards.LOOT = new RewardType(LootReward::new).setRegistryName("loot").setIcon(GuiIcons.MONEY_BAG).setExcludeFromListRewards(true),
+			FTBQuestsRewards.COMMAND = new RewardType(CommandReward::new).setRegistryName("command").setIcon(Icon.getIcon("minecraft:blocks/command_block_back")),
+			FTBQuestsRewards.CUSTOM = new RewardType(CustomReward::new).setRegistryName("custom").setIcon(GuiIcons.COLOR_HSB),
+			FTBQuestsRewards.XP = new RewardType(XPReward::new).setRegistryName("xp").setIcon(Icon.getIcon("minecraft:items/experience_bottle")),
+			FTBQuestsRewards.XP_LEVELS = new RewardType(XPLevelsReward::new).setRegistryName("xp_levels").setIcon(Icon.getIcon("minecraft:items/experience_bottle")),
+			FTBQuestsRewards.ADVANCEMENT = new RewardType(AdvancementReward::new).setRegistryName("advancement").setIcon(Icon.getIcon("minecraft:items/wheat")),
+			FTBQuestsRewards.TOAST = new RewardType(ToastReward::new).setRegistryName("toast").setIcon(Icon.getIcon("minecraft:items/sign"))
 		);
 
 		FTBQuests.PROXY.setRewardGuiProviders();

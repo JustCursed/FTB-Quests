@@ -12,6 +12,7 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamSavedEvent;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.NBTDataStorage;
+import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -148,9 +149,17 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data
 		}
 	}
 
+	public static void updateInMemory(ForgeTeam team) {
+		NBTTagCompound nbt = NBTUtils.readNBT(team.getDataFile("ftbquests"));
+		ServerQuestData data = get(team);
+
+		data.readData(nbt == null ? new NBTTagCompound() : nbt);
+	}
+
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(ForgePlayerLoggedInEvent event)
 	{
+		updateInMemory(event.getTeam());
 		ServerQuestData teamData = ServerQuestData.get(event.getTeam());
 		EntityPlayerMP player = event.getPlayer().getPlayer();
 
@@ -367,10 +376,21 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data
 		return false;
 	}
 
-	public void claimReward(EntityPlayerMP player, Reward reward, boolean notify)
-	{
-		if (setRewardClaimed(player.getUniqueID(), reward))
-		{
+	public void claimReward(EntityPlayerMP player, Reward reward, boolean notify) {
+		if (setRewardClaimed(player.getUniqueID(), reward)) {
+			ForgeTeam team = Universe.get().getTeam(player.getName());
+			NBTTagCompound nbt = new NBTTagCompound();
+			ServerQuestData data = get(team);
+
+			data.writeData(nbt);
+
+			File file = team.getDataFile("ftbquests");
+
+			if (nbt.isEmpty())
+				FileUtils.deleteSafe(file);
+			else
+				NBTUtils.writeNBTSafe(file, nbt);
+
 			reward.claim(player, notify);
 		}
 	}
