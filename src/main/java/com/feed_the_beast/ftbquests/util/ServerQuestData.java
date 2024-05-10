@@ -61,28 +61,15 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data
 	}
 
 	@SubscribeEvent
-	public static void registerTeamData(ForgeTeamDataEvent event)
-	{
+	public static void registerTeamData(ForgeTeamDataEvent event) {
 		event.register(new ServerQuestData(event.getTeam()));
 	}
 
 	@SubscribeEvent
-	public static void onTeamSaved(ForgeTeamSavedEvent event)
-	{
+	public static void onTeamSaved(ForgeTeamSavedEvent event) {
 		NBTTagCompound nbt = new NBTTagCompound();
 		ServerQuestData data = get(event.getTeam());
 		data.writeData(nbt);
-
-		File file = event.getTeam().getDataFile("ftbquests");
-
-		if (nbt.isEmpty())
-		{
-			FileUtils.deleteSafe(file);
-		}
-		else
-		{
-			NBTUtils.writeNBTSafe(file, nbt);
-		}
 	}
 
 	@SubscribeEvent
@@ -157,8 +144,7 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data
 	}
 
 	@SubscribeEvent
-	public static void onPlayerLoggedIn(ForgePlayerLoggedInEvent event)
-	{
+	public static void onPlayerLoggedIn(ForgePlayerLoggedInEvent event) {
 		updateInMemory(event.getTeam());
 		ServerQuestData teamData = ServerQuestData.get(event.getTeam());
 		EntityPlayerMP player = event.getPlayer().getPlayer();
@@ -168,8 +154,7 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data
 		m.team = teamData.getTeamUID();
 		m.teamData = new ArrayList<>();
 
-		for (ForgeTeam team : event.getUniverse().getTeams())
-		{
+		for (ForgeTeam team : event.getUniverse().getTeams()) {
 			ServerQuestData data = get(team);
 			MessageSyncQuests.TeamInst t = new MessageSyncQuests.TeamInst();
 			t.uid = team.getUID();
@@ -178,10 +163,8 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data
 
 			int size = 0;
 
-			for (TaskData taskData : data.taskData.values())
-			{
-				if (taskData.isStarted())
-				{
+			for (TaskData taskData : data.taskData.values()) {
+				if (taskData.isStarted()) {
 					size++;
 				}
 			}
@@ -190,10 +173,8 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data
 			t.taskValues = new long[size];
 			int i = 0;
 
-			for (TaskData taskData : data.taskData.values())
-			{
-				if (taskData.isStarted())
-				{
+			for (TaskData taskData : data.taskData.values()) {
+				if (taskData.isStarted()) {
 					t.taskKeys[i] = taskData.task.id;
 					t.taskValues[i] = taskData.progress;
 					i++;
@@ -202,10 +183,8 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data
 
 			size = 0;
 
-			for (Map.Entry<UUID, IntOpenHashSet> entry : data.claimedPlayerRewards.entrySet())
-			{
-				if (!entry.getValue().isEmpty())
-				{
+			for (Map.Entry<UUID, IntOpenHashSet> entry : data.claimedPlayerRewards.entrySet()) {
+				if (!entry.getValue().isEmpty()) {
 					size++;
 				}
 			}
@@ -214,10 +193,8 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data
 			t.playerRewardIDs = new int[size][];
 			i = 0;
 
-			for (Map.Entry<UUID, IntOpenHashSet> entry : data.claimedPlayerRewards.entrySet())
-			{
-				if (!entry.getValue().isEmpty())
-				{
+			for (Map.Entry<UUID, IntOpenHashSet> entry : data.claimedPlayerRewards.entrySet()) {
+				if (!entry.getValue().isEmpty()) {
 					t.playerRewardUUIDs[i] = entry.getKey();
 					t.playerRewardIDs[i] = entry.getValue().toIntArray();
 					i++;
@@ -234,8 +211,7 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data
 
 		int i = 0;
 
-		for (ForgePlayer p : event.getUniverse().getPlayers())
-		{
+		for (ForgePlayer p : event.getUniverse().getPlayers()) {
 			m.playerIDs[i] = p.getId();
 			m.playerTeams[i] = p.team.getUID();
 			i++;
@@ -246,10 +222,8 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data
 		m.sendTo(player);
 		event.getPlayer().getPlayer().inventoryContainer.addListener(new FTBQuestsInventoryListener(event.getPlayer().getPlayer()));
 
-		for (Chapter chapter : ServerQuestFile.INSTANCE.chapters)
-		{
-			for (Quest quest : chapter.quests)
-			{
+		for (Chapter chapter : ServerQuestFile.INSTANCE.chapters) {
+			for (Quest quest : chapter.quests) {
 				teamData.checkAutoCompletion(quest);
 			}
 		}
