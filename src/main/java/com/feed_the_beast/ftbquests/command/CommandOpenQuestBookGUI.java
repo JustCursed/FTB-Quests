@@ -17,4 +17,9 @@ public class CommandOpenQuestBookGUI extends CommandFTBQuestsBase {
             new MessageOpenQuestBook().sendTo((EntityPlayerMP) sender);
         }
     }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
 }
