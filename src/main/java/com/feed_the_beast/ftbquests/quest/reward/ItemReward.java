@@ -28,184 +28,157 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class ItemReward extends Reward
-{
-	public ItemStack item;
-	public int count;
-	public int randomBonus;
-	public boolean onlyOne;
+public class ItemReward extends Reward {
+    public ItemStack item;
+    public int count;
+    public int randomBonus;
+    public boolean onlyOne;
 
-	public ItemReward(Quest quest, ItemStack is)
-	{
-		super(quest);
-		item = is;
-		count = 1;
-		randomBonus = 0;
-		onlyOne = false;
-	}
+    public ItemReward(Quest quest, ItemStack is) {
+        super(quest);
+        item = is;
+        count = 1;
+        randomBonus = 0;
+        onlyOne = false;
+    }
 
-	public ItemReward(Quest quest)
-	{
-		this(quest, new ItemStack(Items.APPLE));
-	}
+    public ItemReward(Quest quest) {
+        this(quest, new ItemStack(Items.APPLE));
+    }
 
-	@Override
-	public RewardType getType()
-	{
-		return FTBQuestsRewards.ITEM;
-	}
+    @Override
+    public RewardType getType() {
+        return FTBQuestsRewards.ITEM;
+    }
 
-	@Override
-	public void writeData(NBTTagCompound nbt)
-	{
-		super.writeData(nbt);
-		nbt.setTag("item", ItemMissing.write(item, false));
+    @Override
+    public void writeData(NBTTagCompound nbt) {
+        super.writeData(nbt);
+        nbt.setTag("item", ItemMissing.write(item, false));
 
-		if (count > 1)
-		{
-			nbt.setInteger("count", count);
-		}
+        if (count > 1) {
+            nbt.setInteger("count", count);
+        }
 
-		if (randomBonus > 0)
-		{
-			nbt.setInteger("random_bonus", randomBonus);
-		}
+        if (randomBonus > 0) {
+            nbt.setInteger("random_bonus", randomBonus);
+        }
 
-		if (onlyOne)
-		{
-			nbt.setBoolean("only_one", true);
-		}
-	}
+        if (onlyOne) {
+            nbt.setBoolean("only_one", true);
+        }
+    }
 
-	@Override
-	public void readData(NBTTagCompound nbt)
-	{
-		super.readData(nbt);
-		item = ItemMissing.read(nbt.getTag("item"));
-		count = nbt.getInteger("count");
+    @Override
+    public void readData(NBTTagCompound nbt) {
+        super.readData(nbt);
+        item = ItemMissing.read(nbt.getTag("item"));
+        count = nbt.getInteger("count");
 
-		if (count == 0)
-		{
-			count = item.getCount();
-			item.setCount(1);
-		}
+        if (count == 0) {
+            count = item.getCount();
+            item.setCount(1);
+        }
 
-		randomBonus = nbt.getInteger("random_bonus");
-		onlyOne = nbt.getBoolean("only_one");
-	}
+        randomBonus = nbt.getInteger("random_bonus");
+        onlyOne = nbt.getBoolean("only_one");
+    }
 
-	@Override
-	public void writeNetData(DataOut data)
-	{
-		super.writeNetData(data);
-		data.writeItemStack(item);
-		data.writeVarInt(count);
-		data.writeVarInt(randomBonus);
-		data.writeBoolean(onlyOne);
-	}
+    @Override
+    public void writeNetData(DataOut data) {
+        super.writeNetData(data);
+        data.writeItemStack(item);
+        data.writeVarInt(count);
+        data.writeVarInt(randomBonus);
+        data.writeBoolean(onlyOne);
+    }
 
-	@Override
-	public void readNetData(DataIn data)
-	{
-		super.readNetData(data);
-		item = data.readItemStack();
-		count = data.readVarInt();
-		randomBonus = data.readVarInt();
-		onlyOne = data.readBoolean();
-	}
+    @Override
+    public void readNetData(DataIn data) {
+        super.readNetData(data);
+        item = data.readItemStack();
+        count = data.readVarInt();
+        randomBonus = data.readVarInt();
+        onlyOne = data.readBoolean();
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getConfig(ConfigGroup config)
-	{
-		super.getConfig(config);
-		config.add("item", new ConfigItemStack.SimpleStack(true, () -> item, v -> item = v), new ConfigItemStack(ItemStack.EMPTY)).setDisplayName(new TextComponentTranslation("ftbquests.reward.ftbquests.item"));
-		config.addInt("count", () -> count, v -> count = v, 1, 1, 8192);
-		config.addInt("random_bonus", () -> randomBonus, v -> randomBonus = v, 0, 0, 8192).setDisplayName(new TextComponentTranslation("ftbquests.reward.random_bonus"));
-		config.addBool("only_one", () -> onlyOne, v -> onlyOne = v, false);
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getConfig(ConfigGroup config) {
+        super.getConfig(config);
+        config.add("item", new ConfigItemStack.SimpleStack(true, () -> item, v -> item = v), new ConfigItemStack(ItemStack.EMPTY)).setDisplayName(new TextComponentTranslation("ftbquests.reward.ftbquests.item"));
+        config.addInt("count", () -> count, v -> count = v, 1, 1, 8192);
+        config.addInt("random_bonus", () -> randomBonus, v -> randomBonus = v, 0, 0, 8192).setDisplayName(new TextComponentTranslation("ftbquests.reward.random_bonus"));
+        config.addBool("only_one", () -> onlyOne, v -> onlyOne = v, false);
+    }
 
-	@Override
-	public void claim(EntityPlayerMP player, boolean notify)
-	{
-		if (onlyOne && player.inventory.hasItemStack(item))
-		{
-			return;
-		}
+    @Override
+    public void claim(EntityPlayerMP player, boolean notify) {
+        if (onlyOne && player.inventory.hasItemStack(item)) {
+            return;
+        }
 
-		int size = count + player.world.rand.nextInt(randomBonus + 1);
+        int size = count + player.world.rand.nextInt(randomBonus + 1);
 
-		while (size > 0)
-		{
-			int s = Math.min(size, item.getMaxStackSize());
-			ItemHandlerHelper.giveItemToPlayer(player, ItemHandlerHelper.copyStackWithSize(item, s));
-			size -= s;
-		}
+        while (size > 0) {
+            int s = Math.min(size, item.getMaxStackSize());
+            ItemHandlerHelper.giveItemToPlayer(player, ItemHandlerHelper.copyStackWithSize(item, s));
+            size -= s;
+        }
 
-		if (notify)
-		{
-			new MessageDisplayItemRewardToast(item, size).sendTo(player);
-		}
-	}
+        if (notify) {
+            new MessageDisplayItemRewardToast(item, size).sendTo(player);
+        }
+    }
 
-	@Override
-	public boolean automatedClaimPre(TileEntity tileEntity, List<ItemStack> items, Random random, UUID playerId, @Nullable EntityPlayerMP player)
-	{
-		int size = count + random.nextInt(randomBonus + 1);
+    @Override
+    public boolean automatedClaimPre(TileEntity tileEntity, List<ItemStack> items, Random random, UUID playerId, @Nullable EntityPlayerMP player) {
+        int size = count + random.nextInt(randomBonus + 1);
 
-		while (size > 0)
-		{
-			int s = Math.min(size, item.getMaxStackSize());
-			items.add(ItemHandlerHelper.copyStackWithSize(item, s));
-			size -= s;
-		}
+        while (size > 0) {
+            int s = Math.min(size, item.getMaxStackSize());
+            items.add(ItemHandlerHelper.copyStackWithSize(item, s));
+            size -= s;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public void automatedClaimPost(TileEntity tileEntity, UUID playerId, @Nullable EntityPlayerMP player)
-	{
-	}
+    @Override
+    public void automatedClaimPost(TileEntity tileEntity, UUID playerId, @Nullable EntityPlayerMP player) {
+    }
 
-	@Override
-	public Icon getAltIcon()
-	{
-		if (item.isEmpty())
-		{
-			return super.getAltIcon();
-		}
+    @Override
+    public Icon getAltIcon() {
+        if (item.isEmpty()) {
+            return super.getAltIcon();
+        }
 
-		return ItemIcon.getItemIcon(ItemHandlerHelper.copyStackWithSize(item, 1));
-	}
+        return ItemIcon.getItemIcon(ItemHandlerHelper.copyStackWithSize(item, 1));
+    }
 
-	@Override
-	public String getAltTitle()
-	{
-		return (item.getCount() > 1 ? (randomBonus > 0 ? (item.getCount() + "-" + (item.getCount() + randomBonus) + "x ") : (item.getCount() + "x ")) : "") + item.getDisplayName();
-	}
+    @Override
+    public String getAltTitle() {
+        return (item.getCount() > 1 ? (randomBonus > 0 ? (item.getCount() + "-" + (item.getCount() + randomBonus) + "x ") : (item.getCount() + "x ")) : "") + item.getDisplayName();
+    }
 
-	@Override
-	public boolean addTitleInMouseOverText()
-	{
-		return !getTitle().equals(getAltTitle());
-	}
+    @Override
+    public boolean addTitleInMouseOverText() {
+        return !getTitle().equals(getAltTitle());
+    }
 
-	@Nullable
-	@Override
-	public Object getIngredient()
-	{
-		return new WrappedIngredient(item).tooltip();
-	}
+    @Nullable
+    @Override
+    public Object getIngredient() {
+        return new WrappedIngredient(item).tooltip();
+    }
 
-	@Override
-	public String getButtonText()
-	{
-		if (randomBonus > 0)
-		{
-			return count + "-" + (count + randomBonus);
-		}
+    @Override
+    public String getButtonText() {
+        if (randomBonus > 0) {
+            return count + "-" + (count + randomBonus);
+        }
 
-		return Integer.toString(count);
-	}
+        return Integer.toString(count);
+    }
 }

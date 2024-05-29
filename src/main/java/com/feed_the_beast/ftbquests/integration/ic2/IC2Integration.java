@@ -12,20 +12,17 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 /**
  * @author LatvianModder
  */
-public class IC2Integration
-{
-	public static TaskType EU_TASK;
+public class IC2Integration {
+    public static TaskType EU_TASK;
 
-	public static void preInit()
-	{
-		MinecraftForge.EVENT_BUS.register(IC2Integration.class);
-		GameRegistry.registerTileEntity(TileTaskScreenCoreIC2.class, new ResourceLocation(FTBQuests.MOD_ID, "screen_core_ic2"));
-		GameRegistry.registerTileEntity(TileTaskScreenPartIC2.class, new ResourceLocation(FTBQuests.MOD_ID, "screen_part_ic2"));
-	}
+    public static void preInit() {
+        MinecraftForge.EVENT_BUS.register(IC2Integration.class);
+        GameRegistry.registerTileEntity(TileTaskScreenCoreIC2.class, new ResourceLocation(FTBQuests.MOD_ID, "screen_core_ic2"));
+        GameRegistry.registerTileEntity(TileTaskScreenPartIC2.class, new ResourceLocation(FTBQuests.MOD_ID, "screen_part_ic2"));
+    }
 
-	@SubscribeEvent
-	public static void registerTasks(RegistryEvent.Register<TaskType> event)
-	{
-		event.getRegistry().register(EU_TASK = new TaskType(IC2EnergyTask::new).setRegistryName("ic2_energy").setIcon(Icon.getIcon(IC2EnergyTask.FULL_TEXTURE.toString()).combineWith(Icon.getIcon(IC2EnergyTask.EMPTY_TEXTURE.toString()))));
-	}
+    @SubscribeEvent
+    public static void registerTasks(RegistryEvent.Register<TaskType> event) {
+        event.getRegistry().register(EU_TASK = new TaskType(IC2EnergyTask::new).setRegistryName("ic2_energy").setIcon(Icon.getIcon(IC2EnergyTask.FULL_TEXTURE.toString()).combineWith(Icon.getIcon(IC2EnergyTask.EMPTY_TEXTURE.toString()))));
+    }
 }

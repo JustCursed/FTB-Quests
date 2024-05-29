@@ -15,44 +15,34 @@ import net.minecraft.entity.player.EntityPlayerMP;
 /**
  * @author LatvianModder
  */
-public class MessageClaimAllRewards extends MessageToServer
-{
-	@Override
-	public NetworkWrapper getWrapper()
-	{
-		return FTBQuestsNetHandler.GENERAL;
-	}
+public class MessageClaimAllRewards extends MessageToServer {
+    @Override
+    public NetworkWrapper getWrapper() {
+        return FTBQuestsNetHandler.GENERAL;
+    }
 
-	@Override
-	public void writeData(DataOut data)
-	{
-	}
+    @Override
+    public void writeData(DataOut data) {
+    }
 
-	@Override
-	public void readData(DataIn data)
-	{
-	}
+    @Override
+    public void readData(DataIn data) {
+    }
 
-	@Override
-	public void onMessage(EntityPlayerMP player)
-	{
-		ServerQuestData teamData = ServerQuestData.get(Universe.get().getPlayer(player).team);
+    @Override
+    public void onMessage(EntityPlayerMP player) {
+        ServerQuestData teamData = ServerQuestData.get(Universe.get().getPlayer(player).team);
 
-		for (Chapter chapter : ServerQuestFile.INSTANCE.chapters)
-		{
-			for (Quest quest : chapter.quests)
-			{
-				if (quest.isComplete(teamData))
-				{
-					for (Reward reward : quest.rewards)
-					{
-						if (!reward.getExcludeFromClaimAll())
-						{
-							teamData.claimReward(player, reward, true);
-						}
-					}
-				}
-			}
-		}
-	}
+        for (Chapter chapter : ServerQuestFile.INSTANCE.chapters) {
+            for (Quest quest : chapter.quests) {
+                if (quest.isComplete(teamData)) {
+                    for (Reward reward : quest.rewards) {
+                        if (!reward.getExcludeFromClaimAll()) {
+                            teamData.claimReward(player, reward, true);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

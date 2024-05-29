@@ -13,56 +13,47 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class ClientQuestData extends QuestData
-{
-	private final short teamUID;
-	private final String teamID;
-	private final ITextComponent displayName;
+public class ClientQuestData extends QuestData {
+    private final short teamUID;
+    private final String teamID;
+    private final ITextComponent displayName;
 
-	public ClientQuestData(short uid, String id, ITextComponent n)
-	{
-		teamUID = uid;
-		teamID = id;
-		displayName = n;
-	}
+    public ClientQuestData(short uid, String id, ITextComponent n) {
+        teamUID = uid;
+        teamID = id;
+        displayName = n;
+    }
 
-	@Override
-	public short getTeamUID()
-	{
-		return teamUID;
-	}
+    @Override
+    public short getTeamUID() {
+        return teamUID;
+    }
 
-	@Override
-	public String getTeamID()
-	{
-		return teamID;
-	}
+    @Override
+    public String getTeamID() {
+        return teamID;
+    }
 
-	@Override
-	public ITextComponent getDisplayName()
-	{
-		return displayName;
-	}
+    @Override
+    public ITextComponent getDisplayName() {
+        return displayName;
+    }
 
-	@Override
-	public QuestFile getFile()
-	{
-		return ClientQuestFile.INSTANCE;
-	}
+    @Override
+    public QuestFile getFile() {
+        return ClientQuestFile.INSTANCE;
+    }
 
-	@Override
-	public List<EntityPlayer> getOnlineMembers()
-	{
-		if (this == ClientQuestFile.INSTANCE.self)
-		{
-			return Collections.singletonList(Minecraft.getMinecraft().player);
-		}
+    @Override
+    public List<EntityPlayer> getOnlineMembers() {
+        if (this == ClientQuestFile.INSTANCE.self) {
+            return Collections.singletonList(Minecraft.getMinecraft().player);
+        }
 
-		return Collections.emptyList();
-	}
+        return Collections.emptyList();
+    }
 
-	public boolean isRewardClaimedSelf(Reward reward)
-	{
-		return isRewardClaimed(Minecraft.getMinecraft().player.getUniqueID(), reward);
-	}
+    public boolean isRewardClaimedSelf(Reward reward) {
+        return isRewardClaimed(Minecraft.getMinecraft().player.getUniqueID(), reward);
+    }
 }

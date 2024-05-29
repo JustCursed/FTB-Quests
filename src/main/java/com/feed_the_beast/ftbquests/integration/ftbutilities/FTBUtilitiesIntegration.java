@@ -16,37 +16,33 @@ import java.util.Comparator;
 /**
  * @author LatvianModder
  */
-public class FTBUtilitiesIntegration
-{
-	public static void preInit()
-	{
-		MinecraftForge.EVENT_BUS.register(FTBUtilitiesIntegration.class);
-	}
+public class FTBUtilitiesIntegration {
+    public static void preInit() {
+        MinecraftForge.EVENT_BUS.register(FTBUtilitiesIntegration.class);
+    }
 
-	@SubscribeEvent
-	public static void registerLeaderboards(LeaderboardRegistryEvent event)
-	{
-		event.register(new Leaderboard(
-				new ResourceLocation(FTBQuests.MOD_ID, "progress"),
-				new TextComponentTranslation("ftbquests.leaderboard_progress"),
-				player -> {
-					QuestData data = ServerQuestFile.INSTANCE.getData(player.team.getUID());
+    @SubscribeEvent
+    public static void registerLeaderboards(LeaderboardRegistryEvent event) {
+        event.register(new Leaderboard(
+                new ResourceLocation(FTBQuests.MOD_ID, "progress"),
+                new TextComponentTranslation("ftbquests.leaderboard_progress"),
+                player -> {
+                    QuestData data = ServerQuestFile.INSTANCE.getData(player.team.getUID());
 
-					if (data == null)
-					{
-						return new TextComponentString("0%");
-					}
+                    if (data == null) {
+                        return new TextComponentString("0%");
+                    }
 
-					return new TextComponentString(ServerQuestFile.INSTANCE.getRelativeProgress(data) + "%");
-				},
-				Comparator.comparingLong(player -> {
-					QuestData data = ServerQuestFile.INSTANCE.getData(player.team.getUID());
-					return data == null ? 0L : -ServerQuestFile.INSTANCE.getRelativeProgress(data);
-				}),
-				player -> {
-					QuestData data = ServerQuestFile.INSTANCE.getData(player.team.getUID());
-					return data != null && ServerQuestFile.INSTANCE.isStarted(data);
-				})
-		);
-	}
+                    return new TextComponentString(ServerQuestFile.INSTANCE.getRelativeProgress(data) + "%");
+                },
+                Comparator.comparingLong(player -> {
+                    QuestData data = ServerQuestFile.INSTANCE.getData(player.team.getUID());
+                    return data == null ? 0L : -ServerQuestFile.INSTANCE.getRelativeProgress(data);
+                }),
+                player -> {
+                    QuestData data = ServerQuestFile.INSTANCE.getData(player.team.getUID());
+                    return data != null && ServerQuestFile.INSTANCE.isStarted(data);
+                })
+        );
+    }
 }

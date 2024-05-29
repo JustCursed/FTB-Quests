@@ -7,17 +7,14 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
  * @author LatvianModder
  */
 @Cancelable
-public class CustomTaskEvent extends FTBQuestsEvent
-{
-	private final CustomTask task;
+public class CustomTaskEvent extends FTBQuestsEvent {
+    private final CustomTask task;
 
-	public CustomTaskEvent(CustomTask t)
-	{
-		task = t;
-	}
+    public CustomTaskEvent(CustomTask t) {
+        task = t;
+    }
 
-	public CustomTask getTask()
-	{
-		return task;
-	}
+    public CustomTask getTask() {
+        return task;
+    }
 }

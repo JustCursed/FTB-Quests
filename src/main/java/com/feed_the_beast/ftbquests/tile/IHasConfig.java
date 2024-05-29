@@ -6,7 +6,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 /**
  * @author LatvianModder
  */
-public interface IHasConfig extends IConfigCallback
-{
-	void editConfig(EntityPlayerMP player, boolean editor);
+public interface IHasConfig extends IConfigCallback {
+    void editConfig(EntityPlayerMP player, boolean editor);
 }

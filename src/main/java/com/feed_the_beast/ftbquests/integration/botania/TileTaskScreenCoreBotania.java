@@ -7,41 +7,34 @@ import vazkii.botania.api.mana.IManaReceiver;
 /**
  * @author LatvianModder
  */
-public class TileTaskScreenCoreBotania extends TileTaskScreenCore implements IManaReceiver
-{
-	@Override
-	public boolean isFull()
-	{
-		TaskData d = getTaskData();
+public class TileTaskScreenCoreBotania extends TileTaskScreenCore implements IManaReceiver {
+    @Override
+    public boolean isFull() {
+        TaskData d = getTaskData();
 
-		if (d instanceof IManaReceiver && d.task.quest.canStartTasks(d.data))
-		{
-			return ((IManaReceiver) d).isFull();
-		}
+        if (d instanceof IManaReceiver && d.task.quest.canStartTasks(d.data)) {
+            return ((IManaReceiver) d).isFull();
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public void recieveMana(int mana)
-	{
-		TaskData d = getTaskData();
+    @Override
+    public void recieveMana(int mana) {
+        TaskData d = getTaskData();
 
-		if (d instanceof IManaReceiver && d.task.quest.canStartTasks(d.data))
-		{
-			((IManaReceiver) d).recieveMana(mana);
-		}
-	}
+        if (d instanceof IManaReceiver && d.task.quest.canStartTasks(d.data)) {
+            ((IManaReceiver) d).recieveMana(mana);
+        }
+    }
 
-	@Override
-	public boolean canRecieveManaFromBursts()
-	{
-		return !isFull();
-	}
+    @Override
+    public boolean canRecieveManaFromBursts() {
+        return !isFull();
+    }
 
-	@Override
-	public int getCurrentMana()
-	{
-		return 0;
-	}
+    @Override
+    public int getCurrentMana() {
+        return 0;
+    }
 }

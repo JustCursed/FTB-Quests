@@ -5,17 +5,14 @@ import com.feed_the_beast.ftbquests.quest.task.TaskData;
 /**
  * @author LatvianModder
  */
-public class TaskStartedEvent extends FTBQuestsEvent
-{
-	private final TaskData data;
+public class TaskStartedEvent extends FTBQuestsEvent {
+    private final TaskData data;
 
-	public TaskStartedEvent(TaskData d)
-	{
-		data = d;
-	}
+    public TaskStartedEvent(TaskData d) {
+        data = d;
+    }
 
-	public TaskData getTaskData()
-	{
-		return data;
-	}
+    public TaskData getTaskData() {
+        return data;
+    }
 }

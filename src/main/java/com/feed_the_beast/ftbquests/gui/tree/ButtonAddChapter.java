@@ -15,28 +15,24 @@ import java.util.regex.Pattern;
 /**
  * @author LatvianModder
  */
-public class ButtonAddChapter extends ButtonTab
-{
-	public ButtonAddChapter(Panel panel)
-	{
-		super(panel, I18n.format("gui.add"), ThemeProperties.ADD_ICON.get());
-	}
+public class ButtonAddChapter extends ButtonTab {
+    public ButtonAddChapter(Panel panel) {
+        super(panel, I18n.format("gui.add"), ThemeProperties.ADD_ICON.get());
+    }
 
-	@Override
-	public void onClicked(MouseButton button)
-	{
-		GuiHelper.playClickSound();
+    @Override
+    public void onClicked(MouseButton button) {
+        GuiHelper.playClickSound();
 
-		new GuiEditConfigValue("title", new ConfigString("", Pattern.compile("^.+$")), (value, set) ->
-		{
-			treeGui.openGui();
+        new GuiEditConfigValue("title", new ConfigString("", Pattern.compile("^.+$")), (value, set) ->
+        {
+            treeGui.openGui();
 
-			if (set)
-			{
-				Chapter chapter = new Chapter(treeGui.file);
-				chapter.title = value.getString();
-				new MessageCreateObject(chapter, null).sendToServer();
-			}
-		}).openGui();
-	}
+            if (set) {
+                Chapter chapter = new Chapter(treeGui.file);
+                chapter.title = value.getString();
+                new MessageCreateObject(chapter, null).sendToServer();
+            }
+        }).openGui();
+    }
 }

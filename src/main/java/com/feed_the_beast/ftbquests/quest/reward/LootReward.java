@@ -17,91 +17,74 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class LootReward extends RandomReward
-{
-	public LootReward(Quest quest)
-	{
-		super(quest);
-	}
+public class LootReward extends RandomReward {
+    public LootReward(Quest quest) {
+        super(quest);
+    }
 
-	@Override
-	public RewardType getType()
-	{
-		return FTBQuestsRewards.LOOT;
-	}
+    @Override
+    public RewardType getType() {
+        return FTBQuestsRewards.LOOT;
+    }
 
-	@Override
-	public void claim(EntityPlayerMP player, boolean notify)
-	{
-		if (getTable() == null)
-		{
-			return;
-		}
+    @Override
+    public void claim(EntityPlayerMP player, boolean notify) {
+        if (getTable() == null) {
+            return;
+        }
 
-		int totalWeight = getTable().getTotalWeight(true);
+        int totalWeight = getTable().getTotalWeight(true);
 
-		if (totalWeight <= 0)
-		{
-			return;
-		}
+        if (totalWeight <= 0) {
+            return;
+        }
 
-		for (int i = 0; i < getTable().lootSize; i++)
-		{
-			int number = player.world.rand.nextInt(totalWeight) + 1;
-			int currentWeight = getTable().emptyWeight;
+        for (int i = 0; i < getTable().lootSize; i++) {
+            int number = player.world.rand.nextInt(totalWeight) + 1;
+            int currentWeight = getTable().emptyWeight;
 
-			if (currentWeight < number)
-			{
-				for (WeightedReward reward : getTable().rewards)
-				{
-					currentWeight += reward.weight;
+            if (currentWeight < number) {
+                for (WeightedReward reward : getTable().rewards) {
+                    currentWeight += reward.weight;
 
-					if (currentWeight >= number)
-					{
-						reward.reward.claim(player, notify);
-						break;
-					}
-				}
-			}
-		}
-	}
+                    if (currentWeight >= number) {
+                        reward.reward.claim(player, notify);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
-	@Override
-	public boolean automatedClaimPre(TileEntity tileEntity, List<ItemStack> items, Random random, UUID playerId, @Nullable EntityPlayerMP player)
-	{
-		return false;
-	}
+    @Override
+    public boolean automatedClaimPre(TileEntity tileEntity, List<ItemStack> items, Random random, UUID playerId, @Nullable EntityPlayerMP player) {
+        return false;
+    }
 
-	@Override
-	public void automatedClaimPost(TileEntity tileEntity, UUID playerId, @Nullable EntityPlayerMP player)
-	{
-	}
+    @Override
+    public void automatedClaimPost(TileEntity tileEntity, UUID playerId, @Nullable EntityPlayerMP player) {
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addMouseOverText(List<String> list)
-	{
-		if (getTable() != null)
-		{
-			getTable().addMouseOverText(list, true, true);
-		}
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addMouseOverText(List<String> list) {
+        if (getTable() != null) {
+            getTable().addMouseOverText(list, true, true);
+        }
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void onButtonClicked(boolean canClick)
-	{
-		if (canClick)
-		{
-			new GuiRewardNotifications().openGui();
-		}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onButtonClicked(boolean canClick) {
+        if (canClick) {
+            new GuiRewardNotifications().openGui();
+        }
 
-		super.onButtonClicked(canClick);
-	}
+        super.onButtonClicked(canClick);
+    }
 
-	@Override
-	public boolean getExcludeFromClaimAll()
-	{
-		return true;
-	}
+    @Override
+    public boolean getExcludeFromClaimAll() {
+        return true;
+    }
 }

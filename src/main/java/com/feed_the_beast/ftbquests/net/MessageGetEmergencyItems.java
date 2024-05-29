@@ -10,22 +10,18 @@ import net.minecraftforge.items.ItemHandlerHelper;
 /**
  * @author LatvianModder
  */
-public class MessageGetEmergencyItems extends MessageToServer
-{
-	@Override
-	public NetworkWrapper getWrapper()
-	{
-		return FTBQuestsNetHandler.GENERAL;
-	}
+public class MessageGetEmergencyItems extends MessageToServer {
+    @Override
+    public NetworkWrapper getWrapper() {
+        return FTBQuestsNetHandler.GENERAL;
+    }
 
-	@Override
-	public void onMessage(EntityPlayerMP player)
-	{
-		//TODO: Verify on server side
+    @Override
+    public void onMessage(EntityPlayerMP player) {
+        //TODO: Verify on server side
 
-		for (ItemStack stack : ServerQuestFile.INSTANCE.emergencyItems)
-		{
-			ItemHandlerHelper.giveItemToPlayer(player, stack.copy());
-		}
-	}
+        for (ItemStack stack : ServerQuestFile.INSTANCE.emergencyItems) {
+            ItemHandlerHelper.giveItemToPlayer(player, stack.copy());
+        }
+    }
 }

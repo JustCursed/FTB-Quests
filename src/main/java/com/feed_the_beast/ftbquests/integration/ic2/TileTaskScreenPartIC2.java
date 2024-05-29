@@ -10,51 +10,42 @@ import net.minecraft.util.EnumFacing;
 /**
  * @author LatvianModder
  */
-public class TileTaskScreenPartIC2 extends TileTaskScreenPart implements IEnergySink
-{
-	@Override
-	public void onLoad()
-	{
-		if (world != null && !world.isRemote)
-		{
-			EnergyNet.instance.addTile(this);
-		}
-	}
+public class TileTaskScreenPartIC2 extends TileTaskScreenPart implements IEnergySink {
+    @Override
+    public void onLoad() {
+        if (world != null && !world.isRemote) {
+            EnergyNet.instance.addTile(this);
+        }
+    }
 
-	@Override
-	public void invalidate()
-	{
-		if (!isInvalid() && world != null && !world.isRemote)
-		{
-			EnergyNet.instance.removeTile(this);
-		}
+    @Override
+    public void invalidate() {
+        if (!isInvalid() && world != null && !world.isRemote) {
+            EnergyNet.instance.removeTile(this);
+        }
 
-		super.invalidate();
-	}
+        super.invalidate();
+    }
 
-	@Override
-	public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing facing)
-	{
-		return true;
-	}
+    @Override
+    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing facing) {
+        return true;
+    }
 
-	@Override
-	public double getDemandedEnergy()
-	{
-		TileTaskScreenCore screen = getScreen();
-		return screen instanceof TileTaskScreenCoreIC2 ? ((TileTaskScreenCoreIC2) screen).getDemandedEnergy() : 0D;
-	}
+    @Override
+    public double getDemandedEnergy() {
+        TileTaskScreenCore screen = getScreen();
+        return screen instanceof TileTaskScreenCoreIC2 ? ((TileTaskScreenCoreIC2) screen).getDemandedEnergy() : 0D;
+    }
 
-	@Override
-	public int getSinkTier()
-	{
-		return 4;
-	}
+    @Override
+    public int getSinkTier() {
+        return 4;
+    }
 
-	@Override
-	public double injectEnergy(EnumFacing facing, double amount, double voltage)
-	{
-		TileTaskScreenCore screen = getScreen();
-		return screen instanceof TileTaskScreenCoreIC2 ? ((TileTaskScreenCoreIC2) screen).injectEnergy(facing, amount, voltage) : amount;
-	}
+    @Override
+    public double injectEnergy(EnumFacing facing, double amount, double voltage) {
+        TileTaskScreenCore screen = getScreen();
+        return screen instanceof TileTaskScreenCoreIC2 ? ((TileTaskScreenCoreIC2) screen).injectEnergy(facing, amount, voltage) : amount;
+    }
 }

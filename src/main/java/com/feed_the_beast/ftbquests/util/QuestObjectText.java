@@ -8,26 +8,22 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public final class QuestObjectText
-{
-	public static final QuestObjectText NONE = new QuestObjectText(Collections.emptyMap());
+public final class QuestObjectText {
+    public static final QuestObjectText NONE = new QuestObjectText(Collections.emptyMap());
 
-	private final Map<String, String[]> text;
+    private final Map<String, String[]> text;
 
-	public QuestObjectText(Map<String, String[]> t)
-	{
-		text = t;
-	}
+    public QuestObjectText(Map<String, String[]> t) {
+        text = t;
+    }
 
-	public String[] getStringArray(String key)
-	{
-		String[] array = text.get(key);
-		return array == null ? StringUtils.EMPTY_ARRAY : array;
-	}
+    public String[] getStringArray(String key) {
+        String[] array = text.get(key);
+        return array == null ? StringUtils.EMPTY_ARRAY : array;
+    }
 
-	public String getString(String key)
-	{
-		String[] array = getStringArray(key);
-		return array.length == 0 ? "" : array[0];
-	}
+    public String getString(String key) {
+        String[] array = getStringArray(key);
+        return array.length == 0 ? "" : array[0];
+    }
 }

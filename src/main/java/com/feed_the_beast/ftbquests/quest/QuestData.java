@@ -14,141 +14,114 @@ import java.util.*;
 /**
  * @author LatvianModder
  */
-public abstract class QuestData
-{
-	public final Int2ObjectOpenHashMap<TaskData> taskData;
-	public final Map<UUID, IntOpenHashSet> claimedPlayerRewards;
-	public final IntOpenHashSet claimedTeamRewards;
-	public Int2ByteOpenHashMap progressCache;
-	public Int2ByteOpenHashMap areDependenciesCompleteCache;
+public abstract class QuestData {
+    public final Int2ObjectOpenHashMap<TaskData> taskData;
+    public final Map<UUID, IntOpenHashSet> claimedPlayerRewards;
+    public final IntOpenHashSet claimedTeamRewards;
+    public Int2ByteOpenHashMap progressCache;
+    public Int2ByteOpenHashMap areDependenciesCompleteCache;
 
-	protected QuestData()
-	{
-		taskData = new Int2ObjectOpenHashMap<>();
-		claimedPlayerRewards = new HashMap<>();
-		claimedTeamRewards = new IntOpenHashSet();
-		progressCache = null;
-		areDependenciesCompleteCache = null;
-	}
+    protected QuestData() {
+        taskData = new Int2ObjectOpenHashMap<>();
+        claimedPlayerRewards = new HashMap<>();
+        claimedTeamRewards = new IntOpenHashSet();
+        progressCache = null;
+        areDependenciesCompleteCache = null;
+    }
 
-	public abstract short getTeamUID();
+    public abstract short getTeamUID();
 
-	public abstract String getTeamID();
+    public abstract String getTeamID();
 
-	public abstract ITextComponent getDisplayName();
+    public abstract ITextComponent getDisplayName();
 
-	public abstract QuestFile getFile();
+    public abstract QuestFile getFile();
 
-	public abstract List<? extends EntityPlayer> getOnlineMembers();
+    public abstract List<? extends EntityPlayer> getOnlineMembers();
 
-	public void markDirty()
-	{
-	}
+    public void markDirty() {
+    }
 
-	public TaskData getTaskData(Task task)
-	{
-		TaskData data = taskData.get(task.id);
+    public TaskData getTaskData(Task task) {
+        TaskData data = taskData.get(task.id);
 
-		if (data == null)
-		{
-			return task.createData(this);
-		}
+        if (data == null) {
+            return task.createData(this);
+        }
 
-		return data;
-	}
+        return data;
+    }
 
-	@Override
-	public String toString()
-	{
-		return getTeamID();
-	}
+    @Override
+    public String toString() {
+        return getTeamID();
+    }
 
-	public void removeTask(Task task)
-	{
-		taskData.remove(task.id);
-	}
+    public void removeTask(Task task) {
+        taskData.remove(task.id);
+    }
 
-	public void createTaskData(Task task)
-	{
-		taskData.put(task.id, task.createData(this));
-	}
+    public void createTaskData(Task task) {
+        taskData.put(task.id, task.createData(this));
+    }
 
-	public boolean isRewardClaimed(UUID player, Reward reward)
-	{
-		if (reward.isTeamReward())
-		{
-			return claimedTeamRewards.contains(reward.id);
-		}
+    public boolean isRewardClaimed(UUID player, Reward reward) {
+        if (reward.isTeamReward()) {
+            return claimedTeamRewards.contains(reward.id);
+        }
 
-		IntOpenHashSet rewards = claimedPlayerRewards.get(player);
-		return rewards != null && rewards.contains(reward.id);
-	}
+        IntOpenHashSet rewards = claimedPlayerRewards.get(player);
+        return rewards != null && rewards.contains(reward.id);
+    }
 
-	public void unclaimRewards(Collection<Reward> rewards)
-	{
-		for (Reward reward : rewards)
-		{
-			if (reward.isTeamReward())
-			{
-				claimedTeamRewards.rem(reward.id);
-			}
-			else
-			{
-				Iterator<IntOpenHashSet> iterator = claimedPlayerRewards.values().iterator();
+    public void unclaimRewards(Collection<Reward> rewards) {
+        for (Reward reward : rewards) {
+            if (reward.isTeamReward()) {
+                claimedTeamRewards.rem(reward.id);
+            } else {
+                Iterator<IntOpenHashSet> iterator = claimedPlayerRewards.values().iterator();
 
-				while (iterator.hasNext())
-				{
-					IntOpenHashSet set = iterator.next();
+                while (iterator.hasNext()) {
+                    IntOpenHashSet set = iterator.next();
 
-					if (set != null && set.rem(reward.id))
-					{
-						if (set.isEmpty())
-						{
-							iterator.remove();
-						}
-					}
-				}
-			}
-		}
+                    if (set != null && set.rem(reward.id)) {
+                        if (set.isEmpty()) {
+                            iterator.remove();
+                        }
+                    }
+                }
+            }
+        }
 
-		markDirty();
-	}
+        markDirty();
+    }
 
-	public boolean setRewardClaimed(UUID player, Reward reward)
-	{
-		if (reward.isTeamReward())
-		{
-			if (claimedTeamRewards.add(reward.id))
-			{
-				reward.quest.checkRepeatableQuests(this, player);
-				return true;
-			}
-		}
-		else
-		{
-			IntOpenHashSet set = claimedPlayerRewards.get(player);
+    public boolean setRewardClaimed(UUID player, Reward reward) {
+        if (reward.isTeamReward()) {
+            if (claimedTeamRewards.add(reward.id)) {
+                reward.quest.checkRepeatableQuests(this, player);
+                return true;
+            }
+        } else {
+            IntOpenHashSet set = claimedPlayerRewards.get(player);
 
-			if (set == null)
-			{
-				set = new IntOpenHashSet();
-			}
+            if (set == null) {
+                set = new IntOpenHashSet();
+            }
 
-			if (set.add(reward.id))
-			{
-				if (set.size() == 1)
-				{
-					claimedPlayerRewards.put(player, set);
-				}
+            if (set.add(reward.id)) {
+                if (set.size() == 1) {
+                    claimedPlayerRewards.put(player, set);
+                }
 
-				reward.quest.checkRepeatableQuests(this, player);
-				return true;
-			}
-		}
+                reward.quest.checkRepeatableQuests(this, player);
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public void checkAutoCompletion(Quest quest)
-	{
-	}
+    public void checkAutoCompletion(Quest quest) {
+    }
 }

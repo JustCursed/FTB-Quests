@@ -9,14 +9,11 @@ import java.util.function.Predicate;
 /**
  * @author LatvianModder
  */
-public class QuestFileCacheReloader implements ISelectiveResourceReloadListener
-{
-	@Override
-	public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate)
-	{
-		if (ClientQuestFile.exists())
-		{
-			ClientQuestFile.INSTANCE.clearCachedData();
-		}
-	}
+public class QuestFileCacheReloader implements ISelectiveResourceReloadListener {
+    @Override
+    public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate) {
+        if (ClientQuestFile.exists()) {
+            ClientQuestFile.INSTANCE.clearCachedData();
+        }
+    }
 }

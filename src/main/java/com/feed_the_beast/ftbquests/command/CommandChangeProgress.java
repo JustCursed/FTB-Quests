@@ -24,73 +24,57 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class CommandChangeProgress extends CommandFTBQuestsBase
-{
-	@Override
-	public String getName()
-	{
-		return "change_progress";
-	}
+public class CommandChangeProgress extends CommandFTBQuestsBase {
+    @Override
+    public String getName() {
+        return "change_progress";
+    }
 
-	@Override
-	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-	{
-		if (args.length == 1)
-		{
-			return getListOfStringsMatchingLastWord(args, ChangeProgress.NAME_MAP.values);
-		}
-		else if (args.length == 2)
-		{
-			return getListOfStringsMatchingLastWord(args, Universe.get().getTeams());
-		}
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+        if (args.length == 1) {
+            return getListOfStringsMatchingLastWord(args, ChangeProgress.NAME_MAP.values);
+        } else if (args.length == 2) {
+            return getListOfStringsMatchingLastWord(args, Universe.get().getTeams());
+        }
 
-		return super.getTabCompletions(server, sender, args, pos);
-	}
+        return super.getTabCompletions(server, sender, args, pos);
+    }
 
-	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-	{
-		if (args.length < 1)
-		{
-			throw new WrongUsageException(getUsage(sender));
-		}
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        if (args.length < 1) {
+            throw new WrongUsageException(getUsage(sender));
+        }
 
-		ChangeProgress type = ChangeProgress.NAME_MAP.get(args[0]);
+        ChangeProgress type = ChangeProgress.NAME_MAP.get(args[0]);
 
-		Collection<ForgeTeam> teams;
+        Collection<ForgeTeam> teams;
 
-		if (args.length == 1)
-		{
-			teams = Collections.singleton(Universe.get().getPlayer(getCommandSenderAsPlayer(sender)).team);
-		}
-		else if (args[1].equals("*"))
-		{
-			teams = Universe.get().getTeams();
-		}
-		else
-		{
-			ForgeTeam team = Universe.get().getTeam(args[1]);
+        if (args.length == 1) {
+            teams = Collections.singleton(Universe.get().getPlayer(getCommandSenderAsPlayer(sender)).team);
+        } else if (args[1].equals("*")) {
+            teams = Universe.get().getTeams();
+        } else {
+            ForgeTeam team = Universe.get().getTeam(args[1]);
 
-			if (!team.isValid())
-			{
-				throw new CommandException("ftblib.lang.team.error.not_found", args[1]);
-			}
+            if (!team.isValid()) {
+                throw new CommandException("ftblib.lang.team.error.not_found", args[1]);
+            }
 
-			teams = Collections.singleton(team);
-		}
+            teams = Collections.singleton(team);
+        }
 
-		QuestObject object = args.length == 2 ? ServerQuestFile.INSTANCE : ServerQuestFile.INSTANCE.get(ServerQuestFile.INSTANCE.getID(args[2]));
+        QuestObject object = args.length == 2 ? ServerQuestFile.INSTANCE : ServerQuestFile.INSTANCE.get(ServerQuestFile.INSTANCE.getID(args[2]));
 
-		if (object == null)
-		{
-			throw CommandUtils.error(SidedUtils.lang(sender, FTBQuests.MOD_ID, "commands.ftbquests.change_progress.invalid_id", args[2]));
-		}
+        if (object == null) {
+            throw CommandUtils.error(SidedUtils.lang(sender, FTBQuests.MOD_ID, "commands.ftbquests.change_progress.invalid_id", args[2]));
+        }
 
-		for (ForgeTeam team : teams)
-		{
-			object.forceProgress(ServerQuestData.get(team), type, true);
-		}
+        for (ForgeTeam team : teams) {
+            object.forceProgress(ServerQuestData.get(team), type, true);
+        }
 
-		sender.sendMessage(new TextComponentTranslation("commands.ftbquests.change_progress.text"));
-	}
+        sender.sendMessage(new TextComponentTranslation("commands.ftbquests.change_progress.text"));
+    }
 }

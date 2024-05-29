@@ -7,32 +7,27 @@ import net.minecraft.client.resources.I18n;
 /**
  * @author LatvianModder
  */
-public class RewardToast extends SimpleToast
-{
-	private String text;
-	private Icon icon;
+public class RewardToast extends SimpleToast {
+    private final String text;
+    private final Icon icon;
 
-	public RewardToast(String t, Icon i)
-	{
-		text = t;
-		icon = i;
-	}
+    public RewardToast(String t, Icon i) {
+        text = t;
+        icon = i;
+    }
 
-	@Override
-	public String getTitle()
-	{
-		return I18n.format("ftbquests.reward.collected");
-	}
+    @Override
+    public String getTitle() {
+        return I18n.format("ftbquests.reward.collected");
+    }
 
-	@Override
-	public String getSubtitle()
-	{
-		return text;
-	}
+    @Override
+    public String getSubtitle() {
+        return text;
+    }
 
-	@Override
-	public Icon getIcon()
-	{
-		return icon;
-	}
+    @Override
+    public Icon getIcon() {
+        return icon;
+    }
 }

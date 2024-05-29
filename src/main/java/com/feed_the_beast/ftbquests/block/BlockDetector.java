@@ -38,156 +38,130 @@ import java.util.function.Supplier;
 /**
  * @author LatvianModder
  */
-public class BlockDetector extends Block
-{
-	public enum Variant implements IStringSerializable
-	{
-		REDSTONE("redstone", TileRedstoneDetector.class, TileRedstoneDetector::new),
-		PLAYER("player", TilePlayerDetector.class, TilePlayerDetector::new);
+public class BlockDetector extends Block {
+    public enum Variant implements IStringSerializable {
+        REDSTONE("redstone", TileRedstoneDetector.class, TileRedstoneDetector::new),
+        PLAYER("player", TilePlayerDetector.class, TilePlayerDetector::new);
 
-		public static final Variant[] VALUES = values();
+        public static final Variant[] VALUES = values();
 
-		private final String name;
-		public final Class<? extends TileBase> clazz;
-		private final Supplier<TileBase> tileEntitySupplier;
+        private final String name;
+        public final Class<? extends TileBase> clazz;
+        private final Supplier<TileBase> tileEntitySupplier;
 
-		Variant(String n, Class<? extends TileBase> c, Supplier<TileBase> t)
-		{
-			name = n;
-			clazz = c;
-			tileEntitySupplier = t;
-		}
+        Variant(String n, Class<? extends TileBase> c, Supplier<TileBase> t) {
+            name = n;
+            clazz = c;
+            tileEntitySupplier = t;
+        }
 
-		@Override
-		public String getName()
-		{
-			return name;
-		}
-	}
+        @Override
+        public String getName() {
+            return name;
+        }
+    }
 
-	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
+    public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 
-	public BlockDetector()
-	{
-		super(Material.IRON);
-		setHardness(1F);
-		setDefaultState(blockState.getBaseState().withProperty(VARIANT, Variant.REDSTONE));
-	}
+    public BlockDetector() {
+        super(Material.IRON);
+        setHardness(1F);
+        setDefaultState(blockState.getBaseState().withProperty(VARIANT, Variant.REDSTONE));
+    }
 
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, VARIANT);
-	}
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, VARIANT);
+    }
 
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return state.getValue(VARIANT).ordinal();
-	}
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(VARIANT).ordinal();
+    }
 
-	@Override
-	@Deprecated
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return getDefaultState().withProperty(VARIANT, Variant.VALUES[meta]);
-	}
+    @Override
+    @Deprecated
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(VARIANT, Variant.VALUES[meta]);
+    }
 
-	@Override
-	public boolean hasTileEntity(IBlockState state)
-	{
-		return true;
-	}
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
 
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
-	{
-		return state.getValue(VARIANT).tileEntitySupplier.get();
-	}
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return state.getValue(VARIANT).tileEntitySupplier.get();
+    }
 
-	@Override
-	public int damageDropped(IBlockState state)
-	{
-		return state.getValue(VARIANT).ordinal();
-	}
+    @Override
+    public int damageDropped(IBlockState state) {
+        return state.getValue(VARIANT).ordinal();
+    }
 
-	@Override
-	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items)
-	{
-		for (Variant variant : Variant.VALUES)
-		{
-			items.add(new ItemStack(this, 1, variant.ordinal()));
-		}
-	}
+    @Override
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
+        for (Variant variant : Variant.VALUES) {
+            items.add(new ItemStack(this, 1, variant.ordinal()));
+        }
+    }
 
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote && FTBQuests.canEdit(player))
-		{
-			TileEntity tileEntity = world.getTileEntity(pos);
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (!world.isRemote && FTBQuests.canEdit(player)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
 
-			if (tileEntity instanceof IHasConfig)
-			{
-				((IHasConfig) tileEntity).editConfig((EntityPlayerMP) player, true);
-			}
-		}
+            if (tileEntity instanceof IHasConfig) {
+                ((IHasConfig) tileEntity).editConfig((EntityPlayerMP) player, true);
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-	{
-		TileEntity tileEntity = world.getTileEntity(pos);
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (tileEntity instanceof TileBase)
-		{
-			((TileBase) tileEntity).readFromItem(stack);
+        if (tileEntity instanceof TileBase) {
+            ((TileBase) tileEntity).readFromItem(stack);
 
-			if (tileEntity instanceof TileWithTeam)
-			{
-				((TileWithTeam) tileEntity).setIDFromPlacer(placer);
-			}
-		}
-	}
+            if (tileEntity instanceof TileWithTeam) {
+                ((TileWithTeam) tileEntity).setIDFromPlacer(placer);
+            }
+        }
+    }
 
-	@Override
-	@Deprecated
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos)
-	{
-		if (state.getValue(VARIANT) == Variant.REDSTONE)
-		{
-			TileEntity tileEntity = world.getTileEntity(pos);
+    @Override
+    @Deprecated
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
+        if (state.getValue(VARIANT) == Variant.REDSTONE) {
+            TileEntity tileEntity = world.getTileEntity(pos);
 
-			if (tileEntity instanceof TileRedstoneDetector)
-			{
-				((TileRedstoneDetector) tileEntity).checkRedstone();
-			}
-		}
-	}
+            if (tileEntity instanceof TileRedstoneDetector) {
+                ((TileRedstoneDetector) tileEntity).checkRedstone();
+            }
+        }
+    }
 
-	@Override
-	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side)
-	{
-		return state.getValue(VARIANT) == Variant.REDSTONE;
-	}
+    @Override
+    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side) {
+        return state.getValue(VARIANT) == Variant.REDSTONE;
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
-	{
-		if (world == null || !ClientQuestFile.exists())
-		{
-			return;
-		}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        if (world == null || !ClientQuestFile.exists()) {
+            return;
+        }
 
-		NBTTagCompound nbt = stack.getTagCompound();
-		QuestObject object = nbt == null ? null : ClientQuestFile.INSTANCE.get(nbt.getInteger("object"));
+        NBTTagCompound nbt = stack.getTagCompound();
+        QuestObject object = nbt == null ? null : ClientQuestFile.INSTANCE.get(nbt.getInteger("object"));
 
-		if (object != null)
-		{
-			tooltip.add(object.getYellowDisplayName());
-		}
-	}
+        if (object != null) {
+            tooltip.add(object.getYellowDisplayName());
+        }
+    }
 }

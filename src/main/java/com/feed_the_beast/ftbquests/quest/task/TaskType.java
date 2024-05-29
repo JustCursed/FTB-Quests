@@ -24,143 +24,118 @@ import java.util.function.Consumer;
 /**
  * @author LatvianModder
  */
-public final class TaskType extends IForgeRegistryEntry.Impl<TaskType>
-{
-	private static ForgeRegistry<TaskType> REGISTRY;
+public final class TaskType extends IForgeRegistryEntry.Impl<TaskType> {
+    private static ForgeRegistry<TaskType> REGISTRY;
 
-	public static void createRegistry()
-	{
-		if (REGISTRY == null)
-		{
-			ResourceLocation registryName = new ResourceLocation(FTBQuests.MOD_ID, "tasks");
-			REGISTRY = (ForgeRegistry<TaskType>) new RegistryBuilder<TaskType>().setType(TaskType.class).setName(registryName).create();
-			MinecraftForge.EVENT_BUS.post(new RegistryEvent.Register<>(registryName, REGISTRY));
-		}
-	}
+    public static void createRegistry() {
+        if (REGISTRY == null) {
+            ResourceLocation registryName = new ResourceLocation(FTBQuests.MOD_ID, "tasks");
+            REGISTRY = (ForgeRegistry<TaskType>) new RegistryBuilder<TaskType>().setType(TaskType.class).setName(registryName).create();
+            MinecraftForge.EVENT_BUS.post(new RegistryEvent.Register<>(registryName, REGISTRY));
+        }
+    }
 
-	public static ForgeRegistry<TaskType> getRegistry()
-	{
-		return REGISTRY;
-	}
+    public static ForgeRegistry<TaskType> getRegistry() {
+        return REGISTRY;
+    }
 
-	@Nullable
-	public static Task createTask(Quest quest, String id)
-	{
-		if (id.isEmpty())
-		{
-			id = FTBQuests.MOD_ID + ":item";
-		}
-		else if (id.indexOf(':') == -1)
-		{
-			id = FTBQuests.MOD_ID + ':' + id;
-		}
+    @Nullable
+    public static Task createTask(Quest quest, String id) {
+        if (id.isEmpty()) {
+            id = FTBQuests.MOD_ID + ":item";
+        } else if (id.indexOf(':') == -1) {
+            id = FTBQuests.MOD_ID + ':' + id;
+        }
 
-		TaskType type = REGISTRY.getValue(new ResourceLocation(id));
+        TaskType type = REGISTRY.getValue(new ResourceLocation(id));
 
-		if (type == null)
-		{
-			if (id.equals("ftbquests:ftb_money"))
-			{
-				return createTask(quest, "ftbmoney:money");
-			}
+        if (type == null) {
+            if (id.equals("ftbquests:ftb_money")) {
+                return createTask(quest, "ftbmoney:money");
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		return type.provider.create(quest);
-	}
+        return type.provider.create(quest);
+    }
 
-	@FunctionalInterface
-	public interface Provider
-	{
-		Task create(Quest quest);
-	}
+    @FunctionalInterface
+    public interface Provider {
+        Task create(Quest quest);
+    }
 
-	public interface GuiProvider
-	{
-		@SideOnly(Side.CLIENT)
-		void openCreationGui(IOpenableGui gui, Quest quest, Consumer<Task> callback);
-	}
+    public interface GuiProvider {
+        @SideOnly(Side.CLIENT)
+        void openCreationGui(IOpenableGui gui, Quest quest, Consumer<Task> callback);
+    }
 
-	public final Provider provider;
-	private String displayName;
-	private Icon icon;
-	private GuiProvider guiProvider;
+    public final Provider provider;
+    private String displayName;
+    private Icon icon;
+    private GuiProvider guiProvider;
 
-	public TaskType(Provider p)
-	{
-		provider = p;
-		displayName = null;
-		icon = GuiIcons.ACCEPT;
-		guiProvider = new GuiProvider()
-		{
-			@Override
-			@SideOnly(Side.CLIENT)
-			public void openCreationGui(IOpenableGui gui, Quest quest, Consumer<Task> callback)
-			{
-				Task task = provider.create(quest);
+    public TaskType(Provider p) {
+        provider = p;
+        displayName = null;
+        icon = GuiIcons.ACCEPT;
+        guiProvider = new GuiProvider() {
+            @Override
+            @SideOnly(Side.CLIENT)
+            public void openCreationGui(IOpenableGui gui, Quest quest, Consumer<Task> callback) {
+                Task task = provider.create(quest);
 
-				if (task instanceof ISingleLongValueTask)
-				{
-					new GuiEditConfigValue("value", ((ISingleLongValueTask) task).getDefaultValue(), (value, set) -> {
-						gui.openGui();
-						if (set)
-						{
-							((ISingleLongValueTask) task).setValue(value.getLong());
-							callback.accept(task);
-						}
-					}).openGui();
-					return;
-				}
+                if (task instanceof ISingleLongValueTask) {
+                    new GuiEditConfigValue("value", ((ISingleLongValueTask) task).getDefaultValue(), (value, set) -> {
+                        gui.openGui();
+                        if (set) {
+                            ((ISingleLongValueTask) task).setValue(value.getLong());
+                            callback.accept(task);
+                        }
+                    }).openGui();
+                    return;
+                }
 
-				ConfigGroup group = ConfigGroup.newGroup(FTBQuests.MOD_ID);
-				task.getConfig(task.createSubGroup(group));
-				new GuiEditConfig(group, (g1, sender) -> callback.accept(task)).openGui();
-			}
-		};
-	}
+                ConfigGroup group = ConfigGroup.newGroup(FTBQuests.MOD_ID);
+                task.getConfig(task.createSubGroup(group));
+                new GuiEditConfig(group, (g1, sender) -> callback.accept(task)).openGui();
+            }
+        };
+    }
 
-	public String getTypeForNBT()
-	{
-		return getRegistryName().getNamespace().equals(FTBQuests.MOD_ID) ? getRegistryName().getPath() : getRegistryName().toString();
-	}
+    public String getTypeForNBT() {
+        return getRegistryName().getNamespace().equals(FTBQuests.MOD_ID) ? getRegistryName().getPath() : getRegistryName().toString();
+    }
 
-	public TaskType setDisplayName(String name)
-	{
-		displayName = name;
-		return this;
-	}
+    public TaskType setDisplayName(String name) {
+        displayName = name;
+        return this;
+    }
 
-	public String getDisplayName()
-	{
-		if (displayName != null)
-		{
-			return displayName;
-		}
+    public String getDisplayName() {
+        if (displayName != null) {
+            return displayName;
+        }
 
-		ResourceLocation id = getRegistryName();
-		return id == null ? "error" : I18n.format("ftbquests.task." + id.getNamespace() + '.' + id.getPath());
-	}
+        ResourceLocation id = getRegistryName();
+        return id == null ? "error" : I18n.format("ftbquests.task." + id.getNamespace() + '.' + id.getPath());
+    }
 
-	public TaskType setIcon(Icon i)
-	{
-		icon = i;
-		return this;
-	}
+    public TaskType setIcon(Icon i) {
+        icon = i;
+        return this;
+    }
 
-	public Icon getIcon()
-	{
-		return icon;
-	}
+    public Icon getIcon() {
+        return icon;
+    }
 
-	public TaskType setGuiProvider(GuiProvider p)
-	{
-		guiProvider = p;
-		return this;
-	}
+    public TaskType setGuiProvider(GuiProvider p) {
+        guiProvider = p;
+        return this;
+    }
 
-	public GuiProvider getGuiProvider()
-	{
-		return guiProvider;
-	}
+    public GuiProvider getGuiProvider() {
+        return guiProvider;
+    }
 }

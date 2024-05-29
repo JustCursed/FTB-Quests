@@ -13,60 +13,51 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class MessageUpdateTaskProgress extends MessageToClient
-{
-	private short team;
-	private int task;
-	private long progress;
+public class MessageUpdateTaskProgress extends MessageToClient {
+    private short team;
+    private int task;
+    private long progress;
 
-	public MessageUpdateTaskProgress()
-	{
-	}
+    public MessageUpdateTaskProgress() {
+    }
 
-	public MessageUpdateTaskProgress(short t, int k, long p)
-	{
-		team = t;
-		task = k;
-		progress = p;
-	}
+    public MessageUpdateTaskProgress(short t, int k, long p) {
+        team = t;
+        task = k;
+        progress = p;
+    }
 
-	@Override
-	public NetworkWrapper getWrapper()
-	{
-		return FTBQuestsNetHandler.GENERAL;
-	}
+    @Override
+    public NetworkWrapper getWrapper() {
+        return FTBQuestsNetHandler.GENERAL;
+    }
 
-	@Override
-	public void writeData(DataOut data)
-	{
-		data.writeShort(team);
-		data.writeInt(task);
-		data.writeVarLong(progress);
-	}
+    @Override
+    public void writeData(DataOut data) {
+        data.writeShort(team);
+        data.writeInt(task);
+        data.writeVarLong(progress);
+    }
 
-	@Override
-	public void readData(DataIn data)
-	{
-		team = data.readShort();
-		task = data.readInt();
-		progress = data.readVarLong();
-	}
+    @Override
+    public void readData(DataIn data) {
+        team = data.readShort();
+        task = data.readInt();
+        progress = data.readVarLong();
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void onMessage()
-	{
-		Task qtask = ClientQuestFile.INSTANCE.getTask(task);
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onMessage() {
+        Task qtask = ClientQuestFile.INSTANCE.getTask(task);
 
-		if (qtask != null)
-		{
-			ClientQuestData data = ClientQuestFile.INSTANCE.getData(team);
+        if (qtask != null) {
+            ClientQuestData data = ClientQuestFile.INSTANCE.getData(team);
 
-			if (data != null)
-			{
-				ClientQuestFile.INSTANCE.clearCachedProgress();
-				data.getTaskData(qtask).setProgress(progress);
-			}
-		}
-	}
+            if (data != null) {
+                ClientQuestFile.INSTANCE.clearCachedProgress();
+                data.getTaskData(qtask).setProgress(progress);
+            }
+        }
+    }
 }

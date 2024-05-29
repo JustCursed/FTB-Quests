@@ -26,206 +26,171 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class TileLootCrateOpener extends TileBase implements IItemHandler
-{
-	public List<ItemEntryWithCount> items = new ArrayList<>();
-	public UUID owner = null;
+public class TileLootCrateOpener extends TileBase implements IItemHandler {
+    public List<ItemEntryWithCount> items = new ArrayList<>();
+    public UUID owner = null;
 
-	@Override
-	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
-	{
-		if (!type.save)
-		{
-			return;
-		}
+    @Override
+    protected void writeData(NBTTagCompound nbt, EnumSaveType type) {
+        if (!type.save) {
+            return;
+        }
 
-		NBTTagList itemsTag = new NBTTagList();
+        NBTTagList itemsTag = new NBTTagList();
 
-		for (ItemEntryWithCount entry : items)
-		{
-			if (!entry.isEmpty())
-			{
-				itemsTag.appendTag(entry.serializeNBT());
-			}
-		}
+        for (ItemEntryWithCount entry : items) {
+            if (!entry.isEmpty()) {
+                itemsTag.appendTag(entry.serializeNBT());
+            }
+        }
 
-		nbt.setTag("items", itemsTag);
+        nbt.setTag("items", itemsTag);
 
-		if (owner != null && !type.item)
-		{
-			nbt.setString("owner", StringUtils.fromUUID(owner));
-		}
-	}
+        if (owner != null && !type.item) {
+            nbt.setString("owner", StringUtils.fromUUID(owner));
+        }
+    }
 
-	@Override
-	protected void readData(NBTTagCompound nbt, EnumSaveType type)
-	{
-		if (!type.save)
-		{
-			return;
-		}
+    @Override
+    protected void readData(NBTTagCompound nbt, EnumSaveType type) {
+        if (!type.save) {
+            return;
+        }
 
-		NBTTagList itemsTag = nbt.getTagList("items", Constants.NBT.TAG_COMPOUND);
+        NBTTagList itemsTag = nbt.getTagList("items", Constants.NBT.TAG_COMPOUND);
 
-		items = new ArrayList<>(itemsTag.tagCount());
+        items = new ArrayList<>(itemsTag.tagCount());
 
-		for (int i = 0; i < itemsTag.tagCount(); i++)
-		{
-			ItemEntryWithCount entry = new ItemEntryWithCount(itemsTag.get(i));
+        for (int i = 0; i < itemsTag.tagCount(); i++) {
+            ItemEntryWithCount entry = new ItemEntryWithCount(itemsTag.get(i));
 
-			if (!entry.isEmpty())
-			{
-				items.add(entry);
-			}
-		}
+            if (!entry.isEmpty()) {
+                items.add(entry);
+            }
+        }
 
-		owner = nbt.hasKey("owner") ? StringUtils.fromString(nbt.getString("owner")) : null;
-	}
+        owner = nbt.hasKey("owner") ? StringUtils.fromString(nbt.getString("owner")) : null;
+    }
 
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-	{
-		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-	}
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
 
-	@Override
-	@Nullable
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
-	{
-		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) this : super.getCapability(capability, facing);
-	}
+    @Override
+    @Nullable
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) this : super.getCapability(capability, facing);
+    }
 
-	@Override
-	public int getSlots()
-	{
-		return 2;
-	}
+    @Override
+    public int getSlots() {
+        return 2;
+    }
 
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		return slot == 0 || items.isEmpty() ? ItemStack.EMPTY : items.get(0).getStack(false);
-	}
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return slot == 0 || items.isEmpty() ? ItemStack.EMPTY : items.get(0).getStack(false);
+    }
 
-	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
-	{
-		if (slot != 0 || world == null || world.isRemote)
-		{
-			return stack;
-		}
+    @Override
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (slot != 0 || world == null || world.isRemote) {
+            return stack;
+        }
 
-		LootCrate crate = ItemLootCrate.getCrate(world, stack);
+        LootCrate crate = ItemLootCrate.getCrate(world, stack);
 
-		if (crate == null)
-		{
-			return stack;
-		}
+        if (crate == null) {
+            return stack;
+        }
 
-		int totalWeight = crate.table.getTotalWeight(true);
-		EntityPlayerMP player = owner == null ? null : world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
-		boolean update = false;
+        int totalWeight = crate.table.getTotalWeight(true);
+        EntityPlayerMP player = owner == null ? null : world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
+        boolean update = false;
 
-		if (totalWeight > 0)
-		{
-			for (int j = 0; j < stack.getCount() * crate.table.lootSize; j++)
-			{
-				int number = world.rand.nextInt(totalWeight) + 1;
-				int currentWeight = crate.table.emptyWeight;
+        if (totalWeight > 0) {
+            for (int j = 0; j < stack.getCount() * crate.table.lootSize; j++) {
+                int number = world.rand.nextInt(totalWeight) + 1;
+                int currentWeight = crate.table.emptyWeight;
 
-				if (currentWeight < number)
-				{
-					for (WeightedReward reward : crate.table.rewards)
-					{
-						currentWeight += reward.weight;
+                if (currentWeight < number) {
+                    for (WeightedReward reward : crate.table.rewards) {
+                        currentWeight += reward.weight;
 
-						if (currentWeight >= number)
-						{
-							List<ItemStack> stacks = new ArrayList<>();
+                        if (currentWeight >= number) {
+                            List<ItemStack> stacks = new ArrayList<>();
 
-							if (reward.reward.automatedClaimPre(this, stacks, world.rand, owner, player))
-							{
-								update = true;
+                            if (reward.reward.automatedClaimPre(this, stacks, world.rand, owner, player)) {
+                                update = true;
 
-								if (!simulate)
-								{
-									for (ItemStack stack1 : stacks)
-									{
-										ItemEntry entry = ItemEntry.get(stack1);
+                                if (!simulate) {
+                                    for (ItemStack stack1 : stacks) {
+                                        ItemEntry entry = ItemEntry.get(stack1);
 
-										for (ItemEntryWithCount entry1 : items)
-										{
-											if (entry1.entry.equalsEntry(entry))
-											{
-												entry1.count += stack1.getCount();
-												return ItemStack.EMPTY;
-											}
-										}
+                                        for (ItemEntryWithCount entry1 : items) {
+                                            if (entry1.entry.equalsEntry(entry)) {
+                                                entry1.count += stack1.getCount();
+                                                return ItemStack.EMPTY;
+                                            }
+                                        }
 
-										items.add(new ItemEntryWithCount(entry, stack1.getCount()));
-										reward.reward.automatedClaimPost(this, owner, player);
-									}
-								}
-							}
+                                        items.add(new ItemEntryWithCount(entry, stack1.getCount()));
+                                        reward.reward.automatedClaimPost(this, owner, player);
+                                    }
+                                }
+                            }
 
-							break;
-						}
-					}
-				}
-			}
-		}
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
-		if (update && !simulate)
-		{
-			markDirty();
-		}
+        if (update && !simulate) {
+            markDirty();
+        }
 
-		return ItemStack.EMPTY;
-	}
+        return ItemStack.EMPTY;
+    }
 
-	@Override
-	public boolean isItemValid(int slot, ItemStack stack)
-	{
-		return slot == 0 && ItemLootCrate.getCrate(world, stack) != null;
-	}
+    @Override
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return slot == 0 && ItemLootCrate.getCrate(world, stack) != null;
+    }
 
-	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate)
-	{
-		if (slot == 0 || amount <= 0 || items.isEmpty())
-		{
-			return ItemStack.EMPTY;
-		}
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (slot == 0 || amount <= 0 || items.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
 
-		ItemEntryWithCount entry = items.get(0);
-		ItemStack stack1 = entry.getStack(true);
-		int a = Math.min(entry.count, Math.min(amount, stack1.getMaxStackSize()));
-		stack1.setCount(a);
+        ItemEntryWithCount entry = items.get(0);
+        ItemStack stack1 = entry.getStack(true);
+        int a = Math.min(entry.count, Math.min(amount, stack1.getMaxStackSize()));
+        stack1.setCount(a);
 
-		if (!simulate && !world.isRemote)
-		{
-			entry.count -= a;
+        if (!simulate && !world.isRemote) {
+            entry.count -= a;
 
-			if (entry.isEmpty())
-			{
-				items.remove(0);
-			}
+            if (entry.isEmpty()) {
+                items.remove(0);
+            }
 
-			markDirty();
-		}
+            markDirty();
+        }
 
-		return stack1;
-	}
+        return stack1;
+    }
 
-	@Override
-	public int getSlotLimit(int slot)
-	{
-		return 64;
-	}
+    @Override
+    public int getSlotLimit(int slot) {
+        return 64;
+    }
 
-	@Override
-	public void markDirty()
-	{
-		sendDirtyUpdate();
-	}
+    @Override
+    public void markDirty() {
+        sendDirtyUpdate();
+    }
 }

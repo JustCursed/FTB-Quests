@@ -13,21 +13,18 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 /**
  * @author LatvianModder
  */
-public class ProjectEIntegration
-{
-	public static TaskType EMC_TASK;
+public class ProjectEIntegration {
+    public static TaskType EMC_TASK;
 
-	public static void preInit()
-	{
-		MinecraftForge.EVENT_BUS.register(ProjectEIntegration.class);
-		FMLInterModComms.sendMessage(PECore.MODID, "nbtwhitelist", new ItemStack(FTBQuestsItems.SCREEN));
-		FMLInterModComms.sendMessage(PECore.MODID, "nbtwhitelist", new ItemStack(FTBQuestsItems.PROGRESS_SCREEN));
-		FMLInterModComms.sendMessage(PECore.MODID, "nbtwhitelist", new ItemStack(FTBQuestsItems.LOOTCRATE));
-	}
+    public static void preInit() {
+        MinecraftForge.EVENT_BUS.register(ProjectEIntegration.class);
+        FMLInterModComms.sendMessage(PECore.MODID, "nbtwhitelist", new ItemStack(FTBQuestsItems.SCREEN));
+        FMLInterModComms.sendMessage(PECore.MODID, "nbtwhitelist", new ItemStack(FTBQuestsItems.PROGRESS_SCREEN));
+        FMLInterModComms.sendMessage(PECore.MODID, "nbtwhitelist", new ItemStack(FTBQuestsItems.LOOTCRATE));
+    }
 
-	@SubscribeEvent
-	public static void registerTasks(RegistryEvent.Register<TaskType> event)
-	{
-		event.getRegistry().register(EMC_TASK = new TaskType(EMCTask::new).setRegistryName("emc").setIcon(Icon.getIcon("projecte:items/transmute_tablet")));
-	}
+    @SubscribeEvent
+    public static void registerTasks(RegistryEvent.Register<TaskType> event) {
+        event.getRegistry().register(EMC_TASK = new TaskType(EMCTask::new).setRegistryName("emc").setIcon(Icon.getIcon("projecte:items/transmute_tablet")));
+    }
 }

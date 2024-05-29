@@ -9,45 +9,36 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class FTBQuestsCommon
-{
-	public void preInit()
-	{
-	}
+public class FTBQuestsCommon {
+    public void preInit() {
+    }
 
-	@Nullable
-	public QuestFile getQuestFile(@Nullable World world)
-	{
-		return ServerQuestFile.INSTANCE;
-	}
+    @Nullable
+    public QuestFile getQuestFile(@Nullable World world) {
+        return ServerQuestFile.INSTANCE;
+    }
 
-	@Nullable
-	public QuestFile getQuestFile(boolean clientSide)
-	{
-		return ServerQuestFile.INSTANCE;
-	}
+    @Nullable
+    public QuestFile getQuestFile(boolean clientSide) {
+        return ServerQuestFile.INSTANCE;
+    }
 
-	public void setTaskGuiProviders()
-	{
-	}
+    public void setTaskGuiProviders() {
+    }
 
-	public void setRewardGuiProviders()
-	{
-	}
+    public void setRewardGuiProviders() {
+    }
 
-	public String getLanguageCode()
-	{
-		return "en_us";
-	}
+    public String getLanguageCode() {
+        return "en_us";
+    }
 
-	public void openCustomIconGui(ItemStack stack)
-	{
-	}
+    public void openCustomIconGui(ItemStack stack) {
+    }
 
-	@Nullable
-	public QuestData getQuestData(@Nullable World world, UUID owner)
-	{
-		QuestFile file = getQuestFile(world);
-		return file == null ? null : file.getData(owner);
-	}
+    @Nullable
+    public QuestData getQuestData(@Nullable World world, UUID owner) {
+        QuestFile file = getQuestFile(world);
+        return file == null ? null : file.getData(owner);
+    }
 }

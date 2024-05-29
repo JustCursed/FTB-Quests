@@ -22,108 +22,89 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public class TileQuestBarrier extends TileBase implements IHasConfig, ITickable
-{
-	public int object = 0;
-	private Boolean prevCompleted = null;
-	public boolean completed = false;
+public class TileQuestBarrier extends TileBase implements IHasConfig, ITickable {
+    public int object = 0;
+    private Boolean prevCompleted = null;
+    public boolean completed = false;
 
-	@Override
-	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
-	{
-		nbt.setInteger("object", object);
-	}
+    @Override
+    protected void writeData(NBTTagCompound nbt, EnumSaveType type) {
+        nbt.setInteger("object", object);
+    }
 
-	@Override
-	protected void readData(NBTTagCompound nbt, EnumSaveType type)
-	{
-		object = nbt.getInteger("object");
+    @Override
+    protected void readData(NBTTagCompound nbt, EnumSaveType type) {
+        object = nbt.getInteger("object");
 
-		if (object == 0)
-		{
-			try
-			{
-				object = Long.valueOf(nbt.getString("object"), 16).intValue();
-			}
-			catch (Exception ex)
-			{
-				object = 0;
-			}
-		}
+        if (object == 0) {
+            try {
+                object = Long.valueOf(nbt.getString("object"), 16).intValue();
+            } catch (Exception ex) {
+                object = 0;
+            }
+        }
 
-		prevCompleted = null;
-	}
+        prevCompleted = null;
+    }
 
-	@Override
-	public void editConfig(EntityPlayerMP player, boolean editor)
-	{
-		if (!editor)
-		{
-			return;
-		}
+    @Override
+    public void editConfig(EntityPlayerMP player, boolean editor) {
+        if (!editor) {
+            return;
+        }
 
-		ConfigGroup group0 = ConfigGroup.newGroup("tile");
-		group0.setDisplayName(new TextComponentTranslation("tile.ftbquests.barrier.name"));
-		ConfigGroup config = group0.getGroup("ftbquests.barrier");
+        ConfigGroup group0 = ConfigGroup.newGroup("tile");
+        group0.setDisplayName(new TextComponentTranslation("tile.ftbquests.barrier.name"));
+        ConfigGroup config = group0.getGroup("ftbquests.barrier");
 
-		QuestObject o = getObject(ServerQuestFile.INSTANCE);
-		config.add("object", new ConfigQuestObject(ServerQuestFile.INSTANCE, o == null ? 0 : o.id, QuestObjectType.ALL_PROGRESSING)
-		{
-			@Override
-			public void setObject(int v)
-			{
-				object = v;
-			}
-		}, new ConfigQuestObject(ServerQuestFile.INSTANCE, 1, QuestObjectType.ALL_PROGRESSING));
+        QuestObject o = getObject(ServerQuestFile.INSTANCE);
+        config.add("object", new ConfigQuestObject(ServerQuestFile.INSTANCE, o == null ? 0 : o.id, QuestObjectType.ALL_PROGRESSING) {
+            @Override
+            public void setObject(int v) {
+                object = v;
+            }
+        }, new ConfigQuestObject(ServerQuestFile.INSTANCE, 1, QuestObjectType.ALL_PROGRESSING));
 
-		FTBLibAPI.editServerConfig(player, group0, this);
-	}
+        FTBLibAPI.editServerConfig(player, group0, this);
+    }
 
-	@Override
-	public void onConfigSaved(ConfigGroup group, ICommandSender sender)
-	{
-		updateContainingBlockInfo();
-		markDirty();
-	}
+    @Override
+    public void onConfigSaved(ConfigGroup group, ICommandSender sender) {
+        updateContainingBlockInfo();
+        markDirty();
+    }
 
-	@Override
-	public void update()
-	{
-		if (world.isRemote && world.getTotalWorldTime() % 7L == 0L)
-		{
-			QuestObject o = getObject(ClientQuestFile.INSTANCE);
-			completed = o != null && ClientQuestFile.existsWithTeam() && o.isComplete(ClientQuestFile.INSTANCE.self);
+    @Override
+    public void update() {
+        if (world.isRemote && world.getTotalWorldTime() % 7L == 0L) {
+            QuestObject o = getObject(ClientQuestFile.INSTANCE);
+            completed = o != null && ClientQuestFile.existsWithTeam() && o.isComplete(ClientQuestFile.INSTANCE.self);
 
-			if (prevCompleted == null || prevCompleted != completed)
-			{
-				prevCompleted = completed;
-				markDirty();
-			}
-		}
+            if (prevCompleted == null || prevCompleted != completed) {
+                prevCompleted = completed;
+                markDirty();
+            }
+        }
 
-		checkIfDirty();
-	}
+        checkIfDirty();
+    }
 
-	@Override
-	protected void sendDirtyUpdate()
-	{
-		if (world != null)
-		{
-			world.markChunkDirty(pos, this);
-			BlockUtils.notifyBlockUpdate(world, pos, getBlockState());
-		}
-	}
+    @Override
+    protected void sendDirtyUpdate() {
+        if (world != null) {
+            world.markChunkDirty(pos, this);
+            BlockUtils.notifyBlockUpdate(world, pos, getBlockState());
+        }
+    }
 
-	@Override
-	public void updateContainingBlockInfo()
-	{
-		super.updateContainingBlockInfo();
-		prevCompleted = null;
-	}
+    @Override
+    public void updateContainingBlockInfo() {
+        super.updateContainingBlockInfo();
+        prevCompleted = null;
+    }
 
-	@Nullable
-	public QuestObject getObject(QuestFile file)
-	{
-		return file.get(file.getID(object));
-	}
+    @Nullable
+    public QuestObject getObject(QuestFile file) {
+        return file.get(file.getID(object));
+    }
 }

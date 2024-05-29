@@ -11,43 +11,35 @@ import net.minecraft.entity.player.EntityPlayerMP;
 /**
  * @author LatvianModder
  */
-public class MessageDeleteObject extends MessageToServer
-{
-	private int id;
+public class MessageDeleteObject extends MessageToServer {
+    private int id;
 
-	public MessageDeleteObject()
-	{
-	}
+    public MessageDeleteObject() {
+    }
 
-	public MessageDeleteObject(int i)
-	{
-		id = i;
-	}
+    public MessageDeleteObject(int i) {
+        id = i;
+    }
 
-	@Override
-	public NetworkWrapper getWrapper()
-	{
-		return FTBQuestsEditNetHandler.EDIT;
-	}
+    @Override
+    public NetworkWrapper getWrapper() {
+        return FTBQuestsEditNetHandler.EDIT;
+    }
 
-	@Override
-	public void writeData(DataOut data)
-	{
-		data.writeInt(id);
-	}
+    @Override
+    public void writeData(DataOut data) {
+        data.writeInt(id);
+    }
 
-	@Override
-	public void readData(DataIn data)
-	{
-		id = data.readInt();
-	}
+    @Override
+    public void readData(DataIn data) {
+        id = data.readInt();
+    }
 
-	@Override
-	public void onMessage(EntityPlayerMP player)
-	{
-		if (FTBQuests.canEdit(player))
-		{
-			ServerQuestFile.INSTANCE.deleteObject(id);
-		}
-	}
+    @Override
+    public void onMessage(EntityPlayerMP player) {
+        if (FTBQuests.canEdit(player)) {
+            ServerQuestFile.INSTANCE.deleteObject(id);
+        }
+    }
 }

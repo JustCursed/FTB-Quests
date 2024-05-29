@@ -8,43 +8,36 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public abstract class ThemeProperty<T>
-{
-	public final String name;
+public abstract class ThemeProperty<T> {
+    public final String name;
 
-	public ThemeProperty(String n)
-	{
-		name = n;
-	}
+    public ThemeProperty(String n) {
+        name = n;
+    }
 
-	@Nullable
-	public abstract T parse(String string);
+    @Nullable
+    public abstract T parse(String string);
 
-	@Override
-	public String toString()
-	{
-		return name;
-	}
+    @Override
+    public String toString() {
+        return name;
+    }
 
-	@Override
-	public int hashCode()
-	{
-		return name.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 
-	@Override
-	public boolean equals(Object o)
-	{
-		return o == this || o instanceof ThemeProperty && name.equals(o.toString());
-	}
+    @Override
+    public boolean equals(Object o) {
+        return o == this || o instanceof ThemeProperty && name.equals(o.toString());
+    }
 
-	public T get(@Nullable QuestObjectBase object)
-	{
-		return QuestTheme.instance.get(this, object);
-	}
+    public T get(@Nullable QuestObjectBase object) {
+        return QuestTheme.instance.get(this, object);
+    }
 
-	public T get()
-	{
-		return get(null);
-	}
+    public T get() {
+        return get(null);
+    }
 }

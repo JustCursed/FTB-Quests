@@ -7,23 +7,19 @@ import net.minecraft.item.ItemStack;
 /**
  * @author LatvianModder
  */
-public class ItemBlockDetector extends ItemBlock
-{
-	public ItemBlockDetector(Block block)
-	{
-		super(block);
-		setHasSubtypes(true);
-	}
+public class ItemBlockDetector extends ItemBlock {
+    public ItemBlockDetector(Block block) {
+        super(block);
+        setHasSubtypes(true);
+    }
 
-	@Override
-	public int getMetadata(int damage)
-	{
-		return damage;
-	}
+    @Override
+    public int getMetadata(int damage) {
+        return damage;
+    }
 
-	@Override
-	public String getTranslationKey(ItemStack stack)
-	{
-		return super.getTranslationKey(stack) + "." + BlockDetector.Variant.VALUES[stack.getMetadata()].getName();
-	}
+    @Override
+    public String getTranslationKey(ItemStack stack) {
+        return super.getTranslationKey(stack) + "." + BlockDetector.Variant.VALUES[stack.getMetadata()].getName();
+    }
 }

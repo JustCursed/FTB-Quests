@@ -37,196 +37,165 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class BlockQuestBarrier extends Block
-{
-	public static final PropertyBool COMPLETED = PropertyBool.create("completed");
-	private static final Predicate<Entity> PREDICATE = entity -> entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode;
+public class BlockQuestBarrier extends Block {
+    public static final PropertyBool COMPLETED = PropertyBool.create("completed");
+    private static final Predicate<Entity> PREDICATE = entity -> entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode;
 
-	public BlockQuestBarrier()
-	{
-		super(Material.BARRIER, MapColor.LIGHT_BLUE);
-		setDefaultState(blockState.getBaseState().withProperty(COMPLETED, false));
-		translucent = true;
-		setBlockUnbreakable();
-		setResistance(6000000F);
-	}
+    public BlockQuestBarrier() {
+        super(Material.BARRIER, MapColor.LIGHT_BLUE);
+        setDefaultState(blockState.getBaseState().withProperty(COMPLETED, false));
+        translucent = true;
+        setBlockUnbreakable();
+        setResistance(6000000F);
+    }
 
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, COMPLETED);
-	}
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, COMPLETED);
+    }
 
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return 0;
-	}
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return 0;
+    }
 
-	@Override
-	@Deprecated
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return getDefaultState();
-	}
+    @Override
+    @Deprecated
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState();
+    }
 
-	@Override
-	public boolean hasTileEntity(IBlockState state)
-	{
-		return true;
-	}
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
 
-	@Override
-	@Nullable
-	public TileEntity createTileEntity(World world, IBlockState state)
-	{
-		return new TileQuestBarrier();
-	}
+    @Override
+    @Nullable
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileQuestBarrier();
+    }
 
-	@Override
-	@Deprecated
-	public boolean isOpaqueCube(IBlockState state)
-	{
-		return false;
-	}
+    @Override
+    @Deprecated
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	@Deprecated
-	public boolean isFullBlock(IBlockState state)
-	{
-		return false;
-	}
+    @Override
+    @Deprecated
+    public boolean isFullBlock(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	@Deprecated
-	public boolean isFullCube(IBlockState state)
-	{
-		return false;
-	}
+    @Override
+    @Deprecated
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	public BlockRenderLayer getRenderLayer()
-	{
-		return BlockRenderLayer.TRANSLUCENT;
-	}
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.TRANSLUCENT;
+    }
 
-	@Override
-	@Deprecated
-	public float getAmbientOcclusionLightValue(IBlockState state)
-	{
-		return 1F;
-	}
+    @Override
+    @Deprecated
+    public float getAmbientOcclusionLightValue(IBlockState state) {
+        return 1F;
+    }
 
-	@Override
-	public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float chance, int fortune)
-	{
-	}
+    @Override
+    public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float chance, int fortune) {
+    }
 
-	@Override
-	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity)
-	{
-		return false;
-	}
+    @Override
+    public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
+        return false;
+    }
 
-	@Override
-	@Deprecated
-	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entity, boolean isActualState)
-	{
-		if (entity instanceof EntityPlayer)
-		{
-			if (((EntityPlayer) entity).capabilities.isCreativeMode)
-			{
-				return;
-			}
+    @Override
+    @Deprecated
+    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entity, boolean isActualState) {
+        if (entity instanceof EntityPlayer) {
+            if (((EntityPlayer) entity).capabilities.isCreativeMode) {
+                return;
+            }
 
-			TileEntity tileEntity = world.getTileEntity(pos);
+            TileEntity tileEntity = world.getTileEntity(pos);
 
-			if (tileEntity instanceof TileQuestBarrier)
-			{
-				QuestFile file = FTBQuests.PROXY.getQuestFile(world);
+            if (tileEntity instanceof TileQuestBarrier) {
+                QuestFile file = FTBQuests.PROXY.getQuestFile(world);
 
-				if (file != null)
-				{
-					QuestObject object = ((TileQuestBarrier) tileEntity).getObject(file);
-					QuestData data = file.getData(entity);
+                if (file != null) {
+                    QuestObject object = ((TileQuestBarrier) tileEntity).getObject(file);
+                    QuestData data = file.getData(entity);
 
-					if (object != null && data != null && object.isComplete(data))
-					{
-						return;
-					}
-				}
-			}
-		}
+                    if (object != null && data != null && object.isComplete(data)) {
+                        return;
+                    }
+                }
+            }
+        }
 
-		super.addCollisionBoxToList(state, world, pos, entityBox, collidingBoxes, entity, isActualState);
-	}
+        super.addCollisionBoxToList(state, world, pos, entityBox, collidingBoxes, entity, isActualState);
+    }
 
-	@Override
-	@Nullable
-	@Deprecated
-	public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end)
-	{
-		EntityPlayer player = worldIn.getClosestPlayer(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5D, PREDICATE);
+    @Override
+    @Nullable
+    @Deprecated
+    public RayTraceResult collisionRayTrace(IBlockState state, World worldIn, BlockPos pos, Vec3d start, Vec3d end) {
+        EntityPlayer player = worldIn.getClosestPlayer(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5D, PREDICATE);
 
-		if (player == null)
-		{
-			return null;
-		}
+        if (player == null) {
+            return null;
+        }
 
-		return rayTrace(pos, start, end, state.getBoundingBox(worldIn, pos));
-	}
+        return rayTrace(pos, start, end, state.getBoundingBox(worldIn, pos));
+    }
 
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-	{
-		if (player.getHeldItem(hand).getItem() == FTBQuestsItems.BARRIER)
-		{
-			return false;
-		}
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (player.getHeldItem(hand).getItem() == FTBQuestsItems.BARRIER) {
+            return false;
+        }
 
-		if (!world.isRemote && FTBQuests.canEdit(player))
-		{
-			TileEntity tileEntity = world.getTileEntity(pos);
+        if (!world.isRemote && FTBQuests.canEdit(player)) {
+            TileEntity tileEntity = world.getTileEntity(pos);
 
-			if (tileEntity instanceof TileQuestBarrier)
-			{
-				((TileQuestBarrier) tileEntity).editConfig((EntityPlayerMP) player, true);
-			}
-		}
+            if (tileEntity instanceof TileQuestBarrier) {
+                ((TileQuestBarrier) tileEntity).editConfig((EntityPlayerMP) player, true);
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-	{
-		TileEntity tileEntity = world.getTileEntity(pos);
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (tileEntity instanceof TileQuestBarrier)
-		{
-			((TileQuestBarrier) tileEntity).readFromItem(stack);
-		}
-	}
+        if (tileEntity instanceof TileQuestBarrier) {
+            ((TileQuestBarrier) tileEntity).readFromItem(stack);
+        }
+    }
 
-	@Override
-	@Deprecated
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		TileEntity tileEntity = world.getTileEntity(pos);
+    @Override
+    @Deprecated
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (tileEntity instanceof TileQuestBarrier && ((TileQuestBarrier) tileEntity).completed)
-		{
-			return state.withProperty(COMPLETED, true);
-		}
+        if (tileEntity instanceof TileQuestBarrier && ((TileQuestBarrier) tileEntity).completed) {
+            return state.withProperty(COMPLETED, true);
+        }
 
-		return state;
-	}
+        return state;
+    }
 
-	@Override
-	@Deprecated
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing facing)
-	{
-		return world.getBlockState(pos.offset(facing)).getBlock() != this && super.shouldSideBeRendered(state, world, pos, facing);
-	}
+    @Override
+    @Deprecated
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing facing) {
+        return world.getBlockState(pos.offset(facing)).getBlock() != this && super.shouldSideBeRendered(state, world, pos, facing);
+    }
 }

@@ -15,35 +15,29 @@ import net.minecraft.world.World;
 /**
  * @author LatvianModder
  */
-public class ItemBlockBarrier extends ItemBlock
-{
-	public ItemBlockBarrier(Block block)
-	{
-		super(block);
-	}
+public class ItemBlockBarrier extends ItemBlock {
+    public ItemBlockBarrier(Block block) {
+        super(block);
+    }
 
-	@Override
-	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState)
-	{
-		if (super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState))
-		{
-			TileEntity tileEntity = world.getTileEntity(pos.offset(side.getOpposite()));
+    @Override
+    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+        if (super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState)) {
+            TileEntity tileEntity = world.getTileEntity(pos.offset(side.getOpposite()));
 
-			if (tileEntity instanceof TileQuestBarrier)
-			{
-				TileEntity barrier = world.getTileEntity(pos);
+            if (tileEntity instanceof TileQuestBarrier) {
+                TileEntity barrier = world.getTileEntity(pos);
 
-				if (barrier instanceof TileQuestBarrier)
-				{
-					((TileQuestBarrier) barrier).object = ((TileQuestBarrier) tileEntity).object;
-					barrier.markDirty();
-					BlockUtils.notifyBlockUpdate(world, pos, newState);
-				}
-			}
+                if (barrier instanceof TileQuestBarrier) {
+                    ((TileQuestBarrier) barrier).object = ((TileQuestBarrier) tileEntity).object;
+                    barrier.markDirty();
+                    BlockUtils.notifyBlockUpdate(world, pos, newState);
+                }
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

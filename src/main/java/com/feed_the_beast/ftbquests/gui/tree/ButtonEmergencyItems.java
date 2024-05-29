@@ -10,17 +10,14 @@ import net.minecraft.client.resources.I18n;
 /**
  * @author LatvianModder
  */
-public class ButtonEmergencyItems extends ButtonTab
-{
-	public ButtonEmergencyItems(Panel panel)
-	{
-		super(panel, I18n.format("ftbquests.file.emergency_items"), ThemeProperties.EMERGENCY_ITEMS_ICON.get());
-	}
+public class ButtonEmergencyItems extends ButtonTab {
+    public ButtonEmergencyItems(Panel panel) {
+        super(panel, I18n.format("ftbquests.file.emergency_items"), ThemeProperties.EMERGENCY_ITEMS_ICON.get());
+    }
 
-	@Override
-	public void onClicked(MouseButton button)
-	{
-		GuiHelper.playClickSound();
-		new GuiEmergencyItems().openGui();
-	}
+    @Override
+    public void onClicked(MouseButton button) {
+        GuiHelper.playClickSound();
+        new GuiEmergencyItems().openGui();
+    }
 }

@@ -13,51 +13,42 @@ import net.minecraft.util.EnumHand;
 /**
  * @author LatvianModder
  */
-public class MessageSetCustomIcon extends MessageToServer
-{
-	private String icon;
+public class MessageSetCustomIcon extends MessageToServer {
+    private String icon;
 
-	public MessageSetCustomIcon()
-	{
-	}
+    public MessageSetCustomIcon() {
+    }
 
-	public MessageSetCustomIcon(String i)
-	{
-		icon = i;
-	}
+    public MessageSetCustomIcon(String i) {
+        icon = i;
+    }
 
-	@Override
-	public NetworkWrapper getWrapper()
-	{
-		return FTBQuestsNetHandler.GENERAL;
-	}
+    @Override
+    public NetworkWrapper getWrapper() {
+        return FTBQuestsNetHandler.GENERAL;
+    }
 
-	@Override
-	public void writeData(DataOut data)
-	{
-		data.writeString(icon);
-	}
+    @Override
+    public void writeData(DataOut data) {
+        data.writeString(icon);
+    }
 
-	@Override
-	public void readData(DataIn data)
-	{
-		icon = data.readString();
-	}
+    @Override
+    public void readData(DataIn data) {
+        icon = data.readString();
+    }
 
-	@Override
-	public void onMessage(EntityPlayerMP player)
-	{
-		ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+    @Override
+    public void onMessage(EntityPlayerMP player) {
+        ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
 
-		if (stack.getItem() != FTBQuestsItems.CUSTOM_ICON)
-		{
-			stack = player.getHeldItem(EnumHand.OFF_HAND);
-		}
+        if (stack.getItem() != FTBQuestsItems.CUSTOM_ICON) {
+            stack = player.getHeldItem(EnumHand.OFF_HAND);
+        }
 
-		if (stack.getItem() == FTBQuestsItems.CUSTOM_ICON)
-		{
-			stack.setTagInfo("icon", new NBTTagString(icon));
-			player.inventoryContainer.detectAndSendChanges();
-		}
-	}
+        if (stack.getItem() == FTBQuestsItems.CUSTOM_ICON) {
+            stack.setTagInfo("icon", new NBTTagString(icon));
+            player.inventoryContainer.detectAndSendChanges();
+        }
+    }
 }

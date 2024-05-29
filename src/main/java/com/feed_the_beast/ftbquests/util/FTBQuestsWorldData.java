@@ -29,129 +29,109 @@ import java.util.List;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBQuests.MOD_ID)
-public class FTBQuestsWorldData implements IConfigCallback
-{
-	public static FTBQuestsWorldData INSTANCE;
+public class FTBQuestsWorldData implements IConfigCallback {
+    public static FTBQuestsWorldData INSTANCE;
 
-	@SubscribeEvent
-	public static void onUniversePreLoaded(UniverseLoadedEvent.Pre event)
-	{
-		INSTANCE = new FTBQuestsWorldData(event.getUniverse());
+    @SubscribeEvent
+    public static void onUniversePreLoaded(UniverseLoadedEvent.Pre event) {
+        INSTANCE = new FTBQuestsWorldData(event.getUniverse());
 
-		if (ServerQuestFile.INSTANCE != null)
-		{
-			ServerQuestFile.INSTANCE.unload();
-		}
+        if (ServerQuestFile.INSTANCE != null) {
+            ServerQuestFile.INSTANCE.unload();
+        }
 
-		ServerQuestFile.INSTANCE = new ServerQuestFile(event.getUniverse());
-		ServerQuestFile.INSTANCE.load();
+        ServerQuestFile.INSTANCE = new ServerQuestFile(event.getUniverse());
+        ServerQuestFile.INSTANCE.load();
 
-		int c = ServerQuestFile.INSTANCE.chapters.size();
-		int q = 0;
-		int t = 0;
-		int r = 0;
+        int c = ServerQuestFile.INSTANCE.chapters.size();
+        int q = 0;
+        int t = 0;
+        int r = 0;
 
-		for (Chapter chapter : ServerQuestFile.INSTANCE.chapters)
-		{
-			q += chapter.quests.size();
+        for (Chapter chapter : ServerQuestFile.INSTANCE.chapters) {
+            q += chapter.quests.size();
 
-			for (Quest quest : chapter.quests)
-			{
-				t += quest.tasks.size();
-				r += quest.rewards.size();
-			}
-		}
+            for (Quest quest : chapter.quests) {
+                t += quest.tasks.size();
+                r += quest.rewards.size();
+            }
+        }
 
-		FTBQuests.LOGGER.info(String.format("Loaded %d chapters, %d quests, %d tasks and %d rewards. In total, %d objects", c, q, t, r, ServerQuestFile.INSTANCE.getAllObjects().size()));
+        FTBQuests.LOGGER.info(String.format("Loaded %d chapters, %d quests, %d tasks and %d rewards. In total, %d objects", c, q, t, r, ServerQuestFile.INSTANCE.getAllObjects().size()));
 
-		NBTTagCompound nbt = event.getData(FTBQuests.MOD_ID);
-		INSTANCE.extraFiles.clear();
+        NBTTagCompound nbt = event.getData(FTBQuests.MOD_ID);
+        INSTANCE.extraFiles.clear();
 
-		NBTTagList list = nbt.getTagList("ExtraFiles", Constants.NBT.TAG_STRING);
+        NBTTagList list = nbt.getTagList("ExtraFiles", Constants.NBT.TAG_STRING);
 
-		for (int i = 0; i < list.tagCount(); i++)
-		{
-			INSTANCE.extraFiles.add(list.getStringTagAt(i));
-		}
+        for (int i = 0; i < list.tagCount(); i++) {
+            INSTANCE.extraFiles.add(list.getStringTagAt(i));
+        }
 
-		if (ServerQuestFile.INSTANCE.fileVersion != ServerQuestFile.VERSION)
-		{
-			FTBQuests.LOGGER.info("File version changed " + ServerQuestFile.INSTANCE.fileVersion + " -> " + ServerQuestFile.VERSION);
-			ServerQuestFile.INSTANCE.saveNow();
-		}
-	}
+        if (ServerQuestFile.INSTANCE.fileVersion != ServerQuestFile.VERSION) {
+            FTBQuests.LOGGER.info("File version changed " + ServerQuestFile.INSTANCE.fileVersion + " -> " + ServerQuestFile.VERSION);
+            ServerQuestFile.INSTANCE.saveNow();
+        }
+    }
 
-	private static String getFolderName()
-	{
-		if (Loader.isModLoaded("packmode"))
-		{
-			return getPackmodeFolderName();
-		}
+    private static String getFolderName() {
+        if (Loader.isModLoaded("packmode")) {
+            return getPackmodeFolderName();
+        }
 
-		return "normal";
-	}
+        return "normal";
+    }
 
-	private static String getPackmodeFolderName()
-	{
-		return PackModeAPI.getInstance().getCurrentPackMode();
-	}
+    private static String getPackmodeFolderName() {
+        return PackModeAPI.getInstance().getCurrentPackMode();
+    }
 
-	@SubscribeEvent
-	public static void onUniverseSaved(UniverseSavedEvent event)
-	{
-		if (ServerQuestFile.INSTANCE != null && ServerQuestFile.INSTANCE.shouldSave)
-		{
-			ServerQuestFile.INSTANCE.saveNow();
-			ServerQuestFile.INSTANCE.shouldSave = false;
-		}
+    @SubscribeEvent
+    public static void onUniverseSaved(UniverseSavedEvent event) {
+        if (ServerQuestFile.INSTANCE != null && ServerQuestFile.INSTANCE.shouldSave) {
+            ServerQuestFile.INSTANCE.saveNow();
+            ServerQuestFile.INSTANCE.shouldSave = false;
+        }
 
-		NBTTagCompound nbt = new NBTTagCompound();
+        NBTTagCompound nbt = new NBTTagCompound();
 
-		if (!INSTANCE.extraFiles.isEmpty())
-		{
-			NBTTagList list = new NBTTagList();
+        if (!INSTANCE.extraFiles.isEmpty()) {
+            NBTTagList list = new NBTTagList();
 
-			for (String file : INSTANCE.extraFiles)
-			{
-				list.appendTag(new NBTTagString(file));
-			}
+            for (String file : INSTANCE.extraFiles) {
+                list.appendTag(new NBTTagString(file));
+            }
 
-			nbt.setTag("ExtraFiles", list);
-		}
+            nbt.setTag("ExtraFiles", list);
+        }
 
-		if (!nbt.isEmpty())
-		{
-			event.setData(FTBQuests.MOD_ID, nbt);
-		}
-	}
+        if (!nbt.isEmpty()) {
+            event.setData(FTBQuests.MOD_ID, nbt);
+        }
+    }
 
-	@SubscribeEvent
-	public static void onUniverseClosed(UniverseClosedEvent event)
-	{
-		if (ServerQuestFile.INSTANCE != null)
-		{
-			ServerQuestFile.INSTANCE.unload();
-			ServerQuestFile.INSTANCE = null;
-		}
+    @SubscribeEvent
+    public static void onUniverseClosed(UniverseClosedEvent event) {
+        if (ServerQuestFile.INSTANCE != null) {
+            ServerQuestFile.INSTANCE.unload();
+            ServerQuestFile.INSTANCE = null;
+        }
 
-		INSTANCE = null;
-	}
+        INSTANCE = null;
+    }
 
-	public final Universe universe;
-	public final List<String> extraFiles;
+    public final Universe universe;
+    public final List<String> extraFiles;
 
-	private FTBQuestsWorldData(Universe u)
-	{
-		universe = u;
-		extraFiles = new ArrayList<>();
-	}
+    private FTBQuestsWorldData(Universe u) {
+        universe = u;
+        extraFiles = new ArrayList<>();
+    }
 
-	@Override
-	public void onConfigSaved(ConfigGroup group, ICommandSender sender)
-	{
-		for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
-		{
-			new MessageSyncEditingMode(FTBQuests.canEdit(player)).sendTo(player);
-		}
-	}
+    @Override
+    public void onConfigSaved(ConfigGroup group, ICommandSender sender) {
+        for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers()) {
+            new MessageSyncEditingMode(FTBQuests.canEdit(player)).sendTo(player);
+        }
+    }
 }

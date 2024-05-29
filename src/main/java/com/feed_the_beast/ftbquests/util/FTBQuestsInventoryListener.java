@@ -15,82 +15,64 @@ import net.minecraft.util.NonNullList;
 /**
  * @author LatvianModder
  */
-public class FTBQuestsInventoryListener implements IContainerListener
-{
-	public final EntityPlayerMP player;
+public class FTBQuestsInventoryListener implements IContainerListener {
+    public final EntityPlayerMP player;
 
-	public FTBQuestsInventoryListener(EntityPlayerMP p)
-	{
-		player = p;
-	}
+    public FTBQuestsInventoryListener(EntityPlayerMP p) {
+        player = p;
+    }
 
-	public static void detect(EntityPlayerMP player, ItemStack item, int sourceTask)
-	{
-		if (ServerQuestFile.INSTANCE == null)
-		{
-			return;
-		}
+    public static void detect(EntityPlayerMP player, ItemStack item, int sourceTask) {
+        if (ServerQuestFile.INSTANCE == null) {
+            return;
+        }
 
-		QuestData data = ServerQuestFile.INSTANCE.getData(player);
+        QuestData data = ServerQuestFile.INSTANCE.getData(player);
 
-		if (data == null)
-		{
-			return;
-		}
+        if (data == null) {
+            return;
+        }
 
-		for (Chapter chapter : ServerQuestFile.INSTANCE.chapters)
-		{
-			for (Quest quest : chapter.quests)
-			{
-				if (hasSubmitTasks(quest) && quest.canStartTasks(data))
-				{
-					for (Task task : quest.tasks)
-					{
-						if (task.id != sourceTask && task.submitItemsOnInventoryChange())
-						{
-							data.getTaskData(task).submitTask(player, item);
-						}
-					}
-				}
-			}
-		}
-	}
+        for (Chapter chapter : ServerQuestFile.INSTANCE.chapters) {
+            for (Quest quest : chapter.quests) {
+                if (hasSubmitTasks(quest) && quest.canStartTasks(data)) {
+                    for (Task task : quest.tasks) {
+                        if (task.id != sourceTask && task.submitItemsOnInventoryChange()) {
+                            data.getTaskData(task).submitTask(player, item);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-	private static boolean hasSubmitTasks(Quest quest)
-	{
-		for (Task task : quest.tasks)
-		{
-			if (task.submitItemsOnInventoryChange())
-			{
-				return true;
-			}
-		}
+    private static boolean hasSubmitTasks(Quest quest) {
+        for (Task task : quest.tasks) {
+            if (task.submitItemsOnInventoryChange()) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public void sendAllContents(Container container, NonNullList<ItemStack> itemsList)
-	{
-		detect(player, ItemStack.EMPTY, 0);
-	}
+    @Override
+    public void sendAllContents(Container container, NonNullList<ItemStack> itemsList) {
+        detect(player, ItemStack.EMPTY, 0);
+    }
 
-	@Override
-	public void sendSlotContents(Container container, int index, ItemStack stack)
-	{
-		if (!stack.isEmpty() && container.getSlot(index).inventory == player.inventory)
-		{
-			detect(player, ItemStack.EMPTY, 0);
-		}
-	}
+    @Override
+    public void sendSlotContents(Container container, int index, ItemStack stack) {
+        if (!stack.isEmpty() && container.getSlot(index).inventory == player.inventory) {
+            detect(player, ItemStack.EMPTY, 0);
+        }
+    }
 
-	@Override
-	public void sendWindowProperty(Container container, int id, int value)
-	{
-	}
+    @Override
+    public void sendWindowProperty(Container container, int id, int value) {
+    }
 
-	@Override
-	public void sendAllWindowProperties(Container container, IInventory inventory)
-	{
-	}
+    @Override
+    public void sendAllWindowProperties(Container container, IInventory inventory) {
+    }
 }

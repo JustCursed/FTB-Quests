@@ -7,24 +7,19 @@ import net.minecraft.item.ItemStack;
 /**
  * @author LatvianModder
  */
-public class BooleanTaskData<T extends Task> extends TaskData<T>
-{
-	public BooleanTaskData(T q, QuestData d)
-	{
-		super(q, d);
-	}
+public class BooleanTaskData<T extends Task> extends TaskData<T> {
+    public BooleanTaskData(T q, QuestData d) {
+        super(q, d);
+    }
 
-	public boolean canSubmit(EntityPlayerMP player)
-	{
-		return true;
-	}
+    public boolean canSubmit(EntityPlayerMP player) {
+        return true;
+    }
 
-	@Override
-	public void submitTask(EntityPlayerMP player, ItemStack item)
-	{
-		if (!isComplete() && canSubmit(player))
-		{
-			setProgress(1L);
-		}
-	}
+    @Override
+    public void submitTask(EntityPlayerMP player, ItemStack item) {
+        if (!isComplete() && canSubmit(player)) {
+            setProgress(1L);
+        }
+    }
 }

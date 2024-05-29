@@ -12,54 +12,43 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public enum QuestRegistry
-{
-	INSTANCE;
+public enum QuestRegistry {
+    INSTANCE;
 
-	public final ArrayList<QuestWrapper> list = new ArrayList<>();
+    public final ArrayList<QuestWrapper> list = new ArrayList<>();
 
-	@SuppressWarnings("deprecation")
-	public void refresh()
-	{
-		if (FTBQuestsJEIIntegration.runtime != null && !list.isEmpty())
-		{
-			for (QuestWrapper wrapper : list)
-			{
-				FTBQuestsJEIIntegration.runtime.getRecipeRegistry().removeRecipe(wrapper, QuestCategory.UID);
-			}
-		}
+    @SuppressWarnings("deprecation")
+    public void refresh() {
+        if (FTBQuestsJEIIntegration.runtime != null && !list.isEmpty()) {
+            for (QuestWrapper wrapper : list) {
+                FTBQuestsJEIIntegration.runtime.getRecipeRegistry().removeRecipe(wrapper, QuestCategory.UID);
+            }
+        }
 
-		list.clear();
+        list.clear();
 
-		if (ClientQuestFile.exists())
-		{
-			for (Chapter chapter : ClientQuestFile.INSTANCE.chapters)
-			{
-				for (Quest quest : chapter.quests)
-				{
-					if (quest.rewards.isEmpty() || quest.disableJEI.get(ClientQuestFile.INSTANCE.defaultQuestDisableJEI))
-					{
-						continue;
-					}
+        if (ClientQuestFile.exists()) {
+            for (Chapter chapter : ClientQuestFile.INSTANCE.chapters) {
+                for (Quest quest : chapter.quests) {
+                    if (quest.rewards.isEmpty() || quest.disableJEI.get(ClientQuestFile.INSTANCE.defaultQuestDisableJEI)) {
+                        continue;
+                    }
 
-					List<Reward> rewards = new ArrayList<>();
+                    List<Reward> rewards = new ArrayList<>();
 
-					for (Reward reward : quest.rewards)
-					{
-						if (reward.getAutoClaimType() != RewardAutoClaim.INVISIBLE && reward.getIngredient() != null)
-						{
-							rewards.add(reward);
-						}
-					}
+                    for (Reward reward : quest.rewards) {
+                        if (reward.getAutoClaimType() != RewardAutoClaim.INVISIBLE && reward.getIngredient() != null) {
+                            rewards.add(reward);
+                        }
+                    }
 
-					if (!rewards.isEmpty())
-					{
-						QuestWrapper wrapper = new QuestWrapper(quest, rewards);
-						list.add(wrapper);
-						FTBQuestsJEIIntegration.runtime.getRecipeRegistry().addRecipe(wrapper, QuestCategory.UID);
-					}
-				}
-			}
-		}
-	}
+                    if (!rewards.isEmpty()) {
+                        QuestWrapper wrapper = new QuestWrapper(quest, rewards);
+                        list.add(wrapper);
+                        FTBQuestsJEIIntegration.runtime.getRecipeRegistry().addRecipe(wrapper, QuestCategory.UID);
+                    }
+                }
+            }
+        }
+    }
 }

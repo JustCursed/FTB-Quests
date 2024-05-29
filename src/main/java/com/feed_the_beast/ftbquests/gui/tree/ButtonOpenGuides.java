@@ -9,17 +9,14 @@ import net.minecraft.client.resources.I18n;
 /**
  * @author LatvianModder
  */
-public class ButtonOpenGuides extends ButtonTab
-{
-	public ButtonOpenGuides(Panel panel)
-	{
-		super(panel, I18n.format("sidebar_button.ftbguides.guides"), ThemeProperties.GUIDE_ICON.get());
-	}
+public class ButtonOpenGuides extends ButtonTab {
+    public ButtonOpenGuides(Panel panel) {
+        super(panel, I18n.format("sidebar_button.ftbguides.guides"), ThemeProperties.GUIDE_ICON.get());
+    }
 
-	@Override
-	public void onClicked(MouseButton button)
-	{
-		GuiHelper.playClickSound();
-		handleClick("ftbguides:open_gui");
-	}
+    @Override
+    public void onClicked(MouseButton button) {
+        GuiHelper.playClickSound();
+        handleClick("ftbguides:open_gui");
+    }
 }

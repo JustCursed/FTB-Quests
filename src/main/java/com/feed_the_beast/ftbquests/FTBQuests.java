@@ -29,102 +29,86 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(
-		modid = FTBQuests.MOD_ID,
-		name = FTBQuests.MOD_NAME,
-		version = FTBQuests.VERSION,
-		dependencies = FTBLib.THIS_DEP + ";required-after:itemfilters;before:kubejs;after:gamestages;after:ic2;after:ftbutilities;after:botania;after:buildcraftcore;after:projecte;after:customnpcs;after:reskillable",
-		acceptableRemoteVersions = "*"
+        modid = FTBQuests.MOD_ID,
+        name = FTBQuests.MOD_NAME,
+        version = FTBQuests.VERSION,
+        dependencies = FTBLib.THIS_DEP + ";required-after:itemfilters;before:kubejs;after:gamestages;after:ic2;after:ftbutilities;after:botania;after:buildcraftcore;after:projecte;after:customnpcs;after:reskillable",
+        acceptableRemoteVersions = "*"
 )
-public class FTBQuests
-{
-	public static final String MOD_ID = "ftbquests";
-	public static final String MOD_NAME = "FTB Quests";
-	public static final String VERSION = "0.0.0.ftbquests";
-	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
+public class FTBQuests {
+    public static final String MOD_ID = "ftbquests";
+    public static final String MOD_NAME = "FTB Quests";
+    public static final String VERSION = "0.0.0.ftbquests";
+    public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
-	@Mod.Instance(MOD_ID)
-	public static FTBQuests MOD;
+    @Mod.Instance(MOD_ID)
+    public static FTBQuests MOD;
 
-	@SidedProxy(serverSide = "com.feed_the_beast.ftbquests.FTBQuestsCommon", clientSide = "com.feed_the_beast.ftbquests.client.FTBQuestsClient")
-	public static FTBQuestsCommon PROXY;
+    @SidedProxy(serverSide = "com.feed_the_beast.ftbquests.FTBQuestsCommon", clientSide = "com.feed_the_beast.ftbquests.client.FTBQuestsClient")
+    public static FTBQuestsCommon PROXY;
 
-	public static final CreativeTabs TAB = new CreativeTabs(FTBQuests.MOD_ID)
-	{
-		@Override
-		public ItemStack createIcon()
-		{
-			return new ItemStack(FTBQuestsItems.BOOK);
-		}
-	};
+    public static final CreativeTabs TAB = new CreativeTabs(FTBQuests.MOD_ID) {
+        @Override
+        public ItemStack createIcon() {
+            return new ItemStack(FTBQuestsItems.BOOK);
+        }
+    };
 
-	@Mod.EventHandler
-	public void onPreInit(FMLPreInitializationEvent event)
-	{
-		FTBQuestsNetHandler.init();
+    @Mod.EventHandler
+    public void onPreInit(FMLPreInitializationEvent event) {
+        FTBQuestsNetHandler.init();
 
-		if (Loader.isModLoaded("kubejs"))
-		{
-			KubeJSIntegration.preInit();
-		}
+        if (Loader.isModLoaded("kubejs")) {
+            KubeJSIntegration.preInit();
+        }
 
-		if (Loader.isModLoaded("ic2"))
-		{
-			IC2Integration.preInit();
-		}
+        if (Loader.isModLoaded("ic2")) {
+            IC2Integration.preInit();
+        }
 
-		if (Loader.isModLoaded("botania"))
-		{
-			BotaniaIntegration.preInit();
-		}
+        if (Loader.isModLoaded("botania")) {
+            BotaniaIntegration.preInit();
+        }
 
-		if (Loader.isModLoaded("buildcraftcore"))
-		{
-			BuildCraftIntegration.preInit();
-		}
+        if (Loader.isModLoaded("buildcraftcore")) {
+            BuildCraftIntegration.preInit();
+        }
 
-		if (Loader.isModLoaded("projecte"))
-		{
-			ProjectEIntegration.preInit();
-		}
+        if (Loader.isModLoaded("projecte")) {
+            ProjectEIntegration.preInit();
+        }
 
-		if (Loader.isModLoaded("ftbutilities"))
-		{
-			FTBUtilitiesIntegration.preInit();
-		}
+        if (Loader.isModLoaded("ftbutilities")) {
+            FTBUtilitiesIntegration.preInit();
+        }
 
-		if (Loader.isModLoaded("gamestages"))
-		{
-			GameStagesIntegration.preInit();
-		}
+        if (Loader.isModLoaded("gamestages")) {
+            GameStagesIntegration.preInit();
+        }
 
-		if (Loader.isModLoaded("customnpcs"))
-		{
-			CustomNPCsIntegration.preInit();
-		}
-		
-		if (Loader.isModLoaded("reskillable"))
-		{
-			ReskillableItegration.preInit();
-		}
+        if (Loader.isModLoaded("customnpcs")) {
+            CustomNPCsIntegration.preInit();
+        }
 
-		PROXY.preInit();
-	}
+        if (Loader.isModLoaded("reskillable")) {
+            ReskillableItegration.preInit();
+        }
 
-	@Mod.EventHandler
-	public void onPostInit(FMLPostInitializationEvent event)
-	{
-		TaskType.createRegistry();
-		RewardType.createRegistry();
-	}
+        PROXY.preInit();
+    }
 
-	@Mod.EventHandler
-	public void onServerStarting(FMLServerStartingEvent event)
-	{
-		event.registerServerCommand(new CommandFTBQuests());
-	}
+    @Mod.EventHandler
+    public void onPostInit(FMLPostInitializationEvent event) {
+        TaskType.createRegistry();
+        RewardType.createRegistry();
+    }
 
-	public static boolean canEdit(EntityPlayer player)
-	{
-		return NBTUtils.getPersistedData(player, false).getBoolean("ftbquests_editing_mode");
-	}
+    @Mod.EventHandler
+    public void onServerStarting(FMLServerStartingEvent event) {
+        event.registerServerCommand(new CommandFTBQuests());
+    }
+
+    public static boolean canEdit(EntityPlayer player) {
+        return NBTUtils.getPersistedData(player, false).getBoolean("ftbquests_editing_mode");
+    }
 }

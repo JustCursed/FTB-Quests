@@ -18,80 +18,68 @@ import noppes.npcs.controllers.PlayerQuestController;
 /**
  * @author LatvianModder
  */
-public class NPCQuestTask extends Task
-{
-	public int npcQuest = 0;
-	public boolean checkActive = false;
+public class NPCQuestTask extends Task {
+    public int npcQuest = 0;
+    public boolean checkActive = false;
 
-	public NPCQuestTask(Quest quest)
-	{
-		super(quest);
-	}
+    public NPCQuestTask(Quest quest) {
+        super(quest);
+    }
 
-	@Override
-	public TaskType getType()
-	{
-		return CustomNPCsIntegration.QUEST_TASK;
-	}
+    @Override
+    public TaskType getType() {
+        return CustomNPCsIntegration.QUEST_TASK;
+    }
 
-	@Override
-	public void writeData(NBTTagCompound nbt)
-	{
-		super.writeData(nbt);
-		nbt.setInteger("npc_quest", npcQuest);
-		nbt.setBoolean("check_active", checkActive);
-	}
+    @Override
+    public void writeData(NBTTagCompound nbt) {
+        super.writeData(nbt);
+        nbt.setInteger("npc_quest", npcQuest);
+        nbt.setBoolean("check_active", checkActive);
+    }
 
-	@Override
-	public void readData(NBTTagCompound nbt)
-	{
-		super.readData(nbt);
-		npcQuest = nbt.getInteger("npc_quest");
-		checkActive = nbt.getBoolean("check_active");
-	}
+    @Override
+    public void readData(NBTTagCompound nbt) {
+        super.readData(nbt);
+        npcQuest = nbt.getInteger("npc_quest");
+        checkActive = nbt.getBoolean("check_active");
+    }
 
-	@Override
-	public void writeNetData(DataOut data)
-	{
-		super.writeNetData(data);
-		data.writeVarInt(npcQuest);
-		data.writeBoolean(checkActive);
-	}
+    @Override
+    public void writeNetData(DataOut data) {
+        super.writeNetData(data);
+        data.writeVarInt(npcQuest);
+        data.writeBoolean(checkActive);
+    }
 
-	@Override
-	public void readNetData(DataIn data)
-	{
-		super.readNetData(data);
-		npcQuest = data.readVarInt();
-		checkActive = data.readBoolean();
-	}
+    @Override
+    public void readNetData(DataIn data) {
+        super.readNetData(data);
+        npcQuest = data.readVarInt();
+        checkActive = data.readBoolean();
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getConfig(ConfigGroup config)
-	{
-		super.getConfig(config);
-		config.addInt("id", () -> npcQuest, v -> npcQuest = v, 0, 0, Integer.MAX_VALUE);
-		config.addBool("check_active", () -> checkActive, v -> checkActive = v, false);
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void getConfig(ConfigGroup config) {
+        super.getConfig(config);
+        config.addInt("id", () -> npcQuest, v -> npcQuest = v, 0, 0, Integer.MAX_VALUE);
+        config.addBool("check_active", () -> checkActive, v -> checkActive = v, false);
+    }
 
-	@Override
-	public TaskData createData(QuestData data)
-	{
-		return new Data(this, data);
-	}
+    @Override
+    public TaskData createData(QuestData data) {
+        return new Data(this, data);
+    }
 
-	public static class Data extends BooleanTaskData<NPCQuestTask>
-	{
-		private Data(NPCQuestTask task, QuestData data)
-		{
-			super(task, data);
-		}
+    public static class Data extends BooleanTaskData<NPCQuestTask> {
+        private Data(NPCQuestTask task, QuestData data) {
+            super(task, data);
+        }
 
-		@Override
-		public boolean canSubmit(EntityPlayerMP player)
-		{
-			return task.npcQuest > 0 && (task.checkActive ? PlayerQuestController.isQuestActive(player, task.npcQuest) : PlayerQuestController.isQuestFinished(player, task.npcQuest));
-		}
-	}
+        @Override
+        public boolean canSubmit(EntityPlayerMP player) {
+            return task.npcQuest > 0 && (task.checkActive ? PlayerQuestController.isQuestActive(player, task.npcQuest) : PlayerQuestController.isQuestFinished(player, task.npcQuest));
+        }
+    }
 }

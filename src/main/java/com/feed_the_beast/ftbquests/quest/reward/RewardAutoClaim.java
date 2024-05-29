@@ -6,27 +6,24 @@ import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 /**
  * @author LatvianModder
  */
-public enum RewardAutoClaim implements IWithID
-{
-	DEFAULT("default"),
-	DISABLED("disabled"),
-	ENABLED("enabled"),
-	NO_TOAST("no_toast"),
-	INVISIBLE("invisible");
+public enum RewardAutoClaim implements IWithID {
+    DEFAULT("default"),
+    DISABLED("disabled"),
+    ENABLED("enabled"),
+    NO_TOAST("no_toast"),
+    INVISIBLE("invisible");
 
-	public static final NameMap<RewardAutoClaim> NAME_MAP = NameMap.createWithBaseTranslationKey(DEFAULT, "ftbquests.reward.autoclaim", values());
-	public static final NameMap<RewardAutoClaim> NAME_MAP_NO_DEFAULT = NameMap.createWithBaseTranslationKey(DISABLED, "ftbquests.reward.autoclaim", DISABLED, ENABLED, NO_TOAST, INVISIBLE);
+    public static final NameMap<RewardAutoClaim> NAME_MAP = NameMap.createWithBaseTranslationKey(DEFAULT, "ftbquests.reward.autoclaim", values());
+    public static final NameMap<RewardAutoClaim> NAME_MAP_NO_DEFAULT = NameMap.createWithBaseTranslationKey(DISABLED, "ftbquests.reward.autoclaim", DISABLED, ENABLED, NO_TOAST, INVISIBLE);
 
-	private String id;
+    private final String id;
 
-	RewardAutoClaim(String s)
-	{
-		id = s;
-	}
+    RewardAutoClaim(String s) {
+        id = s;
+    }
 
-	@Override
-	public String getId()
-	{
-		return id;
-	}
+    @Override
+    public String getId() {
+        return id;
+    }
 }
