@@ -14,6 +14,7 @@ buildscript {
 	}
 }
 
+apply plugin: 'scala'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 group = package_group
@@ -43,6 +44,7 @@ repositories {
 }
 
 dependencies {
+	compileOnly 'org.scala-lang:scala-library:2.11.7'
 	implementation fileTree(dir: project.lib, include: ['*.jar'], exclude: ['*-sources.jar'])
 }
 
