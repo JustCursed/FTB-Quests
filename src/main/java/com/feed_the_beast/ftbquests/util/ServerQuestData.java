@@ -32,8 +32,7 @@ import tech.funkyra.ftb.collections.QuestsCollection;
 import java.io.File;
 import java.util.*;
 
-import static tech.funkyra.ftb.collections.QuestsCollection.getClaimedTeamRewards;
-import static tech.funkyra.ftb.collections.QuestsCollection.getTasks;
+import static tech.funkyra.ftb.collections.QuestsCollection.*;
 
 /**
  * @author LatvianModder
@@ -51,9 +50,9 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 
 	@SubscribeEvent
 	public static void onTeamSaved(ForgeTeamSavedEvent event) {
-		NBTTagCompound nbt = new NBTTagCompound();
-		ServerQuestData data = get(event.getTeam());
-		data.writeData(nbt);
+//		NBTTagCompound nbt = new NBTTagCompound();
+//		ServerQuestData data = get(event.getTeam());
+//		data.writeData(nbt);
 	}
 
 	@SubscribeEvent
@@ -68,8 +67,6 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 			}
 		}
 
-		NBTTagCompound nbt = NBTUtils.readNBT(event.getTeam().getDataFile("ftbquests"));
-//        data.readData(nbt == null ? new NBTTagCompound() : nbt);
 		data.readData(event.getTeam());
 	}
 
@@ -109,10 +106,7 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 	}
 
 	public static void updateInMemory(ForgeTeam team) {
-		NBTTagCompound nbt = NBTUtils.readNBT(team.getDataFile("ftbquests"));
 		ServerQuestData data = get(team);
-
-//		data.readData(nbt == null ? new NBTTagCompound() : nbt);
 		data.readData(team);
 	}
 
@@ -306,7 +300,7 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 			NBTTagCompound nbt = new NBTTagCompound();
 			ServerQuestData data = get(team);
 
-			data.writeData(nbt);
+			data.writeData(team.getUID(), nbt);
 
 			File file = team.getDataFile("ftbquests");
 
@@ -319,7 +313,7 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 		}
 	}
 
-	private void writeData(NBTTagCompound nbt) {
+	private void writeData(short uid, NBTTagCompound nbt) {
 		NBTTagCompound nbt1 = new NBTTagCompound();
 
 		for (TaskData data : taskData.values()) {
@@ -357,51 +351,55 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 				nbt.setTag("ClaimedPlayerRewards", nbt1);
 			}
 		}
+
+		setData(uid, nbt);
 	}
 
 	private void readData(ForgeTeam team) {
-//        short d = 1;
-//        List<Document> nbt1 = QuestsCollection.getTasks(d);
-		short uid = team.getUID();
-		NBTTagCompound tasks = getTasks(uid);
-//        System.out.println("PIZDAAAAAAAAA");
-//        System.out.println(nbt1);
+		NBTTagCompound nbt = getData(team.getUID());
+		NBTTagCompound tasks = nbt.getCompoundTag("Tasks");
 
-		for (String s : tasks.getKeySet()) {
+		for (String s : tasks.getKeySet())
+		{
 			Task task = ServerQuestFile.INSTANCE.getTask(ServerQuestFile.INSTANCE.getID(s));
 
-			if (task != null) {
+			if (task != null)
+			{
 				taskData.get(task.id).readProgress(tasks.getLong(s));
 			}
 		}
 
 		claimedTeamRewards.clear();
 
-		for (Object reward : getClaimedTeamRewards(uid)) {
-			claimedTeamRewards.add((Integer) reward);
+		for (int r : nbt.getIntArray("ClaimedTeamRewards")) {
+			claimedTeamRewards.add(r);
 		}
 
 		claimedPlayerRewards.clear();
 
-//		nbt1 = nbt.getCompoundTag("ClaimedPlayerRewards");
-//
-//		for (String s : nbt1.getKeySet()) {
-//			UUID id = StringUtils.fromString(s);
-//
-//			if (id != null) {
-//				int[] ar = nbt1.getIntArray(s);
-//
-//				if (ar.length > 0) {
-//					IntOpenHashSet set = new IntOpenHashSet(ar.length);
-//
-//					for (int r : ar) {
-//						set.add(r);
-//					}
-//
-//					claimedPlayerRewards.put(id, set);
-//				}
-//			}
-//		}
+		NBTTagCompound claimedPlayer = nbt.getCompoundTag("ClaimedPlayerRewards");
+
+		for (String s : claimedPlayer.getKeySet())
+		{
+			UUID id = StringUtils.fromString(s);
+
+			if (id != null)
+			{
+				int[] ar = claimedPlayer.getIntArray(s);
+
+				if (ar.length > 0)
+				{
+					IntOpenHashSet set = new IntOpenHashSet(ar.length);
+
+					for (int r : ar)
+					{
+						set.add(r);
+					}
+
+					claimedPlayerRewards.put(id, set);
+				}
+			}
+		}
 	}
 
 	@Override

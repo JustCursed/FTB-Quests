@@ -1,19 +1,16 @@
 package tech.funkyra.ftb;
 
-import com.mongodb.*;
+import com.mongodb.ConnectionString;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
 
 public class Database {
-	private static final MongoClientOptions.Builder options = MongoClientOptions.builder()
-		.connectionsPerHost(32)
-		.maxConnectionIdleTime(60000)
-		.maxConnectionLifeTime(120000)
-		.readConcern(ReadConcern.AVAILABLE)
-		.writeConcern(WriteConcern.ACKNOWLEDGED);
+	private static final ConnectionString connectionStr =
+		new ConnectionString("mongodb://admin:5HMV77zvNx5evGCif7sZCDz78XB@95.217.56.50:27017/?tls=false");
 
-	private static final MongoClientURI settings = new MongoClientURI("mongodb://user:passwd@127.0.0.1:1224/", options);
-	private static final MongoClient mongo = new MongoClient(settings);
+	private static final MongoClient mongo = MongoClients.create(connectionStr);
 	public static final MongoDatabase ftbDb = mongo.getDatabase("ftb");
 
 	public static final ReplaceOptions queryOption = new ReplaceOptions().upsert(true);
