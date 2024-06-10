@@ -26,7 +26,6 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.bson.Document;
 import tech.funkyra.ftb.collections.QuestsCollection;
 
 import java.io.File;
@@ -87,8 +86,8 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 
 	@SubscribeEvent
 	public static void onTeamDeleted(ForgeTeamDeletedEvent event) {
-		FileUtils.deleteSafe(event.getTeam().getDataFile("ftbquests"));
-		new MessageDeleteTeamData(event.getTeam().getUID()).sendToAll();
+//		FileUtils.deleteSafe(event.getTeam().getDataFile("ftbquests"));
+//		new MessageDeleteTeamData(event.getTeam().getUID()).sendToAll();
 	}
 
 	@SubscribeEvent
@@ -301,13 +300,6 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 			ServerQuestData data = get(team);
 
 			data.writeData(team.getUID(), nbt);
-
-			File file = team.getDataFile("ftbquests");
-
-			if (nbt.isEmpty())
-				FileUtils.deleteSafe(file);
-			else
-				NBTUtils.writeNBTSafe(file, nbt);
 
 			reward.claim(player, notify);
 		}
