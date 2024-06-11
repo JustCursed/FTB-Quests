@@ -6,11 +6,13 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.NBTDataStorage;
 import com.feed_the_beast.ftblib.lib.data.Universe;
-import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbquests.FTBQuests;
-import com.feed_the_beast.ftbquests.net.*;
+import com.feed_the_beast.ftbquests.net.MessageChangedTeam;
+import com.feed_the_beast.ftbquests.net.MessageClaimRewardResponse;
+import com.feed_the_beast.ftbquests.net.MessageCreateTeamData;
+import com.feed_the_beast.ftbquests.net.MessageSyncQuests;
 import com.feed_the_beast.ftbquests.quest.*;
 import com.feed_the_beast.ftbquests.quest.reward.Reward;
 import com.feed_the_beast.ftbquests.quest.reward.RewardAutoClaim;
@@ -26,12 +28,14 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import tech.funkyra.ftb.collections.QuestsCollection;
 
-import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-import static tech.funkyra.ftb.collections.QuestsCollection.*;
+import static tech.funkyra.ftb.collections.QuestsCollection.getData;
+import static tech.funkyra.ftb.collections.QuestsCollection.setData;
 
 /**
  * @author LatvianModder
@@ -66,7 +70,7 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 			}
 		}
 
-		data.readData(event.getTeam());
+		data.readData();
 	}
 
 	@SubscribeEvent
@@ -104,14 +108,10 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 		}
 	}
 
-	public static void updateInMemory(ForgeTeam team) {
-		ServerQuestData data = get(team);
-		data.readData(team);
-	}
-
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(ForgePlayerLoggedInEvent event) {
-		updateInMemory(event.getTeam());
+		get(event.getTeam()).readData(); // update player's quests data in memory
+
 		ServerQuestData teamData = ServerQuestData.get(event.getTeam());
 		EntityPlayerMP player = event.getPlayer().getPlayer();
 
@@ -299,13 +299,13 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 			NBTTagCompound nbt = new NBTTagCompound();
 			ServerQuestData data = get(team);
 
-			data.writeData(team.getUID(), nbt);
+			data.writeData(nbt);
 
 			reward.claim(player, notify);
 		}
 	}
 
-	private void writeData(short uid, NBTTagCompound nbt) {
+	private void writeData(NBTTagCompound nbt) {
 		NBTTagCompound nbt1 = new NBTTagCompound();
 
 		for (TaskData data : taskData.values()) {
@@ -344,11 +344,11 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 			}
 		}
 
-		setData(uid, nbt);
+		setData(this.team.getUID(), nbt);
 	}
 
-	private void readData(ForgeTeam team) {
-		NBTTagCompound nbt = getData(team.getUID());
+	private void readData() {
+		NBTTagCompound nbt = getData(this.team.getUID());
 		NBTTagCompound tasks = nbt.getCompoundTag("Tasks");
 
 		for (String s : tasks.getKeySet())
