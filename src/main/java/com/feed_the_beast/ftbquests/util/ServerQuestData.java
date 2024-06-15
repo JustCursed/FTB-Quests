@@ -9,10 +9,7 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbquests.FTBQuests;
-import com.feed_the_beast.ftbquests.net.MessageChangedTeam;
-import com.feed_the_beast.ftbquests.net.MessageClaimRewardResponse;
-import com.feed_the_beast.ftbquests.net.MessageCreateTeamData;
-import com.feed_the_beast.ftbquests.net.MessageSyncQuests;
+import com.feed_the_beast.ftbquests.net.*;
 import com.feed_the_beast.ftbquests.quest.*;
 import com.feed_the_beast.ftbquests.quest.reward.Reward;
 import com.feed_the_beast.ftbquests.quest.reward.RewardAutoClaim;
@@ -344,11 +341,11 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 			}
 		}
 
-		setData(this.team.getUID(), nbt);
+		setData(this.team.getId(), nbt);
 	}
 
 	private void readData() {
-		NBTTagCompound nbt = getData(this.team.getUID());
+		NBTTagCompound nbt = getData(this.team.getId());
 		NBTTagCompound tasks = nbt.getCompoundTag("Tasks");
 
 		for (String s : tasks.getKeySet())
