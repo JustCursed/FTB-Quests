@@ -10,13 +10,13 @@ import dev.latvian.kubejs.event.EventJS;
  */
 @Info("Event that gets fired when a task is started")
 public class TaskStartedEventJS extends EventJS {
-    public final transient TaskStartedEvent event;
+	public final transient TaskStartedEvent event;
 
-    public TaskStartedEventJS(TaskStartedEvent e) {
-        event = e;
-    }
+	public TaskStartedEventJS(TaskStartedEvent e) {
+		event = e;
+	}
 
-    public TaskData getTaskData() {
-        return event.getTaskData();
-    }
+	public TaskData getTaskData() {
+		return event.getTaskData();
+	}
 }

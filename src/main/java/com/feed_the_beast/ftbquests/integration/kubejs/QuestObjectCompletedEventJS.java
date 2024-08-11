@@ -14,33 +14,33 @@ import dev.latvian.kubejs.server.ServerJS;
  */
 @Info("Event that gets fired when an object is completed. It can be a file, quest, chapter, task")
 public class QuestObjectCompletedEventJS extends ServerEventJS {
-    @Ignore
-    public final ObjectCompletedEvent event;
+	@Ignore
+	public final ObjectCompletedEvent event;
 
-    @Override
-    public ServerJS getServer() {
-        return ServerJS.instance;
-    }
+	@Override
+	public ServerJS getServer() {
+		return ServerJS.instance;
+	}
 
-    public QuestObjectCompletedEventJS(ObjectCompletedEvent e) {
-        event = e;
-    }
+	public QuestObjectCompletedEventJS(ObjectCompletedEvent e) {
+		event = e;
+	}
 
-    public QuestData getData() {
-        return event.getData();
-    }
+	public QuestData getData() {
+		return event.getData();
+	}
 
-    public QuestObject getObject() {
-        return event.getObject();
-    }
+	public QuestObject getObject() {
+		return event.getObject();
+	}
 
-    @Info("List of notified players. It isn't always the list of online members of that team, for example, this list is empty when invisible quest was completed")
-    public EntityArrayList getNotifiedPlayers() {
-        return ServerJS.instance.getOverworld().createEntityList(event.getNotifiedPlayers());
-    }
+	@Info("List of notified players. It isn't always the list of online members of that team, for example, this list is empty when invisible quest was completed")
+	public EntityArrayList getNotifiedPlayers() {
+		return ServerJS.instance.getOverworld().createEntityList(event.getNotifiedPlayers());
+	}
 
-    @Info("List of all online team members")
-    public EntityArrayList getOnlineMembers() {
-        return ServerJS.instance.getOverworld().createEntityList(getData().getOnlineMembers());
-    }
+	@Info("List of all online team members")
+	public EntityArrayList getOnlineMembers() {
+		return ServerJS.instance.getOverworld().createEntityList(getData().getOnlineMembers());
+	}
 }

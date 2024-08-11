@@ -24,37 +24,37 @@ import java.util.List;
  * @author LatvianModder
  */
 public class ItemCustomIcon extends Item {
-    public ItemCustomIcon() {
-        setMaxStackSize(1);
-    }
+	public ItemCustomIcon() {
+		setMaxStackSize(1);
+	}
 
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-        ItemStack stack = player.getHeldItem(hand);
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		ItemStack stack = player.getHeldItem(hand);
 
-        if (world.isRemote) {
-            FTBQuests.PROXY.openCustomIconGui(stack);
-        }
+		if (world.isRemote) {
+			FTBQuests.PROXY.openCustomIconGui(stack);
+		}
 
-        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-    }
+		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+	}
 
-    @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            ItemStack stack = new ItemStack(this);
-            stack.setTagInfo("icon", new NBTTagString("ftblib:textures/icons/support.png"));
-            items.add(stack);
-        }
-    }
+	@Override
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+		if (isInCreativeTab(tab)) {
+			ItemStack stack = new ItemStack(this);
+			stack.setTagInfo("icon", new NBTTagString("ftblib:textures/icons/support.png"));
+			items.add(stack);
+		}
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(I18n.format("item.ftbquests.custom_icon.tooltip"));
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		tooltip.add(I18n.format("item.ftbquests.custom_icon.tooltip"));
 
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("icon")) {
-            tooltip.add(TextFormatting.DARK_GRAY + stack.getTagCompound().getString("icon"));
-        }
-    }
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("icon")) {
+			tooltip.add(TextFormatting.DARK_GRAY + stack.getTagCompound().getString("icon"));
+		}
+	}
 }

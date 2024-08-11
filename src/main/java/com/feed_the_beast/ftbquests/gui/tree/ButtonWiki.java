@@ -10,13 +10,13 @@ import net.minecraft.client.resources.I18n;
  * @author LatvianModder
  */
 public class ButtonWiki extends ButtonTab {
-    public ButtonWiki(Panel panel) {
-        super(panel, I18n.format("ftbquests.gui.wiki"), ThemeProperties.WIKI_ICON.get());
-    }
+	public ButtonWiki(Panel panel) {
+		super(panel, I18n.format("ftbquests.gui.wiki"), ThemeProperties.WIKI_ICON.get());
+	}
 
-    @Override
-    public void onClicked(MouseButton button) {
-        GuiHelper.playClickSound();
-        handleClick(ThemeProperties.WIKI_URL.get());
-    }
+	@Override
+	public void onClicked(MouseButton button) {
+		GuiHelper.playClickSound();
+		handleClick(ThemeProperties.WIKI_URL.get());
+	}
 }

@@ -17,47 +17,47 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 public class ReskillableItegration {
 
-    public static TaskType RESKILLABLE_TASK;
+	public static TaskType RESKILLABLE_TASK;
 
-    public static void preInit() {
-        MinecraftForge.EVENT_BUS.register(ReskillableItegration.class);
-    }
+	public static void preInit() {
+		MinecraftForge.EVENT_BUS.register(ReskillableItegration.class);
+	}
 
-    @SubscribeEvent
-    public static void registerTasks(RegistryEvent.Register<TaskType> event) {
-        event.getRegistry().register(RESKILLABLE_TASK = new TaskType(ReskillableTask::new).setRegistryName("reskillable").setIcon(Icon.getIcon(ReskillableTask.RESKILLABLE_TEXTURE.toString())));
-    }
+	@SubscribeEvent
+	public static void registerTasks(RegistryEvent.Register<TaskType> event) {
+		event.getRegistry().register(RESKILLABLE_TASK = new TaskType(ReskillableTask::new).setRegistryName("reskillable").setIcon(Icon.getIcon(ReskillableTask.RESKILLABLE_TEXTURE.toString())));
+	}
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.player instanceof EntityPlayerMP) {
-            checkSkills((EntityPlayerMP) event.player);
-        }
-    }
+	@SubscribeEvent(priority = EventPriority.LOW)
+	public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+		if (event.player instanceof EntityPlayerMP) {
+			checkSkills((EntityPlayerMP) event.player);
+		}
+	}
 
-    @SubscribeEvent
-    public static void onLevelUp(LevelUpEvent.Post event) {
-        if (event.getEntityPlayer() instanceof EntityPlayerMP) {
-            checkSkills((EntityPlayerMP) event.getEntityPlayer());
-        }
-    }
+	@SubscribeEvent
+	public static void onLevelUp(LevelUpEvent.Post event) {
+		if (event.getEntityPlayer() instanceof EntityPlayerMP) {
+			checkSkills((EntityPlayerMP) event.getEntityPlayer());
+		}
+	}
 
-    private static void checkSkills(EntityPlayerMP player) {
-        QuestData data = ServerQuestFile.INSTANCE == null ? null : ServerQuestFile.INSTANCE.getData(player);
+	private static void checkSkills(EntityPlayerMP player) {
+		QuestData data = ServerQuestFile.INSTANCE == null ? null : ServerQuestFile.INSTANCE.getData(player);
 
-        if (data != null) {
-            for (Chapter chapter : ServerQuestFile.INSTANCE.chapters) {
-                for (Quest quest : chapter.quests) {
-                    if (quest.canStartTasks(data)) {
-                        for (Task task : quest.tasks) {
-                            if (task instanceof ReskillableTask) {
-                                data.getTaskData(task).submitTask(player);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+		if (data != null) {
+			for (Chapter chapter : ServerQuestFile.INSTANCE.chapters) {
+				for (Quest quest : chapter.quests) {
+					if (quest.canStartTasks(data)) {
+						for (Task task : quest.tasks) {
+							if (task instanceof ReskillableTask) {
+								data.getTaskData(task).submitTask(player);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 

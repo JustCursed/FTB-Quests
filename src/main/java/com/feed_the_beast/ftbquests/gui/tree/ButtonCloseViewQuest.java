@@ -11,17 +11,17 @@ import net.minecraft.client.resources.I18n;
  * @author LatvianModder
  */
 public class ButtonCloseViewQuest extends SimpleTextButton {
-    public ButtonCloseViewQuest(PanelViewQuest parent) {
-        super(parent, I18n.format("gui.close"), ThemeProperties.CLOSE_ICON.get(parent.quest));
-    }
+	public ButtonCloseViewQuest(PanelViewQuest parent) {
+		super(parent, I18n.format("gui.close"), ThemeProperties.CLOSE_ICON.get(parent.quest));
+	}
 
-    @Override
-    public void onClicked(MouseButton button) {
-        GuiHelper.playClickSound();
-        ((GuiQuestTree) getGui()).closeQuest();
-    }
+	@Override
+	public void onClicked(MouseButton button) {
+		GuiHelper.playClickSound();
+		((GuiQuestTree) getGui()).closeQuest();
+	}
 
-    @Override
-    public void drawBackground(Theme theme, int x, int y, int w, int h) {
-    }
+	@Override
+	public void drawBackground(Theme theme, int x, int y, int w, int h) {
+	}
 }

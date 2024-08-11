@@ -14,43 +14,43 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author LatvianModder
  */
 public class MessageDeleteObjectResponse extends MessageToClient {
-    private int id;
+	private int id;
 
-    public MessageDeleteObjectResponse() {
-    }
+	public MessageDeleteObjectResponse() {
+	}
 
-    public MessageDeleteObjectResponse(int i) {
-        id = i;
-    }
+	public MessageDeleteObjectResponse(int i) {
+		id = i;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper() {
-        return FTBQuestsEditNetHandler.EDIT;
-    }
+	@Override
+	public NetworkWrapper getWrapper() {
+		return FTBQuestsEditNetHandler.EDIT;
+	}
 
-    @Override
-    public void writeData(DataOut data) {
-        data.writeInt(id);
-    }
+	@Override
+	public void writeData(DataOut data) {
+		data.writeInt(id);
+	}
 
-    @Override
-    public void readData(DataIn data) {
-        id = data.readInt();
-    }
+	@Override
+	public void readData(DataIn data) {
+		id = data.readInt();
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage() {
-        if (ClientQuestFile.exists()) {
-            QuestObjectBase object = ClientQuestFile.INSTANCE.getBase(id);
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onMessage() {
+		if (ClientQuestFile.exists()) {
+			QuestObjectBase object = ClientQuestFile.INSTANCE.getBase(id);
 
-            if (object != null) {
-                object.deleteChildren();
-                object.deleteSelf();
-                ClientQuestFile.INSTANCE.refreshIDMap();
-                object.editedFromGUI();
-                FTBQuestsJEIHelper.refresh(object);
-            }
-        }
-    }
+			if (object != null) {
+				object.deleteChildren();
+				object.deleteSelf();
+				ClientQuestFile.INSTANCE.refreshIDMap();
+				object.editedFromGUI();
+				FTBQuestsJEIHelper.refresh(object);
+			}
+		}
+	}
 }

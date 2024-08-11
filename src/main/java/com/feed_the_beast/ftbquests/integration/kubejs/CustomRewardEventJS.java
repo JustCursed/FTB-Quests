@@ -9,27 +9,27 @@ import dev.latvian.kubejs.player.PlayerEventJS;
  * @author LatvianModder
  */
 public class CustomRewardEventJS extends PlayerEventJS {
-    public final transient CustomRewardEvent event;
+	public final transient CustomRewardEvent event;
 
-    public CustomRewardEventJS(CustomRewardEvent e) {
-        event = e;
-    }
+	public CustomRewardEventJS(CustomRewardEvent e) {
+		event = e;
+	}
 
-    @Override
-    public boolean canCancel() {
-        return true;
-    }
+	@Override
+	public boolean canCancel() {
+		return true;
+	}
 
-    @Override
-    public EntityJS getEntity() {
-        return entityOf(event.getPlayer());
-    }
+	@Override
+	public EntityJS getEntity() {
+		return entityOf(event.getPlayer());
+	}
 
-    public CustomReward getReward() {
-        return event.getReward();
-    }
+	public CustomReward getReward() {
+		return event.getReward();
+	}
 
-    public boolean getNotify() {
-        return event.getNotify();
-    }
+	public boolean getNotify() {
+		return event.getNotify();
+	}
 }

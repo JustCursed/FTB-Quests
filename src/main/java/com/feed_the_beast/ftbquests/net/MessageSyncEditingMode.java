@@ -12,36 +12,36 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author LatvianModder
  */
 public class MessageSyncEditingMode extends MessageToClient {
-    public boolean editingMode;
+	public boolean editingMode;
 
-    public MessageSyncEditingMode() {
-    }
+	public MessageSyncEditingMode() {
+	}
 
-    public MessageSyncEditingMode(boolean e) {
-        editingMode = e;
-    }
+	public MessageSyncEditingMode(boolean e) {
+		editingMode = e;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper() {
-        return FTBQuestsNetHandler.GENERAL;
-    }
+	@Override
+	public NetworkWrapper getWrapper() {
+		return FTBQuestsNetHandler.GENERAL;
+	}
 
-    @Override
-    public void writeData(DataOut data) {
-        data.writeBoolean(editingMode);
-    }
+	@Override
+	public void writeData(DataOut data) {
+		data.writeBoolean(editingMode);
+	}
 
-    @Override
-    public void readData(DataIn data) {
-        editingMode = data.readBoolean();
-    }
+	@Override
+	public void readData(DataIn data) {
+		editingMode = data.readBoolean();
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage() {
-        if (ClientQuestFile.exists() && ClientQuestFile.INSTANCE.editingMode != editingMode) {
-            ClientQuestFile.INSTANCE.editingMode = editingMode;
-            ClientQuestFile.INSTANCE.refreshGui();
-        }
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onMessage() {
+		if (ClientQuestFile.exists() && ClientQuestFile.INSTANCE.editingMode != editingMode) {
+			ClientQuestFile.INSTANCE.editingMode = editingMode;
+			ClientQuestFile.INSTANCE.refreshGui();
+		}
+	}
 }

@@ -15,56 +15,56 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author LatvianModder
  */
 public class MessageMoveChapterResponse extends MessageToClient {
-    private int id;
-    private boolean up;
+	private int id;
+	private boolean up;
 
-    public MessageMoveChapterResponse() {
-    }
+	public MessageMoveChapterResponse() {
+	}
 
-    public MessageMoveChapterResponse(int i, boolean u) {
-        id = i;
-        up = u;
-    }
+	public MessageMoveChapterResponse(int i, boolean u) {
+		id = i;
+		up = u;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper() {
-        return FTBQuestsEditNetHandler.EDIT;
-    }
+	@Override
+	public NetworkWrapper getWrapper() {
+		return FTBQuestsEditNetHandler.EDIT;
+	}
 
-    @Override
-    public void writeData(DataOut data) {
-        data.writeInt(id);
-        data.writeBoolean(up);
-    }
+	@Override
+	public void writeData(DataOut data) {
+		data.writeInt(id);
+		data.writeBoolean(up);
+	}
 
-    @Override
-    public void readData(DataIn data) {
-        id = data.readInt();
-        up = data.readBoolean();
-    }
+	@Override
+	public void readData(DataIn data) {
+		id = data.readInt();
+		up = data.readBoolean();
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage() {
-        if (ClientQuestFile.INSTANCE != null) {
-            Chapter chapter = ClientQuestFile.INSTANCE.getChapter(id);
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onMessage() {
+		if (ClientQuestFile.INSTANCE != null) {
+			Chapter chapter = ClientQuestFile.INSTANCE.getChapter(id);
 
-            if (chapter != null) {
-                int index = ClientQuestFile.INSTANCE.chapters.indexOf(chapter);
+			if (chapter != null) {
+				int index = ClientQuestFile.INSTANCE.chapters.indexOf(chapter);
 
-                if (index != -1 && up ? (index > 0) : (index < ClientQuestFile.INSTANCE.chapters.size() - 1)) {
-                    ClientQuestFile.INSTANCE.chapters.remove(index);
-                    ClientQuestFile.INSTANCE.chapters.add(up ? index - 1 : index + 1, chapter);
-                    ClientQuestFile.INSTANCE.refreshIDMap();
+				if (index != -1 && up ? (index > 0) : (index < ClientQuestFile.INSTANCE.chapters.size() - 1)) {
+					ClientQuestFile.INSTANCE.chapters.remove(index);
+					ClientQuestFile.INSTANCE.chapters.add(up ? index - 1 : index + 1, chapter);
+					ClientQuestFile.INSTANCE.refreshIDMap();
 
-                    GuiQuestTree gui = ClientUtils.getCurrentGuiAs(GuiQuestTree.class);
+					GuiQuestTree gui = ClientUtils.getCurrentGuiAs(GuiQuestTree.class);
 
-                    if (gui != null) {
-                        gui.chapterPanel.refreshWidgets();
-                        gui.chapterPanel.alignWidgets();
-                    }
-                }
-            }
-        }
-    }
+					if (gui != null) {
+						gui.chapterPanel.refreshWidgets();
+						gui.chapterPanel.alignWidgets();
+					}
+				}
+			}
+		}
+	}
 }

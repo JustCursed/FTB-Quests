@@ -9,25 +9,25 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
  */
 @Cancelable
 public class CustomRewardEvent extends FTBQuestsEvent {
-    private final CustomReward reward;
-    private final EntityPlayerMP player;
-    private final boolean notify;
+	private final CustomReward reward;
+	private final EntityPlayerMP player;
+	private final boolean notify;
 
-    public CustomRewardEvent(CustomReward r, EntityPlayerMP p, boolean n) {
-        reward = r;
-        player = p;
-        notify = n;
-    }
+	public CustomRewardEvent(CustomReward r, EntityPlayerMP p, boolean n) {
+		reward = r;
+		player = p;
+		notify = n;
+	}
 
-    public CustomReward getReward() {
-        return reward;
-    }
+	public CustomReward getReward() {
+		return reward;
+	}
 
-    public EntityPlayerMP getPlayer() {
-        return player;
-    }
+	public EntityPlayerMP getPlayer() {
+		return player;
+	}
 
-    public boolean getNotify() {
-        return notify;
-    }
+	public boolean getNotify() {
+		return notify;
+	}
 }

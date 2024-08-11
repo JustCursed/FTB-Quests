@@ -6,11 +6,11 @@ import com.feed_the_beast.ftblib.lib.gui.Panel;
  * @author LatvianModder
  */
 public abstract class PanelOtherButtons extends Panel {
-    public final GuiQuestTree treeGui;
+	public final GuiQuestTree treeGui;
 
-    public PanelOtherButtons(Panel panel) {
-        super(panel);
-        treeGui = (GuiQuestTree) panel.getGui();
-        setWidth(20);
-    }
+	public PanelOtherButtons(Panel panel) {
+		super(panel);
+		treeGui = (GuiQuestTree) panel.getGui();
+		setWidth(20);
+	}
 }

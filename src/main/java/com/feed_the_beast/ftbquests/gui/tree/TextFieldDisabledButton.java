@@ -8,13 +8,13 @@ import com.feed_the_beast.ftblib.lib.gui.Theme;
  * @author LatvianModder
  */
 public class TextFieldDisabledButton extends TextField {
-    public TextFieldDisabledButton(Panel panel, String text) {
-        super(panel);
-        addFlags(Theme.CENTERED | Theme.CENTERED_V);
-        setText(text);
-    }
+	public TextFieldDisabledButton(Panel panel, String text) {
+		super(panel);
+		addFlags(Theme.CENTERED | Theme.CENTERED_V);
+		setText(text);
+	}
 
-    @Override
-    public void drawBackground(Theme theme, int x, int y, int w, int h) {
-    }
+	@Override
+	public void drawBackground(Theme theme, int x, int y, int w, int h) {
+	}
 }

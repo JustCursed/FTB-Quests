@@ -18,45 +18,45 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author LatvianModder
  */
 public class MessageDisplayRewardToast extends MessageToClient {
-    private int id;
-    private ITextComponent text;
-    private Icon icon;
+	private int id;
+	private ITextComponent text;
+	private Icon icon;
 
-    public MessageDisplayRewardToast() {
-    }
+	public MessageDisplayRewardToast() {
+	}
 
-    public MessageDisplayRewardToast(int _id, ITextComponent t, Icon i) {
-        id = _id;
-        text = t;
-        icon = i;
-    }
+	public MessageDisplayRewardToast(int _id, ITextComponent t, Icon i) {
+		id = _id;
+		text = t;
+		icon = i;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper() {
-        return FTBQuestsNetHandler.GENERAL;
-    }
+	@Override
+	public NetworkWrapper getWrapper() {
+		return FTBQuestsNetHandler.GENERAL;
+	}
 
-    @Override
-    public void writeData(DataOut data) {
-        data.writeInt(id);
-        data.writeTextComponent(text);
-        data.writeIcon(icon);
-    }
+	@Override
+	public void writeData(DataOut data) {
+		data.writeInt(id);
+		data.writeTextComponent(text);
+		data.writeIcon(icon);
+	}
 
-    @Override
-    public void readData(DataIn data) {
-        id = data.readInt();
-        text = data.readTextComponent();
-        icon = data.readIcon();
-    }
+	@Override
+	public void readData(DataIn data) {
+		id = data.readInt();
+		text = data.readTextComponent();
+		icon = data.readIcon();
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage() {
-        Icon i = icon.isEmpty() ? ClientQuestFile.INSTANCE.getBase(id).getIcon() : icon;
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onMessage() {
+		Icon i = icon.isEmpty() ? ClientQuestFile.INSTANCE.getBase(id).getIcon() : icon;
 
-        if (!IRewardListenerGui.add(new RewardKey(text.getUnformattedText(), i), 1)) {
-            Minecraft.getMinecraft().getToastGui().add(new RewardToast(text.getFormattedText(), i));
-        }
-    }
+		if (!IRewardListenerGui.add(new RewardKey(text.getUnformattedText(), i), 1)) {
+			Minecraft.getMinecraft().getToastGui().add(new RewardToast(text.getFormattedText(), i));
+		}
+	}
 }

@@ -7,13 +7,13 @@ import net.minecraft.command.ICommandSender;
  * @author LatvianModder
  */
 public abstract class CommandFTBQuestsBase extends CommandBase {
-    @Override
-    public String getUsage(ICommandSender sender) {
-        return "commands.ftbquests." + getName() + ".usage";
-    }
+	@Override
+	public String getUsage(ICommandSender sender) {
+		return "commands.ftbquests." + getName() + ".usage";
+	}
 
-    @Override
-    public int getRequiredPermissionLevel() {
-        return 2;
-    }
+	@Override
+	public int getRequiredPermissionLevel() {
+		return 2;
+	}
 }

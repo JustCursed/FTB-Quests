@@ -18,53 +18,53 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author LatvianModder
  */
 public class MessageCreateTeamData extends MessageToClient {
-    private short uid;
-    private String id;
-    private ITextComponent name;
+	private short uid;
+	private String id;
+	private ITextComponent name;
 
-    public MessageCreateTeamData() {
-    }
+	public MessageCreateTeamData() {
+	}
 
-    public MessageCreateTeamData(ForgeTeam team) {
-        uid = team.getUID();
-        id = team.getId();
-        name = team.getTitle();
-    }
+	public MessageCreateTeamData(ForgeTeam team) {
+		uid = team.getUID();
+		id = team.getId();
+		name = team.getTitle();
+	}
 
-    @Override
-    public NetworkWrapper getWrapper() {
-        return FTBQuestsNetHandler.GENERAL;
-    }
+	@Override
+	public NetworkWrapper getWrapper() {
+		return FTBQuestsNetHandler.GENERAL;
+	}
 
-    @Override
-    public void writeData(DataOut data) {
-        data.writeShort(uid);
-        data.writeString(id);
-        data.writeTextComponent(name);
-    }
+	@Override
+	public void writeData(DataOut data) {
+		data.writeShort(uid);
+		data.writeString(id);
+		data.writeTextComponent(name);
+	}
 
-    @Override
-    public void readData(DataIn data) {
-        uid = data.readShort();
-        id = data.readString();
-        name = data.readTextComponent();
-    }
+	@Override
+	public void readData(DataIn data) {
+		uid = data.readShort();
+		id = data.readString();
+		name = data.readTextComponent();
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage() {
-        if (ClientQuestFile.exists()) {
-            ClientQuestData data = new ClientQuestData(uid, id, name);
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onMessage() {
+		if (ClientQuestFile.exists()) {
+			ClientQuestData data = new ClientQuestData(uid, id, name);
 
-            for (Chapter chapter : ClientQuestFile.INSTANCE.chapters) {
-                for (Quest quest : chapter.quests) {
-                    for (Task task : quest.tasks) {
-                        data.createTaskData(task);
-                    }
-                }
-            }
+			for (Chapter chapter : ClientQuestFile.INSTANCE.chapters) {
+				for (Quest quest : chapter.quests) {
+					for (Task task : quest.tasks) {
+						data.createTaskData(task);
+					}
+				}
+			}
 
-            ClientQuestFile.INSTANCE.addData(data);
-        }
-    }
+			ClientQuestFile.INSTANCE.addData(data);
+		}
+	}
 }

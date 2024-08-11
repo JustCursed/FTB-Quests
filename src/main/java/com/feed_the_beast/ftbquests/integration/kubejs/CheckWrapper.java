@@ -8,14 +8,14 @@ import net.minecraft.entity.player.EntityPlayerMP;
  * @author LatvianModder
  */
 public class CheckWrapper implements CustomTask.Check {
-    private final CustomTaskCheckerJS checkerJS;
+	private final CustomTaskCheckerJS checkerJS;
 
-    CheckWrapper(CustomTaskCheckerJS c) {
-        checkerJS = c;
-    }
+	CheckWrapper(CustomTaskCheckerJS c) {
+		checkerJS = c;
+	}
 
-    @Override
-    public void check(CustomTask.Data taskData, EntityPlayerMP player) {
-        checkerJS.check(taskData, ServerJS.instance.getPlayer(player));
-    }
+	@Override
+	public void check(CustomTask.Data taskData, EntityPlayerMP player) {
+		checkerJS.check(taskData, ServerJS.instance.getPlayer(player));
+	}
 }

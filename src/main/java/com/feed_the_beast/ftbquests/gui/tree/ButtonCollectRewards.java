@@ -14,17 +14,17 @@ import net.minecraft.util.text.TextFormatting;
  * @author LatvianModder
  */
 public class ButtonCollectRewards extends ButtonTab {
-    public ButtonCollectRewards(Panel panel, int r) {
-        super(panel, I18n.format("ftbquests.gui.collect_rewards", TextFormatting.GOLD.toString() + r), ThemeProperties.COLLECT_REWARDS_ICON.get());
-    }
+	public ButtonCollectRewards(Panel panel, int r) {
+		super(panel, I18n.format("ftbquests.gui.collect_rewards", TextFormatting.GOLD.toString() + r), ThemeProperties.COLLECT_REWARDS_ICON.get());
+	}
 
-    @Override
-    public void onClicked(MouseButton button) {
-        GuiHelper.playClickSound();
+	@Override
+	public void onClicked(MouseButton button) {
+		GuiHelper.playClickSound();
 
-        if (ClientQuestFile.existsWithTeam()) {
-            new GuiRewardNotifications().openGui();
-            new MessageClaimAllRewards().sendToServer();
-        }
-    }
+		if (ClientQuestFile.existsWithTeam()) {
+			new GuiRewardNotifications().openGui();
+			new MessageClaimAllRewards().sendToServer();
+		}
+	}
 }

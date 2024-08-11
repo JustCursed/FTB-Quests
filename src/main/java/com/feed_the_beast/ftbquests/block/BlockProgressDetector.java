@@ -29,92 +29,92 @@ import java.util.List;
  * @author LatvianModder
  */
 public class BlockProgressDetector extends Block {
-    public BlockProgressDetector() {
-        super(Material.IRON);
-        setHardness(1F);
-    }
+	public BlockProgressDetector() {
+		super(Material.IRON);
+		setHardness(1F);
+	}
 
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
 
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileProgressDetector();
-    }
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
+		return new TileProgressDetector();
+	}
 
-    @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        ItemStack stack = new ItemStack(this);
+	@Override
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+		ItemStack stack = new ItemStack(this);
 
-        TileEntity tileEntity = world.getTileEntity(pos);
+		TileEntity tileEntity = world.getTileEntity(pos);
 
-        if (tileEntity instanceof TileProgressDetector) {
-            ((TileProgressDetector) tileEntity).writeToItem(stack);
-        }
+		if (tileEntity instanceof TileProgressDetector) {
+			((TileProgressDetector) tileEntity).writeToItem(stack);
+		}
 
-        return stack;
-    }
+		return stack;
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (!world.isRemote) {
+			TileEntity tileEntity = world.getTileEntity(pos);
 
-            if (tileEntity instanceof TileProgressDetector) {
-                ((TileProgressDetector) tileEntity).editConfig((EntityPlayerMP) player);
-            }
-        }
+			if (tileEntity instanceof TileProgressDetector) {
+				((TileProgressDetector) tileEntity).editConfig((EntityPlayerMP) player);
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		TileEntity tileEntity = world.getTileEntity(pos);
 
-        if (tileEntity instanceof TileProgressDetector) {
-            TileProgressDetector tile = (TileProgressDetector) tileEntity;
-            tile.readFromItem(stack);
-            tile.setIDFromPlacer(placer);
+		if (tileEntity instanceof TileProgressDetector) {
+			TileProgressDetector tile = (TileProgressDetector) tileEntity;
+			tile.readFromItem(stack);
+			tile.setIDFromPlacer(placer);
 
-            if (tile.object == 0) {
-                tile.object = 1;
-            }
-        }
-    }
+			if (tile.object == 0) {
+				tile.object = 1;
+			}
+		}
+	}
 
-    @Override
-    @Deprecated
-    public boolean canProvidePower(IBlockState state) {
-        return true;
-    }
+	@Override
+	@Deprecated
+	public boolean canProvidePower(IBlockState state) {
+		return true;
+	}
 
-    @Override
-    @Deprecated
-    public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	@Deprecated
+	public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+		TileEntity tileEntity = world.getTileEntity(pos);
 
-        if (tileEntity instanceof TileProgressDetector) {
-            return ((TileProgressDetector) tileEntity).redstoneOutput;
-        }
+		if (tileEntity instanceof TileProgressDetector) {
+			return ((TileProgressDetector) tileEntity).redstoneOutput;
+		}
 
-        return 0;
-    }
+		return 0;
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
-        if (world == null || !ClientQuestFile.exists()) {
-            return;
-        }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+		if (world == null || !ClientQuestFile.exists()) {
+			return;
+		}
 
-        NBTTagCompound nbt = stack.getTagCompound();
-        QuestObject object = nbt == null ? null : ClientQuestFile.INSTANCE.get(nbt.getInteger("Object"));
+		NBTTagCompound nbt = stack.getTagCompound();
+		QuestObject object = nbt == null ? null : ClientQuestFile.INSTANCE.get(nbt.getInteger("Object"));
 
-        if (object != null) {
-            tooltip.add(object.getYellowDisplayName());
-        }
-    }
+		if (object != null) {
+			tooltip.add(object.getYellowDisplayName());
+		}
+	}
 }

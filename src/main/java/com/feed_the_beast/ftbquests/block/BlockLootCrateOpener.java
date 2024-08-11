@@ -20,59 +20,59 @@ import net.minecraft.world.World;
  * @author LatvianModder
  */
 public class BlockLootCrateOpener extends BlockSpecialDrop {
-    public BlockLootCrateOpener() {
-        super(Material.WOOD, MapColor.WOOD);
-        setHardness(1.8F);
-    }
+	public BlockLootCrateOpener() {
+		super(Material.WOOD, MapColor.WOOD);
+		setHardness(1.8F);
+	}
 
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
 
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileLootCrateOpener();
-    }
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
+		return new TileLootCrateOpener();
+	}
 
-    @Override
-    @Deprecated
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
+	@Override
+	@Deprecated
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    @Deprecated
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
+	@Override
+	@Deprecated
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (!world.isRemote) {
+			TileEntity tileEntity = world.getTileEntity(pos);
 
-            if (tileEntity instanceof TileLootCrateOpener) {
-                int items = 0;
+			if (tileEntity instanceof TileLootCrateOpener) {
+				int items = 0;
 
-                for (ItemEntryWithCount entry : ((TileLootCrateOpener) tileEntity).items) {
-                    items += entry.count;
-                }
+				for (ItemEntryWithCount entry : ((TileLootCrateOpener) tileEntity).items) {
+					items += entry.count;
+				}
 
-                player.sendStatusMessage(new TextComponentTranslation("tile.ftbquests.loot_crate_opener.rightclick", items), true);
-            }
-        }
+				player.sendStatusMessage(new TextComponentTranslation("tile.ftbquests.loot_crate_opener.rightclick", items), true);
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		TileEntity tileEntity = world.getTileEntity(pos);
 
-        if (tileEntity instanceof TileLootCrateOpener) {
-            TileLootCrateOpener tile = (TileLootCrateOpener) tileEntity;
-            tile.owner = placer.getUniqueID();
-        }
-    }
+		if (tileEntity instanceof TileLootCrateOpener) {
+			TileLootCrateOpener tile = (TileLootCrateOpener) tileEntity;
+			tile.owner = placer.getUniqueID();
+		}
+	}
 }

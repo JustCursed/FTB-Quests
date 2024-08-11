@@ -15,48 +15,48 @@ import net.minecraft.entity.player.EntityPlayerMP;
  * @author LatvianModder
  */
 public class MessageClaimChoiceReward extends MessageToServer {
-    private int id;
-    private int index;
+	private int id;
+	private int index;
 
-    public MessageClaimChoiceReward() {
-    }
+	public MessageClaimChoiceReward() {
+	}
 
-    public MessageClaimChoiceReward(int i, int idx) {
-        id = i;
-        index = idx;
-    }
+	public MessageClaimChoiceReward(int i, int idx) {
+		id = i;
+		index = idx;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper() {
-        return FTBQuestsNetHandler.GENERAL;
-    }
+	@Override
+	public NetworkWrapper getWrapper() {
+		return FTBQuestsNetHandler.GENERAL;
+	}
 
-    @Override
-    public void writeData(DataOut data) {
-        data.writeInt(id);
-        data.writeVarInt(index);
-    }
+	@Override
+	public void writeData(DataOut data) {
+		data.writeInt(id);
+		data.writeVarInt(index);
+	}
 
-    @Override
-    public void readData(DataIn data) {
-        id = data.readInt();
-        index = data.readVarInt();
-    }
+	@Override
+	public void readData(DataIn data) {
+		id = data.readInt();
+		index = data.readVarInt();
+	}
 
-    @Override
-    public void onMessage(EntityPlayerMP player) {
-        Reward reward = ServerQuestFile.INSTANCE.getReward(id);
+	@Override
+	public void onMessage(EntityPlayerMP player) {
+		Reward reward = ServerQuestFile.INSTANCE.getReward(id);
 
-        if (reward instanceof ChoiceReward) {
-            ChoiceReward r = (ChoiceReward) reward;
-            ServerQuestData teamData = ServerQuestData.get(Universe.get().getPlayer(player).team);
+		if (reward instanceof ChoiceReward) {
+			ChoiceReward r = (ChoiceReward) reward;
+			ServerQuestData teamData = ServerQuestData.get(Universe.get().getPlayer(player).team);
 
-            if (r.getTable() != null && reward.quest.isComplete(teamData)) {
-                if (index >= 0 && index < r.getTable().rewards.size()) {
-                    r.getTable().rewards.get(index).reward.claim(player, true);
-                    teamData.claimReward(player, reward, true);
-                }
-            }
-        }
-    }
+			if (r.getTable() != null && reward.quest.isComplete(teamData)) {
+				if (index >= 0 && index < r.getTable().rewards.size()) {
+					r.getTable().rewards.get(index).reward.claim(player, true);
+					teamData.claimReward(player, reward, true);
+				}
+			}
+		}
+	}
 }

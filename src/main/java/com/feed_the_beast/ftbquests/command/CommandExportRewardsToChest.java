@@ -28,75 +28,75 @@ import java.util.List;
  * @author LatvianModder
  */
 public class CommandExportRewardsToChest extends CommandFTBQuestsBase {
-    @Override
-    public String getName() {
-        return "export_rewards_to_chest";
-    }
+	@Override
+	public String getName() {
+		return "export_rewards_to_chest";
+	}
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
-        if (args.length == 1) {
-            List<String> list = new ArrayList<>(ServerQuestFile.INSTANCE.rewardTables.size());
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+		if (args.length == 1) {
+			List<String> list = new ArrayList<>(ServerQuestFile.INSTANCE.rewardTables.size());
 
-            for (RewardTable table : ServerQuestFile.INSTANCE.rewardTables) {
-                if (table.lootCrate != null) {
-                    list.add(table.lootCrate.stringID);
-                }
-            }
+			for (RewardTable table : ServerQuestFile.INSTANCE.rewardTables) {
+				if (table.lootCrate != null) {
+					list.add(table.lootCrate.stringID);
+				}
+			}
 
-            for (RewardTable table : ServerQuestFile.INSTANCE.rewardTables) {
-                if (table.lootCrate == null) {
-                    list.add(QuestObjectBase.getCodeString(table));
-                }
-            }
+			for (RewardTable table : ServerQuestFile.INSTANCE.rewardTables) {
+				if (table.lootCrate == null) {
+					list.add(QuestObjectBase.getCodeString(table));
+				}
+			}
 
-            return getListOfStringsMatchingLastWord(args, list);
-        }
+			return getListOfStringsMatchingLastWord(args, list);
+		}
 
-        return super.getTabCompletions(server, sender, args, pos);
-    }
+		return super.getTabCompletions(server, sender, args, pos);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
-        if (args.length < 1) {
-            throw new WrongUsageException(getUsage(sender));
-        }
+		if (args.length < 1) {
+			throw new WrongUsageException(getUsage(sender));
+		}
 
-        RewardTable table = ServerQuestFile.INSTANCE.getRewardTable(args[0]);
+		RewardTable table = ServerQuestFile.INSTANCE.getRewardTable(args[0]);
 
-        if (table == null) {
-            throw FTBLib.error(sender, "commands.ftbquests.import_rewards_from_chest.invalid_id", args[0]);
-        }
+		if (table == null) {
+			throw FTBLib.error(sender, "commands.ftbquests.import_rewards_from_chest.invalid_id", args[0]);
+		}
 
-        RayTraceResult ray = MathUtils.rayTrace(player, false);
+		RayTraceResult ray = MathUtils.rayTrace(player, false);
 
-        if (ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK) {
-            TileEntity tileEntity = player.world.getTileEntity(ray.getBlockPos());
+		if (ray != null && ray.typeOfHit == RayTraceResult.Type.BLOCK) {
+			TileEntity tileEntity = player.world.getTileEntity(ray.getBlockPos());
 
-            if (tileEntity != null) {
-                IItemHandler handler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, ray.sideHit);
+			if (tileEntity != null) {
+				IItemHandler handler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, ray.sideHit);
 
-                if (handler != null) {
-                    int r = 0;
+				if (handler != null) {
+					int r = 0;
 
-                    for (WeightedReward reward : table.rewards) {
-                        Object object = reward.reward.getIngredient();
+					for (WeightedReward reward : table.rewards) {
+						Object object = reward.reward.getIngredient();
 
-                        if (object instanceof ItemStack && !((ItemStack) object).isEmpty()) {
-                            ItemStack stack1 = ((ItemStack) object).copy();
-                            stack1.setCount(1);
+						if (object instanceof ItemStack && !((ItemStack) object).isEmpty()) {
+							ItemStack stack1 = ((ItemStack) object).copy();
+							stack1.setCount(1);
 
-                            if (ItemHandlerHelper.insertItem(handler, stack1, false).isEmpty()) {
-                                r++;
-                            }
-                        }
-                    }
+							if (ItemHandlerHelper.insertItem(handler, stack1, false).isEmpty()) {
+								r++;
+							}
+						}
+					}
 
-                    sender.sendMessage(new TextComponentTranslation("commands.ftbquests.export_rewards_to_chest.text", Integer.toString(r), Integer.toString(table.rewards.size()), table.getTitle()));
-                }
-            }
-        }
-    }
+					sender.sendMessage(new TextComponentTranslation("commands.ftbquests.export_rewards_to_chest.text", Integer.toString(r), Integer.toString(table.rewards.size()), table.getTitle()));
+				}
+			}
+		}
+	}
 }

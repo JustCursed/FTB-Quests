@@ -18,43 +18,43 @@ import java.util.UUID;
  * @author LatvianModder
  */
 public class ChoiceReward extends RandomReward {
-    public ChoiceReward(Quest quest) {
-        super(quest);
-    }
+	public ChoiceReward(Quest quest) {
+		super(quest);
+	}
 
-    @Override
-    public RewardType getType() {
-        return FTBQuestsRewards.CHOICE;
-    }
+	@Override
+	public RewardType getType() {
+		return FTBQuestsRewards.CHOICE;
+	}
 
-    @Override
-    public void claim(EntityPlayerMP player, boolean notify) {
-    }
+	@Override
+	public void claim(EntityPlayerMP player, boolean notify) {
+	}
 
-    @Override
-    public boolean automatedClaimPre(TileEntity tileEntity, List<ItemStack> items, Random random, UUID playerId, @Nullable EntityPlayerMP player) {
-        return false;
-    }
+	@Override
+	public boolean automatedClaimPre(TileEntity tileEntity, List<ItemStack> items, Random random, UUID playerId, @Nullable EntityPlayerMP player) {
+		return false;
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addMouseOverText(List<String> list) {
-        if (getTable() != null) {
-            getTable().addMouseOverText(list, false, false);
-        }
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addMouseOverText(List<String> list) {
+		if (getTable() != null) {
+			getTable().addMouseOverText(list, false, false);
+		}
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onButtonClicked(boolean canClick) {
-        if (canClick) {
-            GuiHelper.playClickSound();
-            new GuiSelectChoiceReward(this).openGui();
-        }
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onButtonClicked(boolean canClick) {
+		if (canClick) {
+			GuiHelper.playClickSound();
+			new GuiSelectChoiceReward(this).openGui();
+		}
+	}
 
-    @Override
-    public boolean getExcludeFromClaimAll() {
-        return true;
-    }
+	@Override
+	public boolean getExcludeFromClaimAll() {
+		return true;
+	}
 }

@@ -22,55 +22,55 @@ import net.minecraft.world.World;
  * @author LatvianModder
  */
 public class BlockLootCrateStorage extends BlockSpecialDrop {
-    public BlockLootCrateStorage() {
-        super(Material.WOOD, MapColor.WOOD);
-        setHardness(1.8F);
-    }
+	public BlockLootCrateStorage() {
+		super(Material.WOOD, MapColor.WOOD);
+		setHardness(1.8F);
+	}
 
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
 
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileLootCrateStorage(world);
-    }
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
+		return new TileLootCrateStorage(world);
+	}
 
-    @Override
-    @Deprecated
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
+	@Override
+	@Deprecated
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    @Deprecated
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
+	@Override
+	@Deprecated
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (!world.isRemote) {
+			TileEntity tileEntity = world.getTileEntity(pos);
 
-            if (tileEntity instanceof TileLootCrateStorage) {
-                TileLootCrateStorage tile = (TileLootCrateStorage) tileEntity;
+			if (tileEntity instanceof TileLootCrateStorage) {
+				TileLootCrateStorage tile = (TileLootCrateStorage) tileEntity;
 
-                for (RewardTable table : ServerQuestFile.INSTANCE.rewardTables) {
-                    if (table.lootCrate != null && !table.lootCrate.stringID.isEmpty()) {
-                        //FIXME: Send message to client with table contents
-                        ITextComponent component = new TextComponentString("");
-                        //component.appendSibling(table.getTitle().createCopy());
-                        component.appendSibling(new TextComponentString(table.lootCrate.stringID));
-                        component.appendText(": ");
-                        component.appendSibling(StringUtils.color(new TextComponentString(Integer.toString(tile.crates.getInt(table.lootCrate.stringID))), TextFormatting.GOLD));
-                        player.sendMessage(component);
-                    }
-                }
-            }
-        }
+				for (RewardTable table : ServerQuestFile.INSTANCE.rewardTables) {
+					if (table.lootCrate != null && !table.lootCrate.stringID.isEmpty()) {
+						//FIXME: Send message to client with table contents
+						ITextComponent component = new TextComponentString("");
+						//component.appendSibling(table.getTitle().createCopy());
+						component.appendSibling(new TextComponentString(table.lootCrate.stringID));
+						component.appendText(": ");
+						component.appendSibling(StringUtils.color(new TextComponentString(Integer.toString(tile.crates.getInt(table.lootCrate.stringID))), TextFormatting.GOLD));
+						player.sendMessage(component);
+					}
+				}
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 }

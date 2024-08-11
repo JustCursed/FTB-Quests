@@ -32,108 +32,108 @@ import java.util.List;
  * @author LatvianModder
  */
 public class BlockQuestChest extends BlockWithHorizontalFacing {
-    private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0, 0.0625, 0.9375, 0.875, 0.9375);
+	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0, 0.0625, 0.9375, 0.875, 0.9375);
 
-    public BlockQuestChest() {
-        super(Material.WOOD, MapColor.GRAY);
-        setHardness(1F);
-    }
+	public BlockQuestChest() {
+		super(Material.WOOD, MapColor.GRAY);
+		setHardness(1F);
+	}
 
-    @Override
-    public boolean isToolEffective(String type, IBlockState state) {
-        return "axe".equals(type) || "pickaxe".equals(type);
-    }
+	@Override
+	public boolean isToolEffective(String type, IBlockState state) {
+		return "axe".equals(type) || "pickaxe".equals(type);
+	}
 
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
 
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileQuestChest();
-    }
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
+		return new TileQuestChest();
+	}
 
-    @Override
-    @Deprecated
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
+	@Override
+	@Deprecated
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    @Deprecated
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
+	@Override
+	@Deprecated
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    @Deprecated
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return AABB;
-    }
+	@Override
+	@Deprecated
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		return AABB;
+	}
 
-    @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        ItemStack stack = new ItemStack(FTBQuestsItems.CHEST);
-        TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+		ItemStack stack = new ItemStack(FTBQuestsItems.CHEST);
+		TileEntity tileEntity = world.getTileEntity(pos);
 
-        if (tileEntity instanceof TileQuestChest) {
-            ((TileQuestChest) tileEntity).writeToItem(stack);
-        }
+		if (tileEntity instanceof TileQuestChest) {
+			((TileQuestChest) tileEntity).writeToItem(stack);
+		}
 
-        return stack;
-    }
+		return stack;
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (!world.isRemote) {
+			TileEntity tileEntity = world.getTileEntity(pos);
 
-            if (tileEntity instanceof TileQuestChest) {
-                ((TileQuestChest) tileEntity).openGui((EntityPlayerMP) player);
-            }
-        }
+			if (tileEntity instanceof TileQuestChest) {
+				((TileQuestChest) tileEntity).openGui((EntityPlayerMP) player);
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		TileEntity tileEntity = world.getTileEntity(pos);
 
-        if (tileEntity instanceof TileQuestChest) {
-            TileQuestChest tile = (TileQuestChest) tileEntity;
-            tile.readFromItem(stack);
-            tile.setIDFromPlacer(placer);
-        }
-    }
+		if (tileEntity instanceof TileQuestChest) {
+			TileQuestChest tile = (TileQuestChest) tileEntity;
+			tile.readFromItem(stack);
+			tile.setIDFromPlacer(placer);
+		}
+	}
 
-    @Override
-    @Deprecated
-    public float getBlockHardness(IBlockState state, World world, BlockPos pos) {
-        TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	@Deprecated
+	public float getBlockHardness(IBlockState state, World world, BlockPos pos) {
+		TileEntity tileEntity = world.getTileEntity(pos);
 
-        if (tileEntity instanceof TileQuestChest && ((TileQuestChest) tileEntity).indestructible) {
-            return -1F;
-        }
+		if (tileEntity instanceof TileQuestChest && ((TileQuestChest) tileEntity).indestructible) {
+			return -1F;
+		}
 
-        return super.getBlockHardness(state, world, pos);
-    }
+		return super.getBlockHardness(state, world, pos);
+	}
 
-    @Override
-    public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion) {
-        TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion) {
+		TileEntity tileEntity = world.getTileEntity(pos);
 
-        if (tileEntity instanceof TileQuestChest && ((TileQuestChest) tileEntity).indestructible) {
-            return Float.MAX_VALUE;
-        }
+		if (tileEntity instanceof TileQuestChest && ((TileQuestChest) tileEntity).indestructible) {
+			return Float.MAX_VALUE;
+		}
 
-        return super.getExplosionResistance(world, pos, exploder, explosion);
-    }
+		return super.getExplosionResistance(world, pos, exploder, explosion);
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(TextFormatting.RED + I18n.format("tile.ftbquests.chest.deprecated"));
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		tooltip.add(TextFormatting.RED + I18n.format("tile.ftbquests.chest.deprecated"));
+	}
 }

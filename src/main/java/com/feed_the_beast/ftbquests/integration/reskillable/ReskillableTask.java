@@ -25,83 +25,83 @@ import java.util.Collection;
  */
 public class ReskillableTask extends Task {
 
-    public static final ResourceLocation RESKILLABLE_TEXTURE = new ResourceLocation(FTBQuests.MOD_ID, "textures/tasks/reskillable.png");
+	public static final ResourceLocation RESKILLABLE_TEXTURE = new ResourceLocation(FTBQuests.MOD_ID, "textures/tasks/reskillable.png");
 
-    public String skill = "";
-    public int skill_level = 0;
+	public String skill = "";
+	public int skill_level = 0;
 
-    public ReskillableTask(Quest quest) {
-        super(quest);
-    }
+	public ReskillableTask(Quest quest) {
+		super(quest);
+	}
 
-    @Override
-    public TaskType getType() {
-        return ReskillableItegration.RESKILLABLE_TASK;
-    }
+	@Override
+	public TaskType getType() {
+		return ReskillableItegration.RESKILLABLE_TASK;
+	}
 
-    @Override
-    public void writeData(NBTTagCompound nbt) {
-        super.writeData(nbt);
-        nbt.setString("skill", skill);
-        nbt.setInteger("skill_level", skill_level);
-    }
+	@Override
+	public void writeData(NBTTagCompound nbt) {
+		super.writeData(nbt);
+		nbt.setString("skill", skill);
+		nbt.setInteger("skill_level", skill_level);
+	}
 
-    @Override
-    public void readData(NBTTagCompound nbt) {
-        super.readData(nbt);
-        skill = nbt.getString("skill");
-        skill_level = nbt.getInteger("skill_level");
-    }
+	@Override
+	public void readData(NBTTagCompound nbt) {
+		super.readData(nbt);
+		skill = nbt.getString("skill");
+		skill_level = nbt.getInteger("skill_level");
+	}
 
-    @Override
-    public void writeNetData(DataOut data) {
-        super.writeNetData(data);
-        data.writeString(skill);
-        data.writeVarInt(skill_level);
-    }
+	@Override
+	public void writeNetData(DataOut data) {
+		super.writeNetData(data);
+		data.writeString(skill);
+		data.writeVarInt(skill_level);
+	}
 
-    @Override
-    public void readNetData(DataIn data) {
-        super.readNetData(data);
-        skill = data.readString();
-        skill_level = data.readVarInt();
-    }
+	@Override
+	public void readNetData(DataIn data) {
+		super.readNetData(data);
+		skill = data.readString();
+		skill_level = data.readVarInt();
+	}
 
-    @Override
-    public void getConfig(ConfigGroup config) {
-        super.getConfig(config);
-        config.addString("skill", () -> skill, v -> skill = v, "");
-        config.addInt("skill_level", () -> skill_level, v -> skill_level = v, 0, 1, Integer.MAX_VALUE);
-    }
+	@Override
+	public void getConfig(ConfigGroup config) {
+		super.getConfig(config);
+		config.addString("skill", () -> skill, v -> skill = v, "");
+		config.addInt("skill_level", () -> skill_level, v -> skill_level = v, 0, 1, Integer.MAX_VALUE);
+	}
 
-    @Override
-    public String getAltTitle() {
-        return I18n.format("ftbquests.task.ftbquests.reskillable.skillyouneed") + ": " + TextFormatting.YELLOW + skill + " (" + skill_level + ")";
-    }
+	@Override
+	public String getAltTitle() {
+		return I18n.format("ftbquests.task.ftbquests.reskillable.skillyouneed") + ": " + TextFormatting.YELLOW + skill + " (" + skill_level + ")";
+	}
 
-    @Override
-    public TaskData createData(QuestData data) {
-        return new Data(this, data);
-    }
+	@Override
+	public TaskData createData(QuestData data) {
+		return new Data(this, data);
+	}
 
-    public static class Data extends BooleanTaskData<ReskillableTask> {
+	public static class Data extends BooleanTaskData<ReskillableTask> {
 
-        public Data(ReskillableTask task, QuestData data) {
-            super(task, data);
-        }
+		public Data(ReskillableTask task, QuestData data) {
+			super(task, data);
+		}
 
-        @Override
-        public boolean canSubmit(EntityPlayerMP player) {
-            return playerHasSkillLevel(player, task.skill, task.skill_level);
-        }
+		@Override
+		public boolean canSubmit(EntityPlayerMP player) {
+			return playerHasSkillLevel(player, task.skill, task.skill_level);
+		}
 
-        private boolean playerHasSkillLevel(EntityPlayerMP player, String skill, int lvl) {
-            Collection<PlayerSkillInfo> skills = PlayerDataHandler.get(player).getAllSkillInfo();
+		private boolean playerHasSkillLevel(EntityPlayerMP player, String skill, int lvl) {
+			Collection<PlayerSkillInfo> skills = PlayerDataHandler.get(player).getAllSkillInfo();
 
-            for (PlayerSkillInfo playerSkillInfo : skills) {
-                if (playerSkillInfo.skill.getName().equals(skill) && playerSkillInfo.getLevel() == lvl) return true;
-            }
-            return false;
-        }
-    }
+			for (PlayerSkillInfo playerSkillInfo : skills) {
+				if (playerSkillInfo.skill.getName().equals(skill) && playerSkillInfo.getLevel() == lvl) return true;
+			}
+			return false;
+		}
+	}
 }

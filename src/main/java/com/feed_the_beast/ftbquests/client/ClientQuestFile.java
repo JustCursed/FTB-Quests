@@ -24,224 +24,224 @@ import java.util.UUID;
  * @author LatvianModder
  */
 public class ClientQuestFile extends QuestFile {
-    public static ClientQuestFile INSTANCE;
+	public static ClientQuestFile INSTANCE;
 
-    public static boolean exists() {
-        return INSTANCE != null && !INSTANCE.invalid;
-    }
+	public static boolean exists() {
+		return INSTANCE != null && !INSTANCE.invalid;
+	}
 
-    public static boolean existsWithTeam() {
-        return exists() && INSTANCE.self != null;
-    }
+	public static boolean existsWithTeam() {
+		return exists() && INSTANCE.self != null;
+	}
 
-    private final Short2ObjectOpenHashMap<ClientQuestData> teamData;
-    public ClientQuestData self;
-    public GuiQuestTree questTreeGui;
-    public GuiBase questGui;
-    public boolean editingMode;
-    public final Object2ShortOpenHashMap<UUID> playerTeams;
-    public final IntOpenHashSet pinnedQuests;
+	private final Short2ObjectOpenHashMap<ClientQuestData> teamData;
+	public ClientQuestData self;
+	public GuiQuestTree questTreeGui;
+	public GuiBase questGui;
+	public boolean editingMode;
+	public final Object2ShortOpenHashMap<UUID> playerTeams;
+	public final IntOpenHashSet pinnedQuests;
 
-    public ClientQuestFile() {
-        teamData = new Short2ObjectOpenHashMap<>();
-        playerTeams = new Object2ShortOpenHashMap<>();
-        playerTeams.defaultReturnValue((short) 0);
-        pinnedQuests = new IntOpenHashSet();
-    }
+	public ClientQuestFile() {
+		teamData = new Short2ObjectOpenHashMap<>();
+		playerTeams = new Object2ShortOpenHashMap<>();
+		playerTeams.defaultReturnValue((short) 0);
+		pinnedQuests = new IntOpenHashSet();
+	}
 
-    public void load(MessageSyncQuests message) {
-        if (INSTANCE != null) {
-            INSTANCE.deleteChildren();
-            INSTANCE.deleteSelf();
-        }
+	public void load(MessageSyncQuests message) {
+		if (INSTANCE != null) {
+			INSTANCE.deleteChildren();
+			INSTANCE.deleteSelf();
+		}
 
-        INSTANCE = this;
+		INSTANCE = this;
 
-        for (MessageSyncQuests.TeamInst team : message.teamData) {
-            ClientQuestData data = new ClientQuestData(team.uid, team.id, team.name);
+		for (MessageSyncQuests.TeamInst team : message.teamData) {
+			ClientQuestData data = new ClientQuestData(team.uid, team.id, team.name);
 
-            for (Chapter chapter : chapters) {
-                for (Quest quest : chapter.quests) {
-                    for (Task task : quest.tasks) {
-                        data.createTaskData(task);
-                    }
-                }
-            }
+			for (Chapter chapter : chapters) {
+				for (Quest quest : chapter.quests) {
+					for (Task task : quest.tasks) {
+						data.createTaskData(task);
+					}
+				}
+			}
 
-            for (int i = 0; i < team.taskKeys.length; i++) {
-                Task task = getTask(team.taskKeys[i]);
+			for (int i = 0; i < team.taskKeys.length; i++) {
+				Task task = getTask(team.taskKeys[i]);
 
-                if (task != null) {
-                    data.getTaskData(task).readProgress(team.taskValues[i]);
-                }
-            }
+				if (task != null) {
+					data.getTaskData(task).readProgress(team.taskValues[i]);
+				}
+			}
 
-            for (int i = 0; i < team.playerRewardUUIDs.length; i++) {
-                data.claimedPlayerRewards.put(team.playerRewardUUIDs[i], fromArray(team.playerRewardIDs[i]));
-            }
+			for (int i = 0; i < team.playerRewardUUIDs.length; i++) {
+				data.claimedPlayerRewards.put(team.playerRewardUUIDs[i], fromArray(team.playerRewardIDs[i]));
+			}
 
-            data.claimedTeamRewards.addAll(fromArray(team.teamRewards));
-            teamData.put(data.getTeamUID(), data);
-        }
+			data.claimedTeamRewards.addAll(fromArray(team.teamRewards));
+			teamData.put(data.getTeamUID(), data);
+		}
 
-        self = message.team == 0 ? null : teamData.get(message.team);
-        editingMode = message.editingMode;
+		self = message.team == 0 ? null : teamData.get(message.team);
+		editingMode = message.editingMode;
 
-        playerTeams.clear();
+		playerTeams.clear();
 
-        for (int i = 0; i < message.playerIDs.length; i++) {
-            playerTeams.put(message.playerIDs[i], message.playerTeams[i]);
-        }
+		for (int i = 0; i < message.playerIDs.length; i++) {
+			playerTeams.put(message.playerIDs[i], message.playerTeams[i]);
+		}
 
-        pinnedQuests.clear();
+		pinnedQuests.clear();
 
-        for (int i : message.favorites) {
-            pinnedQuests.add(i);
-        }
+		for (int i : message.favorites) {
+			pinnedQuests.add(i);
+		}
 
-        refreshGui();
-        FTBQuestsJEIHelper.refresh(this);
-    }
+		refreshGui();
+		FTBQuestsJEIHelper.refresh(this);
+	}
 
-    private IntOpenHashSet fromArray(int[] array) {
-        IntOpenHashSet set = new IntOpenHashSet(array.length);
+	private IntOpenHashSet fromArray(int[] array) {
+		IntOpenHashSet set = new IntOpenHashSet(array.length);
 
-        for (int i : array) {
-            set.add(i);
-        }
+		for (int i : array) {
+			set.add(i);
+		}
 
-        return set;
-    }
+		return set;
+	}
 
-    @Override
-    public boolean canEdit() {
-        return editingMode;
-    }
+	@Override
+	public boolean canEdit() {
+		return editingMode;
+	}
 
-    public void refreshGui() {
-        clearCachedData();
+	public void refreshGui() {
+		clearCachedData();
 
-        boolean hasPrev = false;
-        boolean guiOpen = false;
-        int zoom = 0;
-        double scrollX = 0, scrollY = 0;
-        int selectedChapter = 0;
-        int[] selectedQuests = new int[0];
+		boolean hasPrev = false;
+		boolean guiOpen = false;
+		int zoom = 0;
+		double scrollX = 0, scrollY = 0;
+		int selectedChapter = 0;
+		int[] selectedQuests = new int[0];
 
-        if (questTreeGui != null) {
-            hasPrev = true;
-            zoom = questTreeGui.zoom;
-            scrollX = questTreeGui.questPanel.centerQuestX;
-            scrollY = questTreeGui.questPanel.centerQuestY;
-            selectedChapter = questTreeGui.selectedChapter == null ? 0 : questTreeGui.selectedChapter.id;
-            selectedQuests = new int[questTreeGui.selectedObjects.size()];
-            int i = 0;
+		if (questTreeGui != null) {
+			hasPrev = true;
+			zoom = questTreeGui.zoom;
+			scrollX = questTreeGui.questPanel.centerQuestX;
+			scrollY = questTreeGui.questPanel.centerQuestY;
+			selectedChapter = questTreeGui.selectedChapter == null ? 0 : questTreeGui.selectedChapter.id;
+			selectedQuests = new int[questTreeGui.selectedObjects.size()];
+			int i = 0;
 
-            for (Movable m : questTreeGui.selectedObjects) {
-                if (m instanceof Quest) {
-                    selectedQuests[i] = ((Quest) m).id;
-                }
+			for (Movable m : questTreeGui.selectedObjects) {
+				if (m instanceof Quest) {
+					selectedQuests[i] = ((Quest) m).id;
+				}
 
-                i++;
-            }
+				i++;
+			}
 
-            if (ClientUtils.getCurrentGuiAs(GuiQuestTree.class) != null) {
-                guiOpen = true;
-            }
-        }
+			if (ClientUtils.getCurrentGuiAs(GuiQuestTree.class) != null) {
+				guiOpen = true;
+			}
+		}
 
-        questTreeGui = new GuiQuestTree(this);
-        questGui = questTreeGui;
+		questTreeGui = new GuiQuestTree(this);
+		questGui = questTreeGui;
 
-        if (hasPrev) {
-            questTreeGui.zoom = zoom;
-            questTreeGui.selectChapter(getChapter(selectedChapter));
+		if (hasPrev) {
+			questTreeGui.zoom = zoom;
+			questTreeGui.selectChapter(getChapter(selectedChapter));
 
-            for (int i : selectedQuests) {
-                Quest q = getQuest(i);
+			for (int i : selectedQuests) {
+				Quest q = getQuest(i);
 
-                if (q != null) {
-                    questTreeGui.selectedObjects.add(q);
-                }
-            }
+				if (q != null) {
+					questTreeGui.selectedObjects.add(q);
+				}
+			}
 
-            if (guiOpen) {
-                questTreeGui.openGui();
-            }
-        }
+			if (guiOpen) {
+				questTreeGui.openGui();
+			}
+		}
 
-        questTreeGui.refreshWidgets();
+		questTreeGui.refreshWidgets();
 
-        if (hasPrev) {
-            questTreeGui.questPanel.scrollTo(scrollX, scrollY);
-        }
-    }
+		if (hasPrev) {
+			questTreeGui.questPanel.scrollTo(scrollX, scrollY);
+		}
+	}
 
-    public void openQuestGui(EntityPlayer player) {
-        if (disableGui && !editingMode) {
-            player.sendStatusMessage(new TextComponentTranslation("item.ftbquests.book.disabled"), true);
-        } else if (existsWithTeam()) {
-            questGui.openGui();
-        } else {
-            new MessageMyTeamGui().sendToServer();
-            //player.sendStatusMessage(new TextComponentTranslation("ftblib.lang.team.error.no_team"), true);
-        }
-    }
+	public void openQuestGui(EntityPlayer player) {
+		if (disableGui && !editingMode) {
+			player.sendStatusMessage(new TextComponentTranslation("item.ftbquests.book.disabled"), true);
+		} else if (existsWithTeam()) {
+			questGui.openGui();
+		} else {
+			new MessageMyTeamGui().sendToServer();
+			//player.sendStatusMessage(new TextComponentTranslation("ftblib.lang.team.error.no_team"), true);
+		}
+	}
 
-    @Override
-    public boolean isClient() {
-        return true;
-    }
+	@Override
+	public boolean isClient() {
+		return true;
+	}
 
-    @Nullable
-    @Override
-    public ClientQuestData getData(short team) {
-        return team == 0 ? null : teamData.get(team);
-    }
+	@Nullable
+	@Override
+	public ClientQuestData getData(short team) {
+		return team == 0 ? null : teamData.get(team);
+	}
 
-    @Override
-    @Nullable
-    public QuestData getData(UUID player) {
-        return getData(playerTeams.getShort(player));
-    }
+	@Override
+	@Nullable
+	public QuestData getData(UUID player) {
+		return getData(playerTeams.getShort(player));
+	}
 
-    public ClientQuestData removeData(short team) {
-        return teamData.remove(team);
-    }
+	public ClientQuestData removeData(short team) {
+		return teamData.remove(team);
+	}
 
-    public void addData(ClientQuestData data) {
-        teamData.put(data.getTeamUID(), data);
-    }
+	public void addData(ClientQuestData data) {
+		teamData.put(data.getTeamUID(), data);
+	}
 
-    @Nullable
-    @Override
-    public ClientQuestData getData(String team) {
-        if (team.isEmpty()) {
-            return null;
-        }
+	@Nullable
+	@Override
+	public ClientQuestData getData(String team) {
+		if (team.isEmpty()) {
+			return null;
+		}
 
-        for (ClientQuestData data : teamData.values()) {
-            if (team.equals(data.getTeamID())) {
-                return data;
-            }
-        }
+		for (ClientQuestData data : teamData.values()) {
+			if (team.equals(data.getTeamID())) {
+				return data;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @Override
-    public Collection<ClientQuestData> getAllData() {
-        return teamData.values();
-    }
+	@Override
+	public Collection<ClientQuestData> getAllData() {
+		return teamData.values();
+	}
 
-    @Override
-    public void deleteObject(int id) {
-        new MessageDeleteObject(id).sendToServer();
-    }
+	@Override
+	public void deleteObject(int id) {
+		new MessageDeleteObject(id).sendToServer();
+	}
 
-    @Override
-    public void clearCachedData() {
-        super.clearCachedData();
-        QuestTheme.instance.clearCache();
-    }
+	@Override
+	public void clearCachedData() {
+		super.clearCachedData();
+		QuestTheme.instance.clearCache();
+	}
 }

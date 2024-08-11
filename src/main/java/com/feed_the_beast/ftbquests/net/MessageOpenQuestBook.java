@@ -9,14 +9,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageOpenQuestBook extends MessageToClient {
 
-    @Override
-    public NetworkWrapper getWrapper() {
-        return FTBQuestsNetHandler.GENERAL;
-    }
+	@Override
+	public NetworkWrapper getWrapper() {
+		return FTBQuestsNetHandler.GENERAL;
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage() {
-        ClientQuestFile.INSTANCE.openQuestGui(Minecraft.getMinecraft().player);
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onMessage() {
+		ClientQuestFile.INSTANCE.openQuestGui(Minecraft.getMinecraft().player);
+	}
 }

@@ -20,67 +20,67 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author LatvianModder
  */
 public class XPLevelsReward extends Reward {
-    public int xpLevels;
+	public int xpLevels;
 
-    public XPLevelsReward(Quest quest) {
-        super(quest);
-        xpLevels = 1;
-    }
+	public XPLevelsReward(Quest quest) {
+		super(quest);
+		xpLevels = 1;
+	}
 
-    @Override
-    public RewardType getType() {
-        return FTBQuestsRewards.XP_LEVELS;
-    }
+	@Override
+	public RewardType getType() {
+		return FTBQuestsRewards.XP_LEVELS;
+	}
 
-    @Override
-    public void writeData(NBTTagCompound nbt) {
-        super.writeData(nbt);
-        nbt.setInteger("xp_levels", xpLevels);
-    }
+	@Override
+	public void writeData(NBTTagCompound nbt) {
+		super.writeData(nbt);
+		nbt.setInteger("xp_levels", xpLevels);
+	}
 
-    @Override
-    public void readData(NBTTagCompound nbt) {
-        super.readData(nbt);
-        xpLevels = nbt.getInteger("xp_levels");
-    }
+	@Override
+	public void readData(NBTTagCompound nbt) {
+		super.readData(nbt);
+		xpLevels = nbt.getInteger("xp_levels");
+	}
 
-    @Override
-    public void writeNetData(DataOut data) {
-        super.writeNetData(data);
-        data.writeVarInt(xpLevels);
-    }
+	@Override
+	public void writeNetData(DataOut data) {
+		super.writeNetData(data);
+		data.writeVarInt(xpLevels);
+	}
 
-    @Override
-    public void readNetData(DataIn data) {
-        super.readNetData(data);
-        xpLevels = data.readVarInt();
-    }
+	@Override
+	public void readNetData(DataIn data) {
+		super.readNetData(data);
+		xpLevels = data.readVarInt();
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getConfig(ConfigGroup config) {
-        super.getConfig(config);
-        config.addInt("xp_levels", () -> xpLevels, v -> xpLevels = v, 1, 1, Integer.MAX_VALUE).setDisplayName(new TextComponentTranslation("ftbquests.reward.ftbquests.xp_levels"));
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getConfig(ConfigGroup config) {
+		super.getConfig(config);
+		config.addInt("xp_levels", () -> xpLevels, v -> xpLevels = v, 1, 1, Integer.MAX_VALUE).setDisplayName(new TextComponentTranslation("ftbquests.reward.ftbquests.xp_levels"));
+	}
 
-    @Override
-    public void claim(EntityPlayerMP player, boolean notify) {
-        player.addExperienceLevel(xpLevels);
+	@Override
+	public void claim(EntityPlayerMP player, boolean notify) {
+		player.addExperienceLevel(xpLevels);
 
-        if (notify) {
-            ITextComponent text = new TextComponentString("+" + xpLevels);
-            text.getStyle().setColor(TextFormatting.GREEN);
-            new MessageDisplayRewardToast(id, new TextComponentTranslation("ftbquests.reward.ftbquests.xp_levels").appendText(": ").appendSibling(text), Icon.EMPTY).sendTo(player);
-        }
-    }
+		if (notify) {
+			ITextComponent text = new TextComponentString("+" + xpLevels);
+			text.getStyle().setColor(TextFormatting.GREEN);
+			new MessageDisplayRewardToast(id, new TextComponentTranslation("ftbquests.reward.ftbquests.xp_levels").appendText(": ").appendSibling(text), Icon.EMPTY).sendTo(player);
+		}
+	}
 
-    @Override
-    public String getAltTitle() {
-        return I18n.format("ftbquests.reward.ftbquests.xp_levels") + ": " + TextFormatting.GREEN + "+" + xpLevels;
-    }
+	@Override
+	public String getAltTitle() {
+		return I18n.format("ftbquests.reward.ftbquests.xp_levels") + ": " + TextFormatting.GREEN + "+" + xpLevels;
+	}
 
-    @Override
-    public String getButtonText() {
-        return "+" + xpLevels;
-    }
+	@Override
+	public String getButtonText() {
+		return "+" + xpLevels;
+	}
 }

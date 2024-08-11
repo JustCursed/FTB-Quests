@@ -11,30 +11,30 @@ import net.minecraft.world.World;
  * @author LatvianModder
  */
 public class BlockTaskScreenPart extends BlockTaskScreen {
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return currentTask == null ? new TileTaskScreenPart() : currentTask.createScreenPart(world);
-    }
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
+		return currentTask == null ? new TileTaskScreenPart() : currentTask.createScreenPart(world);
+	}
 
-    @Override
-    public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        return false;
-    }
+	@Override
+	public boolean canPlaceBlockAt(World world, BlockPos pos) {
+		return false;
+	}
 
-    @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        if (!BREAKING_SCREEN) {
-            TileEntity tileEntity = world.getTileEntity(pos);
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		if (!BREAKING_SCREEN) {
+			TileEntity tileEntity = world.getTileEntity(pos);
 
-            if (tileEntity instanceof TileTaskScreenPart) {
-                TileTaskScreenCore screen = ((TileTaskScreenPart) tileEntity).getScreen();
+			if (tileEntity instanceof TileTaskScreenPart) {
+				TileTaskScreenCore screen = ((TileTaskScreenPart) tileEntity).getScreen();
 
-                if (screen != null) {
-                    world.setBlockToAir(screen.getPos());
-                }
-            }
-        }
+				if (screen != null) {
+					world.setBlockToAir(screen.getPos());
+				}
+			}
+		}
 
-        super.breakBlock(world, pos, state);
-    }
+		super.breakBlock(world, pos, state);
+	}
 }

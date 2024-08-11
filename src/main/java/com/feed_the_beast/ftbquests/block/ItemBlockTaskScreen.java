@@ -17,42 +17,42 @@ import net.minecraft.world.World;
  * @author LatvianModder
  */
 public class ItemBlockTaskScreen extends ItemBlock {
-    public ItemBlockTaskScreen(Block block) {
-        super(block);
-    }
+	public ItemBlockTaskScreen(Block block) {
+		super(block);
+	}
 
-    @Override
-    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
-        TileTaskScreenCore t = BlockTaskScreen.getStatic();
-        t.resetData();
-        t.readFromItem(stack);
+	@Override
+	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+		TileTaskScreenCore t = BlockTaskScreen.getStatic();
+		t.resetData();
+		t.readFromItem(stack);
 
-        if (t.size > 0) {
-            boolean xaxis = newState.getValue(BlockHorizontal.FACING).getAxis() == EnumFacing.Axis.X;
+		if (t.size > 0) {
+			boolean xaxis = newState.getValue(BlockHorizontal.FACING).getAxis() == EnumFacing.Axis.X;
 
-            for (int y = 0; y < t.size * 2 + 1; y++) {
-                for (int x = -t.size; x <= t.size; x++) {
-                    if (x != 0 || y != 0) {
-                        int offX = xaxis ? 0 : x;
-                        int offZ = xaxis ? x : 0;
-                        BlockPos pos1 = new BlockPos(pos.getX() + offX, pos.getY() + y, pos.getZ() + offZ);
-                        IBlockState state1 = world.getBlockState(pos1);
+			for (int y = 0; y < t.size * 2 + 1; y++) {
+				for (int x = -t.size; x <= t.size; x++) {
+					if (x != 0 || y != 0) {
+						int offX = xaxis ? 0 : x;
+						int offZ = xaxis ? x : 0;
+						BlockPos pos1 = new BlockPos(pos.getX() + offX, pos.getY() + y, pos.getZ() + offZ);
+						IBlockState state1 = world.getBlockState(pos1);
 
-                        if (!state1.getBlock().isReplaceable(world, pos1)) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
+						if (!state1.getBlock().isReplaceable(world, pos1)) {
+							return false;
+						}
+					}
+				}
+			}
+		}
 
-        BlockTaskScreen.currentTask = null;
-        QuestFile file = FTBQuests.PROXY.getQuestFile(world);
+		BlockTaskScreen.currentTask = null;
+		QuestFile file = FTBQuests.PROXY.getQuestFile(world);
 
-        if (file != null) {
-            BlockTaskScreen.currentTask = file.getTask(t.task);
-        }
+		if (file != null) {
+			BlockTaskScreen.currentTask = file.getTask(t.task);
+		}
 
-        return super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState);
-    }
+		return super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState);
+	}
 }

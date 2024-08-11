@@ -348,12 +348,10 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 		NBTTagCompound nbt = getData(this.team.getId());
 		NBTTagCompound tasks = nbt.getCompoundTag("Tasks");
 
-		for (String s : tasks.getKeySet())
-		{
+		for (String s : tasks.getKeySet()) {
 			Task task = ServerQuestFile.INSTANCE.getTask(ServerQuestFile.INSTANCE.getID(s));
 
-			if (task != null)
-			{
+			if (task != null) {
 				taskData.get(task.id).readProgress(tasks.getLong(s));
 			}
 		}
@@ -368,20 +366,16 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 
 		NBTTagCompound claimedPlayer = nbt.getCompoundTag("ClaimedPlayerRewards");
 
-		for (String s : claimedPlayer.getKeySet())
-		{
+		for (String s : claimedPlayer.getKeySet()) {
 			UUID id = StringUtils.fromString(s);
 
-			if (id != null)
-			{
+			if (id != null) {
 				int[] ar = claimedPlayer.getIntArray(s);
 
-				if (ar.length > 0)
-				{
+				if (ar.length > 0) {
 					IntOpenHashSet set = new IntOpenHashSet(ar.length);
 
-					for (int r : ar)
-					{
+					for (int r : ar) {
 						set.add(r);
 					}
 

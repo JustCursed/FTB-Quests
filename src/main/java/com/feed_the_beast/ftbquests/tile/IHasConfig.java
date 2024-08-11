@@ -7,5 +7,5 @@ import net.minecraft.entity.player.EntityPlayerMP;
  * @author LatvianModder
  */
 public interface IHasConfig extends IConfigCallback {
-    void editConfig(EntityPlayerMP player, boolean editor);
+	void editConfig(EntityPlayerMP player, boolean editor);
 }

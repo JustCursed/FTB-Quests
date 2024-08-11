@@ -15,19 +15,19 @@ import java.util.List;
  * @author LatvianModder
  */
 public class ButtonOpenShop extends ButtonTab {
-    public ButtonOpenShop(Panel panel) {
-        super(panel, I18n.format("sidebar_button.ftbmoney.shop"), ThemeProperties.SHOP_ICON.get());
-    }
+	public ButtonOpenShop(Panel panel) {
+		super(panel, I18n.format("sidebar_button.ftbmoney.shop"), ThemeProperties.SHOP_ICON.get());
+	}
 
-    @Override
-    public void addMouseOverText(List<String> list) {
-        list.add(getTitle());
-        list.add(TextFormatting.GOLD + String.format("\u0398 %,d", NBTUtils.getPersistedData(Minecraft.getMinecraft().player, false).getLong("ftb_money")));
-    }
+	@Override
+	public void addMouseOverText(List<String> list) {
+		list.add(getTitle());
+		list.add(TextFormatting.GOLD + String.format("\u0398 %,d", NBTUtils.getPersistedData(Minecraft.getMinecraft().player, false).getLong("ftb_money")));
+	}
 
-    @Override
-    public void onClicked(MouseButton button) {
-        GuiHelper.playClickSound();
-        handleClick("custom:ftbmoney:open_gui");
-    }
+	@Override
+	public void onClicked(MouseButton button) {
+		GuiHelper.playClickSound();
+		handleClick("custom:ftbmoney:open_gui");
+	}
 }

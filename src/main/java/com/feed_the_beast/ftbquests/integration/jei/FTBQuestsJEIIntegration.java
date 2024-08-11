@@ -14,55 +14,55 @@ import net.minecraft.item.ItemStack;
  */
 @JEIPlugin
 public class FTBQuestsJEIIntegration implements IModPlugin {
-    public static IJeiRuntime runtime;
-    public static IModRegistry registry;
+	public static IJeiRuntime runtime;
+	public static IModRegistry registry;
 
-    @Override
-    public void onRuntimeAvailable(IJeiRuntime r) {
-        runtime = r;
-    }
+	@Override
+	public void onRuntimeAvailable(IJeiRuntime r) {
+		runtime = r;
+	}
 
-    @Override
-    public void registerItemSubtypes(ISubtypeRegistry r) {
-        r.registerSubtypeInterpreter(FTBQuestsItems.LOOTCRATE, stack -> stack.hasTagCompound() ? stack.getTagCompound().getString("type") : "");
+	@Override
+	public void registerItemSubtypes(ISubtypeRegistry r) {
+		r.registerSubtypeInterpreter(FTBQuestsItems.LOOTCRATE, stack -> stack.hasTagCompound() ? stack.getTagCompound().getString("type") : "");
 
-        r.registerSubtypeInterpreter(FTBQuestsItems.SCREEN, stack -> {
-            if (stack.hasTagCompound()) {
-                TileTaskScreenCore t = BlockTaskScreen.getStatic();
-                t.resetData();
-                t.readFromItem(stack);
-                return Integer.toString(t.size);
-            }
+		r.registerSubtypeInterpreter(FTBQuestsItems.SCREEN, stack -> {
+			if (stack.hasTagCompound()) {
+				TileTaskScreenCore t = BlockTaskScreen.getStatic();
+				t.resetData();
+				t.readFromItem(stack);
+				return Integer.toString(t.size);
+			}
 
-            return "";
-        });
+			return "";
+		});
 
-        r.registerSubtypeInterpreter(FTBQuestsItems.PROGRESS_SCREEN, stack -> {
-            if (stack.hasTagCompound()) {
-                TileProgressScreenCore t = BlockProgressScreen.getStatic();
-                t.resetData();
-                t.readFromItem(stack);
-                return t.width + "x" + t.height;
-            }
+		r.registerSubtypeInterpreter(FTBQuestsItems.PROGRESS_SCREEN, stack -> {
+			if (stack.hasTagCompound()) {
+				TileProgressScreenCore t = BlockProgressScreen.getStatic();
+				t.resetData();
+				t.readFromItem(stack);
+				return t.width + "x" + t.height;
+			}
 
-            return "";
-        });
-    }
+			return "";
+		});
+	}
 
-    @Override
-    public void register(IModRegistry r) {
-        registry = r;
-        r.handleRecipes(QuestWrapper.class, recipe -> recipe, QuestCategory.UID);
-        r.addRecipeCatalyst(new ItemStack(FTBQuestsItems.BOOK), QuestCategory.UID);
+	@Override
+	public void register(IModRegistry r) {
+		registry = r;
+		r.handleRecipes(QuestWrapper.class, recipe -> recipe, QuestCategory.UID);
+		r.addRecipeCatalyst(new ItemStack(FTBQuestsItems.BOOK), QuestCategory.UID);
 
-        r.handleRecipes(LootCrateWrapper.class, recipe -> recipe, LootCrateCategory.UID);
-        r.addRecipeCatalyst(new ItemStack(FTBQuestsItems.BOOK), LootCrateCategory.UID);
-        r.addRecipeCatalyst(new ItemStack(FTBQuestsItems.LOOTCRATE), LootCrateCategory.UID);
-    }
+		r.handleRecipes(LootCrateWrapper.class, recipe -> recipe, LootCrateCategory.UID);
+		r.addRecipeCatalyst(new ItemStack(FTBQuestsItems.BOOK), LootCrateCategory.UID);
+		r.addRecipeCatalyst(new ItemStack(FTBQuestsItems.LOOTCRATE), LootCrateCategory.UID);
+	}
 
-    @Override
-    public void registerCategories(IRecipeCategoryRegistration r) {
-        r.addRecipeCategories(new QuestCategory(r.getJeiHelpers().getGuiHelper()));
-        r.addRecipeCategories(new LootCrateCategory(r.getJeiHelpers().getGuiHelper()));
-    }
+	@Override
+	public void registerCategories(IRecipeCategoryRegistration r) {
+		r.addRecipeCategories(new QuestCategory(r.getJeiHelpers().getGuiHelper()));
+		r.addRecipeCategories(new LootCrateCategory(r.getJeiHelpers().getGuiHelper()));
+	}
 }

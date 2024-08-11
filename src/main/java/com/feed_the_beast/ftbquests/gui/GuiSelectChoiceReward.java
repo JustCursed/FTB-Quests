@@ -18,51 +18,51 @@ import java.util.List;
  * @author LatvianModder
  */
 public class GuiSelectChoiceReward extends GuiButtonListBase {
-    private class ButtonChoiceReward extends SimpleTextButton {
-        private final WeightedReward weightedReward;
+	private class ButtonChoiceReward extends SimpleTextButton {
+		private final WeightedReward weightedReward;
 
-        private ButtonChoiceReward(Panel panel, WeightedReward r) {
-            super(panel, r.reward.getTitle(), r.reward.getIcon());
-            weightedReward = r;
-        }
+		private ButtonChoiceReward(Panel panel, WeightedReward r) {
+			super(panel, r.reward.getTitle(), r.reward.getIcon());
+			weightedReward = r;
+		}
 
-        @Override
-        public void addMouseOverText(List<String> list) {
-            super.addMouseOverText(list);
-            weightedReward.reward.addMouseOverText(list);
-        }
+		@Override
+		public void addMouseOverText(List<String> list) {
+			super.addMouseOverText(list);
+			weightedReward.reward.addMouseOverText(list);
+		}
 
-        @Override
-        public void onClicked(MouseButton button) {
-            GuiHelper.playClickSound();
-            closeGui();
-            new MessageClaimChoiceReward(choiceReward.id, choiceReward.getTable().rewards.indexOf(weightedReward)).sendToServer();
-        }
+		@Override
+		public void onClicked(MouseButton button) {
+			GuiHelper.playClickSound();
+			closeGui();
+			new MessageClaimChoiceReward(choiceReward.id, choiceReward.getTable().rewards.indexOf(weightedReward)).sendToServer();
+		}
 
-        @Override
-        @Nullable
-        public Object getIngredientUnderMouse() {
-            return weightedReward.reward.getIngredient();
-        }
-    }
+		@Override
+		@Nullable
+		public Object getIngredientUnderMouse() {
+			return weightedReward.reward.getIngredient();
+		}
+	}
 
-    private final ChoiceReward choiceReward;
+	private final ChoiceReward choiceReward;
 
-    public GuiSelectChoiceReward(ChoiceReward r) {
-        choiceReward = r;
-        setTitle(I18n.format("ftbquests.reward.ftbquests.choice"));
-        setBorder(1, 1, 1);
-    }
+	public GuiSelectChoiceReward(ChoiceReward r) {
+		choiceReward = r;
+		setTitle(I18n.format("ftbquests.reward.ftbquests.choice"));
+		setBorder(1, 1, 1);
+	}
 
-    @Override
-    public void addButtons(Panel panel) {
-        for (WeightedReward r : choiceReward.getTable().rewards) {
-            panel.add(new ButtonChoiceReward(panel, r));
-        }
-    }
+	@Override
+	public void addButtons(Panel panel) {
+		for (WeightedReward r : choiceReward.getTable().rewards) {
+			panel.add(new ButtonChoiceReward(panel, r));
+		}
+	}
 
-    @Override
-    public Theme getTheme() {
-        return FTBQuestsTheme.INSTANCE;
-    }
+	@Override
+	public Theme getTheme() {
+		return FTBQuestsTheme.INSTANCE;
+	}
 }

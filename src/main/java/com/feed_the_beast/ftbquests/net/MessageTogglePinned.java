@@ -12,47 +12,47 @@ import net.minecraft.entity.player.EntityPlayerMP;
  * @author LatvianModder
  */
 public class MessageTogglePinned extends MessageToServer {
-    private int id;
+	private int id;
 
-    public MessageTogglePinned() {
-    }
+	public MessageTogglePinned() {
+	}
 
-    public MessageTogglePinned(int i) {
-        id = i;
-    }
+	public MessageTogglePinned(int i) {
+		id = i;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper() {
-        return FTBQuestsNetHandler.GENERAL;
-    }
+	@Override
+	public NetworkWrapper getWrapper() {
+		return FTBQuestsNetHandler.GENERAL;
+	}
 
-    @Override
-    public void writeData(DataOut data) {
-        data.writeInt(id);
-    }
+	@Override
+	public void writeData(DataOut data) {
+		data.writeInt(id);
+	}
 
-    @Override
-    public void readData(DataIn data) {
-        id = data.readInt();
-    }
+	@Override
+	public void readData(DataIn data) {
+		id = data.readInt();
+	}
 
-    @Override
-    public void onMessage(EntityPlayerMP player) {
-        int[] fav = NBTUtils.getPersistedData(player, false).getIntArray("ftbquests_pinned");
+	@Override
+	public void onMessage(EntityPlayerMP player) {
+		int[] fav = NBTUtils.getPersistedData(player, false).getIntArray("ftbquests_pinned");
 
-        IntOpenHashSet set = new IntOpenHashSet(fav.length);
+		IntOpenHashSet set = new IntOpenHashSet(fav.length);
 
-        for (int i : fav) {
-            set.add(i);
-        }
+		for (int i : fav) {
+			set.add(i);
+		}
 
-        if (set.contains(id)) {
-            set.rem(id);
-        } else {
-            set.add(id);
-        }
+		if (set.contains(id)) {
+			set.rem(id);
+		} else {
+			set.add(id);
+		}
 
-        NBTUtils.getPersistedData(player, true).setIntArray("ftbquests_pinned", set.toIntArray());
-        new MessageTogglePinnedResponse(id).sendTo(player);
-    }
+		NBTUtils.getPersistedData(player, true).setIntArray("ftbquests_pinned", set.toIntArray());
+		new MessageTogglePinnedResponse(id).sendTo(player);
+	}
 }

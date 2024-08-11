@@ -24,115 +24,115 @@ import javax.annotation.Nullable;
  * @author LatvianModder
  */
 public class IC2EnergyTask extends EnergyTask {
-    public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation(FTBQuests.MOD_ID, "textures/tasks/ic2_empty.png");
-    public static final ResourceLocation FULL_TEXTURE = new ResourceLocation(FTBQuests.MOD_ID, "textures/tasks/ic2_full.png");
+	public static final ResourceLocation EMPTY_TEXTURE = new ResourceLocation(FTBQuests.MOD_ID, "textures/tasks/ic2_empty.png");
+	public static final ResourceLocation FULL_TEXTURE = new ResourceLocation(FTBQuests.MOD_ID, "textures/tasks/ic2_full.png");
 
-    public IC2EnergyTask(Quest quest) {
-        super(quest);
-    }
+	public IC2EnergyTask(Quest quest) {
+		super(quest);
+	}
 
-    @Override
-    public TaskType getType() {
-        return IC2Integration.EU_TASK;
-    }
+	@Override
+	public TaskType getType() {
+		return IC2Integration.EU_TASK;
+	}
 
-    @Override
-    public String getAltTitle() {
-        return I18n.format("ftbquests.task.ftbquests.ic2_energy.text", StringUtils.formatDouble(value, true));
-    }
+	@Override
+	public String getAltTitle() {
+		return I18n.format("ftbquests.task.ftbquests.ic2_energy.text", StringUtils.formatDouble(value, true));
+	}
 
-    @Override
-    public Class<? extends TileTaskScreenCore> getScreenCoreClass() {
-        return TileTaskScreenCoreIC2.class;
-    }
+	@Override
+	public Class<? extends TileTaskScreenCore> getScreenCoreClass() {
+		return TileTaskScreenCoreIC2.class;
+	}
 
-    @Override
-    public Class<? extends TileTaskScreenPart> getScreenPartClass() {
-        return TileTaskScreenPartIC2.class;
-    }
+	@Override
+	public Class<? extends TileTaskScreenPart> getScreenPartClass() {
+		return TileTaskScreenPartIC2.class;
+	}
 
-    @Override
-    public TileTaskScreenCore createScreenCore(World world) {
-        return new TileTaskScreenCoreIC2();
-    }
+	@Override
+	public TileTaskScreenCore createScreenCore(World world) {
+		return new TileTaskScreenCoreIC2();
+	}
 
-    @Override
-    public TileTaskScreenPart createScreenPart(World world) {
-        return new TileTaskScreenPartIC2();
-    }
+	@Override
+	public TileTaskScreenPart createScreenPart(World world) {
+		return new TileTaskScreenPartIC2();
+	}
 
-    @Override
-    public void drawScreen(@Nullable TaskData data) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        Minecraft mc = Minecraft.getMinecraft();
+	@Override
+	public void drawScreen(@Nullable TaskData data) {
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
+		Minecraft mc = Minecraft.getMinecraft();
 
-        mc.getTextureManager().bindTexture(EMPTY_TEXTURE);
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        double x = -0.5;
-        double y = -0.5;
-        double w = 1;
-        double h = 1;
-        double z = 0;
-        buffer.pos(x, y + h, z).tex(0, 1).endVertex();
-        buffer.pos(x + w, y + h, z).tex(1, 1).endVertex();
-        buffer.pos(x + w, y, z).tex(1, 0).endVertex();
-        buffer.pos(x, y, z).tex(0, 0).endVertex();
-        tessellator.draw();
+		mc.getTextureManager().bindTexture(EMPTY_TEXTURE);
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		double x = -0.5;
+		double y = -0.5;
+		double w = 1;
+		double h = 1;
+		double z = 0;
+		buffer.pos(x, y + h, z).tex(0, 1).endVertex();
+		buffer.pos(x + w, y + h, z).tex(1, 1).endVertex();
+		buffer.pos(x + w, y, z).tex(1, 0).endVertex();
+		buffer.pos(x, y, z).tex(0, 0).endVertex();
+		tessellator.draw();
 
-        double r = data == null ? 0D : data.progress / (double) data.task.getMaxProgress();
+		double r = data == null ? 0D : data.progress / (double) data.task.getMaxProgress();
 
-        if (r > 0D) {
-            x -= 1D / 128D;
-            w += 1D / 64D;
+		if (r > 0D) {
+			x -= 1D / 128D;
+			w += 1D / 64D;
 
-            y = 3D / 32D + (1D - r) * 26D / 32D - 0.5;
-            h = r * 26D / 32D;
+			y = 3D / 32D + (1D - r) * 26D / 32D - 0.5;
+			h = r * 26D / 32D;
 
-            y -= 1D / 128D;
-            h += 1D / 64D;
-            z = 0.003D;
+			y -= 1D / 128D;
+			h += 1D / 64D;
+			z = 0.003D;
 
-            double u0 = 0;
-            double v0 = 3D / 32D + (26D / 32D) * (1D - r);
-            double u1 = 1;
-            double v1 = 29D / 32D;
+			double u0 = 0;
+			double v0 = 3D / 32D + (26D / 32D) * (1D - r);
+			double u1 = 1;
+			double v1 = 29D / 32D;
 
-            mc.getTextureManager().bindTexture(FULL_TEXTURE);
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-            buffer.pos(x, y + h, z).tex(u0, v1).endVertex();
-            buffer.pos(x + w, y + h, z).tex(u1, v1).endVertex();
-            buffer.pos(x + w, y, z).tex(u1, v0).endVertex();
-            buffer.pos(x, y, z).tex(u0, v0).endVertex();
-            tessellator.draw();
-        }
-    }
+			mc.getTextureManager().bindTexture(FULL_TEXTURE);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			buffer.pos(x, y + h, z).tex(u0, v1).endVertex();
+			buffer.pos(x + w, y + h, z).tex(u1, v1).endVertex();
+			buffer.pos(x + w, y, z).tex(u1, v0).endVertex();
+			buffer.pos(x, y, z).tex(u0, v0).endVertex();
+			tessellator.draw();
+		}
+	}
 
-    @Override
-    public TaskData createData(QuestData data) {
-        return new Data(this, data);
-    }
+	@Override
+	public TaskData createData(QuestData data) {
+		return new Data(this, data);
+	}
 
-    public static class Data extends TaskData<IC2EnergyTask> {
-        private Data(IC2EnergyTask task, QuestData data) {
-            super(task, data);
-        }
+	public static class Data extends TaskData<IC2EnergyTask> {
+		private Data(IC2EnergyTask task, QuestData data) {
+			super(task, data);
+		}
 
-        public double injectEnergy(double amount) {
-            if (amount > 0 && !isComplete()) {
-                double add = Math.min(amount, task.value - progress);
+		public double injectEnergy(double amount) {
+			if (amount > 0 && !isComplete()) {
+				double add = Math.min(amount, task.value - progress);
 
-                if (task.maxInput > 0) {
-                    add = Math.min(add, task.maxInput);
-                }
+				if (task.maxInput > 0) {
+					add = Math.min(add, task.maxInput);
+				}
 
-                if (add > 0D) {
-                    addProgress((long) add);
-                    return amount - add;
-                }
-            }
+				if (add > 0D) {
+					addProgress((long) add);
+					return amount - add;
+				}
+			}
 
-            return amount;
-        }
-    }
+			return amount;
+		}
+	}
 }

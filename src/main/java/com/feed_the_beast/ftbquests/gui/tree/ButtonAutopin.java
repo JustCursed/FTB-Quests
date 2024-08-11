@@ -11,13 +11,13 @@ import net.minecraft.client.resources.I18n;
  * @author LatvianModder
  */
 public class ButtonAutopin extends ButtonTab {
-    public ButtonAutopin(Panel panel) {
-        super(panel, I18n.format(((GuiQuestTree) panel.getGui()).file.pinnedQuests.contains(1) ? "ftbquests.gui.autopin.on" : "ftbquests.gui.autopin.off"), ((GuiQuestTree) panel.getGui()).file.pinnedQuests.contains(1) ? ThemeProperties.PIN_ICON_ON.get() : ThemeProperties.PIN_ICON_OFF.get());
-    }
+	public ButtonAutopin(Panel panel) {
+		super(panel, I18n.format(((GuiQuestTree) panel.getGui()).file.pinnedQuests.contains(1) ? "ftbquests.gui.autopin.on" : "ftbquests.gui.autopin.off"), ((GuiQuestTree) panel.getGui()).file.pinnedQuests.contains(1) ? ThemeProperties.PIN_ICON_ON.get() : ThemeProperties.PIN_ICON_OFF.get());
+	}
 
-    @Override
-    public void onClicked(MouseButton button) {
-        GuiHelper.playClickSound();
-        new MessageTogglePinned(1).sendToServer();
-    }
+	@Override
+	public void onClicked(MouseButton button) {
+		GuiHelper.playClickSound();
+		new MessageTogglePinned(1).sendToServer();
+	}
 }

@@ -19,60 +19,60 @@ import javax.annotation.Nullable;
  * @author LatvianModder
  */
 public class MessageCreateObjectResponse extends MessageToClient {
-    private int id;
-    private int parent;
-    private QuestObjectType type;
-    private NBTTagCompound nbt;
-    private NBTTagCompound extra;
+	private int id;
+	private int parent;
+	private QuestObjectType type;
+	private NBTTagCompound nbt;
+	private NBTTagCompound extra;
 
-    public MessageCreateObjectResponse() {
-    }
+	public MessageCreateObjectResponse() {
+	}
 
-    public MessageCreateObjectResponse(QuestObjectBase o, @Nullable NBTTagCompound e) {
-        id = o.id;
-        parent = o.getParentID();
-        type = o.getObjectType();
-        nbt = new NBTTagCompound();
-        o.writeData(nbt);
-        extra = e;
-    }
+	public MessageCreateObjectResponse(QuestObjectBase o, @Nullable NBTTagCompound e) {
+		id = o.id;
+		parent = o.getParentID();
+		type = o.getObjectType();
+		nbt = new NBTTagCompound();
+		o.writeData(nbt);
+		extra = e;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper() {
-        return FTBQuestsEditNetHandler.EDIT;
-    }
+	@Override
+	public NetworkWrapper getWrapper() {
+		return FTBQuestsEditNetHandler.EDIT;
+	}
 
-    @Override
-    public void writeData(DataOut data) {
-        data.writeInt(id);
-        data.writeInt(parent);
-        QuestObjectType.NAME_MAP.write(data, type);
-        data.writeNBT(nbt);
-        data.writeNBT(extra);
-    }
+	@Override
+	public void writeData(DataOut data) {
+		data.writeInt(id);
+		data.writeInt(parent);
+		QuestObjectType.NAME_MAP.write(data, type);
+		data.writeNBT(nbt);
+		data.writeNBT(extra);
+	}
 
-    @Override
-    public void readData(DataIn data) {
-        id = data.readInt();
-        parent = data.readInt();
-        type = QuestObjectType.NAME_MAP.read(data);
-        nbt = data.readNBT();
-        extra = data.readNBT();
-    }
+	@Override
+	public void readData(DataIn data) {
+		id = data.readInt();
+		parent = data.readInt();
+		type = QuestObjectType.NAME_MAP.read(data);
+		nbt = data.readNBT();
+		extra = data.readNBT();
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage() {
-        QuestObjectBase object = ClientQuestFile.INSTANCE.create(type, parent, extra == null ? new NBTTagCompound() : extra);
-        object.readData(nbt);
-        object.id = id;
-        object.onCreated();
-        ClientQuestFile.INSTANCE.refreshIDMap();
-        object.editedFromGUI();
-        FTBQuestsJEIHelper.refresh(object);
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onMessage() {
+		QuestObjectBase object = ClientQuestFile.INSTANCE.create(type, parent, extra == null ? new NBTTagCompound() : extra);
+		object.readData(nbt);
+		object.id = id;
+		object.onCreated();
+		ClientQuestFile.INSTANCE.refreshIDMap();
+		object.editedFromGUI();
+		FTBQuestsJEIHelper.refresh(object);
 
-        if (object instanceof Chapter) {
-            ClientQuestFile.INSTANCE.questTreeGui.selectChapter((Chapter) object);
-        }
-    }
+		if (object instanceof Chapter) {
+			ClientQuestFile.INSTANCE.questTreeGui.selectChapter((Chapter) object);
+		}
+	}
 }

@@ -16,42 +16,42 @@ import net.minecraft.world.World;
  * @author LatvianModder
  */
 public class BlockWithHorizontalFacing extends BlockHorizontal {
-    public BlockWithHorizontalFacing(Material material, MapColor color) {
-        super(material, color);
-        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-    }
+	public BlockWithHorizontalFacing(Material material, MapColor color) {
+		super(material, color);
+		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+	}
 
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING);
-    }
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, FACING);
+	}
 
-    @Override
-    @Deprecated
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta));
-    }
+	@Override
+	@Deprecated
+	public IBlockState getStateFromMeta(int meta) {
+		return getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta));
+	}
 
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getHorizontalIndex();
-    }
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return state.getValue(FACING).getHorizontalIndex();
+	}
 
-    @Override
-    @Deprecated
-    public IBlockState withRotation(IBlockState state, Rotation rotation) {
-        return state.withProperty(FACING, rotation.rotate(state.getValue(FACING)));
-    }
+	@Override
+	@Deprecated
+	public IBlockState withRotation(IBlockState state, Rotation rotation) {
+		return state.withProperty(FACING, rotation.rotate(state.getValue(FACING)));
+	}
 
-    @Override
-    @Deprecated
-    public IBlockState withMirror(IBlockState state, Mirror mirror) {
-        return state.withRotation(mirror.toRotation(state.getValue(FACING)));
-    }
+	@Override
+	@Deprecated
+	public IBlockState withMirror(IBlockState state, Mirror mirror) {
+		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
+	}
 
-    @Override
-    @Deprecated
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-    }
+	@Override
+	@Deprecated
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+	}
 }

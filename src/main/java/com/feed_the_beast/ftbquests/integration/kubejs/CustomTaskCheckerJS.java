@@ -8,5 +8,5 @@ import dev.latvian.kubejs.player.PlayerJS;
  */
 @FunctionalInterface
 public interface CustomTaskCheckerJS {
-    void check(CustomTask.Data taskData, PlayerJS player);
+	void check(CustomTask.Data taskData, PlayerJS player);
 }

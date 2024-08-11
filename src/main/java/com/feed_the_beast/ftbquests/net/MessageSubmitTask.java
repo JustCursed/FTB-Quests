@@ -14,37 +14,37 @@ import net.minecraft.entity.player.EntityPlayerMP;
  * @author LatvianModder
  */
 public class MessageSubmitTask extends MessageToServer {
-    private int task;
+	private int task;
 
-    public MessageSubmitTask() {
-    }
+	public MessageSubmitTask() {
+	}
 
-    public MessageSubmitTask(int t) {
-        task = t;
-    }
+	public MessageSubmitTask(int t) {
+		task = t;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper() {
-        return FTBQuestsNetHandler.GENERAL;
-    }
+	@Override
+	public NetworkWrapper getWrapper() {
+		return FTBQuestsNetHandler.GENERAL;
+	}
 
-    @Override
-    public void writeData(DataOut data) {
-        data.writeInt(task);
-    }
+	@Override
+	public void writeData(DataOut data) {
+		data.writeInt(task);
+	}
 
-    @Override
-    public void readData(DataIn data) {
-        task = data.readInt();
-    }
+	@Override
+	public void readData(DataIn data) {
+		task = data.readInt();
+	}
 
-    @Override
-    public void onMessage(EntityPlayerMP player) {
-        ServerQuestData teamData = ServerQuestData.get(Universe.get().getPlayer(player).team);
-        Task t = ServerQuestFile.INSTANCE.getTask(task);
+	@Override
+	public void onMessage(EntityPlayerMP player) {
+		ServerQuestData teamData = ServerQuestData.get(Universe.get().getPlayer(player).team);
+		Task t = ServerQuestFile.INSTANCE.getTask(task);
 
-        if (t != null && t.quest.canStartTasks(teamData)) {
-            teamData.getTaskData(t).submitTask(player);
-        }
-    }
+		if (t != null && t.quest.canStartTasks(teamData)) {
+			teamData.getTaskData(t).submitTask(player);
+		}
+	}
 }
