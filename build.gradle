@@ -59,3 +59,10 @@ processResources {
 		exclude 'mcmod.info'
 	}
 }
+
+tasks.register('deobfJar', Jar) {
+	from sourceSets.main.output
+	archiveClassifier.set('deobf')
+}
+
+build.finalizedBy deobfJar

@@ -5,11 +5,13 @@ import com.feed_the_beast.ftblib.events.team.*;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.NBTDataStorage;
-import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbquests.FTBQuests;
-import com.feed_the_beast.ftbquests.net.*;
+import com.feed_the_beast.ftbquests.net.MessageChangedTeam;
+import com.feed_the_beast.ftbquests.net.MessageClaimRewardResponse;
+import com.feed_the_beast.ftbquests.net.MessageCreateTeamData;
+import com.feed_the_beast.ftbquests.net.MessageSyncQuests;
 import com.feed_the_beast.ftbquests.quest.*;
 import com.feed_the_beast.ftbquests.quest.reward.Reward;
 import com.feed_the_beast.ftbquests.quest.reward.RewardAutoClaim;
@@ -25,6 +27,7 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -200,7 +203,7 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 	}
 
 	@SubscribeEvent
-	public static void onPlayerChangedDimension(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent event) {
+	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
 		if (event.player instanceof EntityPlayerMP) {
 			QuestData data = ServerQuestFile.INSTANCE.getData(event.player);
 
@@ -292,17 +295,59 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 
 	public void claimReward(EntityPlayerMP player, Reward reward, boolean notify) {
 		if (setRewardClaimed(player.getUniqueID(), reward)) {
-			ForgeTeam team = Universe.get().getTeam(player.getName());
-			NBTTagCompound nbt = new NBTTagCompound();
-			ServerQuestData data = get(team);
-
-			data.writeData(nbt);
+//			ForgeTeam team = Universe.get().getTeam(player.getName());
+//			NBTTagCompound nbt = new NBTTagCompound();
+//			ServerQuestData data = get(team);
+//
+//			data.writeData(nbt);
 
 			reward.claim(player, notify);
 		}
 	}
 
-	private void writeData(NBTTagCompound nbt) {
+//	public void writeData(NBTTagCompound nbt) {
+//		NBTTagCompound nbt1 = new NBTTagCompound();
+//
+//		for (TaskData data : taskData.values()) {
+//			if (data.isStarted()) {
+//				String key = QuestObjectBase.getCodeString(data.task);
+//
+//				if (data.progress <= Byte.MAX_VALUE) {
+//					nbt1.setByte(key, (byte) data.progress);
+//				} else if (data.progress <= Short.MAX_VALUE) {
+//					nbt1.setShort(key, (short) data.progress);
+//				} else if (data.progress <= Integer.MAX_VALUE) {
+//					nbt1.setInteger(key, (int) data.progress);
+//				} else {
+//					nbt1.setLong(key, data.progress);
+//				}
+//			}
+//		}
+//
+//		nbt.setTag("Tasks", nbt1);
+//
+//		if (!claimedTeamRewards.isEmpty()) {
+//			nbt.setIntArray("ClaimedTeamRewards", claimedTeamRewards.toIntArray());
+//		}
+//
+//		if (!claimedPlayerRewards.isEmpty()) {
+//			nbt1 = new NBTTagCompound();
+//
+//			for (Map.Entry<UUID, IntOpenHashSet> entry : claimedPlayerRewards.entrySet()) {
+//				if (!entry.getValue().isEmpty()) {
+//					nbt1.setIntArray(StringUtils.fromUUID(entry.getKey()), entry.getValue().toIntArray());
+//				}
+//			}
+//
+//			if (!nbt1.isEmpty()) {
+//				nbt.setTag("ClaimedPlayerRewards", nbt1);
+//			}
+//		}
+//
+//		setData(this.team.getId(), nbt);
+//	}
+
+	public boolean writeData(NBTTagCompound nbt) {
 		NBTTagCompound nbt1 = new NBTTagCompound();
 
 		for (TaskData data : taskData.values()) {
@@ -341,10 +386,10 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 			}
 		}
 
-		setData(this.team.getId(), nbt);
+		return setData(this.team.getId(), nbt);
 	}
 
-	private void readData() {
+	public void readData() {
 		NBTTagCompound nbt = getData(this.team.getId());
 		NBTTagCompound tasks = nbt.getCompoundTag("Tasks");
 
