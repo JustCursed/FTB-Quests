@@ -110,7 +110,7 @@ public class ServerQuestData extends QuestData implements NBTDataStorage.Data {
 
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(ForgePlayerLoggedInEvent event) {
-		get(event.getTeam()).readData(); // update player's quests data in memory
+//		get(event.getTeam()).readData(); // update player's quests data in memory
 
 		ServerQuestData teamData = ServerQuestData.get(event.getTeam());
 		EntityPlayerMP player = event.getPlayer().getPlayer();
